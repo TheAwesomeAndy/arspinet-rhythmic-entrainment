@@ -1,0 +1,10 @@
+data/
+*.mat
+*.pkl
+*.pickle
+*.npy
+*.npz
+*.wav
+*.mp3
+*.flac
+__pycache__/
