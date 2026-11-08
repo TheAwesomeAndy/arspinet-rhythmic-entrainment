@@ -290,10 +290,9 @@ Park it.
 2. **Dataset order**: start with Weineck 2022 (no purchase, 13 tempi, features
    released) and treat NMED-T as the 128-channel replication; or buy the ten
    NMED-T tracks (about USD 10–15) and start there as proposed.
-3. **Where the code lives**: I have committed the pilot, results and reviews
-   under `music_entrainment/` on the designated branch of `theBIBMsequel`
-   because that repository was the only candidate not scoped to the BIBM camera-
-   ready; say the word and I move it to a new repository.
+3. **Where the code lives**: decided; this standalone repository
+   (`TheAwesomeAndy/arspinet-rhythmic-entrainment`), kept apart from the BIBM
+   camera-ready and its journal extension.
 4. **Pre-registration content**: one drive (group RCA/PC1 component or a
    fronto-central cluster), one readout (per-unit beat-cycle histogram with a
    fixed combination), two statistics (neighbour-frequency tagging z; residual
