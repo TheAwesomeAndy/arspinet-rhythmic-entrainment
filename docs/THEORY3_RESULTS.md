@@ -71,8 +71,26 @@ component is present. The inner cross-validation chose the most damped Hopf conf
 
 ## 4. Group-level leave-one-tempo-out (pooled across participants)
 
-Running (`weineck/oscillator_group.py`, most-chosen configurations: Hopf alpha -0.5, linear
-alpha -2.0); results appended when complete.
+One encoding model per family fitted on all participants' trials at 12 tempi (normal-equation
+moments summed over participants; lambda by inner leave-one-tempo-out), predicting every
+participant's trials at the held-out tempo; configurations fixed to those most often chosen
+within participants (Hopf alpha -0.5, gain 1; linear alpha -2.0). `weineck/oscillator_group.py`,
+`weineck/results/oscillator_group_loto*.json`.
+
+| model | median held-out r (fronto-central) |
+|---|---|
+| d_short: TRF 0-400 ms | **+0.038** |
+| d_long: TRF 0-1000 ms | +0.038 |
+| aug_lin: linear bank + TRF | +0.038 |
+| aug: Hopf bank + TRF | +0.037 |
+| c: linear bank | +0.031 |
+| a: Hopf bank | +0.030 |
+
+delta_r (aug - best evoked) median **-0.002**, positive in 8/34, one-sided p = 1.00; aug vs
+aug_lin p = 1.00; delta_r negative at 12 of 13 held-out tempi. Pooling across participants
+raises every model's held-out r (the within-participant TRF reached 0.034) and does not change
+the verdict: with 34 participants' worth of training data the oscillator features still add
+nothing to the evoked kernel at unseen tempi.
 
 ## 5. Reading
 
