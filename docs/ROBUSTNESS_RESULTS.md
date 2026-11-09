@@ -6,11 +6,11 @@ Rule (docs/ROBUSTNESS_PLAN.md): 'H2 robust' = residual delta > 0 with one-sided 
 |---|---|---|---|---|---|---|---|---|---|
 | baseline | 78 | +0.036 | +0.228 | 31 / 34 | 0.0000 | pass (-0.005) | pass (-0.001) | -0.005 | yes |
 | seed7 | 78 | +0.036 | +0.228 | 31 / 34 | 0.0000 | pass (-0.004) | pass (-0.000) | -0.002 | yes |
-| seed99 | - | - | in progress (2/34) | | | | | | |
-| rho0 | - | - | not run | | | | | | |
-| rho0.3 | - | - | not run | | | | | | |
-| rho1.2 | - | - | not run | | | | | | |
-| beta0.01 | - | - | not run | | | | | | |
+| seed99 | 78 | +0.036 | +0.228 | 31 / 34 | 0.0000 | pass (-0.007) | pass (-0.009) | +0.005 | yes |
+| rho0 | - | - | in progress (12/34) | | | | | | |
+| rho0.3 | - | - | in progress (21/34) | | | | | | |
+| rho1.2 | - | - | in progress (15/34) | | | | | | |
+| beta0.01 | - | - | in progress (2/34) | | | | | | |
 | beta0.004 | - | - | not run | | | | | | |
 | trf_flux | - | - | not run | | | | | | |
 | trf_long | - | - | not run | | | | | | |
