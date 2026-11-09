@@ -898,3 +898,6 @@ Reading 0 ... 10076  =      0.000 ...    10.076 secs...
 subj 11: 94 trials, 12 tempi present
     11     hopf: mean held-out r_fc +0.0134  (226s)
     11       rf: mean held-out r_fc +0.0055  (100s)
+    11      lin: mean held-out r_fc +0.0252  (174s)
+    11  d_short: mean held-out r_fc +0.0276  (8s)
+    11   d_long: mean held-out r_fc +0.0219  (17s)
