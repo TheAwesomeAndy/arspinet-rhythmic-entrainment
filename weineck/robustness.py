@@ -13,6 +13,20 @@ from underfit_check import load_participant_arrays, solve, corr_cols, SUBJECTS_A
 from mtrf import lag_matrix
 from tagging import GRID, grid_stats, participant_shuffle_z
 import q2_residual as q2
+
+
+def _robust_pc1(M):
+    """Same quantity as q2_residual.pc1 (first principal component scores, U[:,0]*s[0]); falls back to the
+    eigendecomposition of the covariance when LAPACK's SVD fails to converge (observed for the sparse
+    rho = 0 reservoir). M v1 equals U1 s1 up to sign; the tagging statistic is sign-invariant."""
+    Mc = M - M.mean(0)
+    try:
+        U, s_, Vt = np.linalg.svd(Mc, full_matrices=False); return U[:, 0] * s_[0]
+    except np.linalg.LinAlgError:
+        w, V = np.linalg.eigh(Mc.T @ Mc); return Mc @ V[:, -1]
+
+
+q2.pc1 = _robust_pc1          # robustness rows only; the confirmatory module file is not modified
 sys.path.insert(0, '/home/user/dissoAdventureExperiments/chapter5Experiments')
 from experiment_zero import LIFReservoir
 
