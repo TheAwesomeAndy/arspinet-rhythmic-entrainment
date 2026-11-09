@@ -139,6 +139,13 @@
    "median_H3_diff": -0.00479631992946046,
    "R_minus_Rs": -0.007118096620547444,
    "H2_ok": true
+  },
+  "iaaft": {
+   "n": 34,
+   "median_real_delta": 0.2283059621647527,
+   "median_iaaft_delta": 0.1562003742166922,
+   "p_iaaft_gt0": 5.122274160385132e-09,
+   "median_percentile_of_real": 0.73
   }
  },
  "H2_robust": true,
