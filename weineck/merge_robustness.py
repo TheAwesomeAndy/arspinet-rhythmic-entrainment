@@ -24,7 +24,10 @@ for row in ORDER:
     p = f'{R}/{row}.json'
     if not os.path.exists(p):
         md.append(f"| {row} | - | - | not run | | | | | | |"); continue
-    J = json.load(open(p)); S = J['subjects']; subs = sorted(S, key=int); n = len(subs)
+    J = json.load(open(p))
+    if 'ended' not in J:
+        md.append(f"| {row} | - | - | in progress ({len(J['subjects'])}/34) | | | | | | |"); continue
+    S = J['subjects']; subs = sorted(S, key=int); n = len(subs)
     if row == 'iaaft':
         real = np.array([S[s]['resid_N0_real']['delta'] for s in subs]); sm = np.array([S[s]['iaaft_delta_mean'] for s in subs]); pct = np.array([S[s]['real_percentile_in_iaaft'] for s in subs])
         p_surr = float(wilcoxon(sm, alternative='greater').pvalue) if n >= 5 else float('nan')

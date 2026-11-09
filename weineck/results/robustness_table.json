@@ -1,0 +1,35 @@
+{
+ "rows": {
+  "baseline": {
+   "n": 34,
+   "tau_ms": 78.125,
+   "heldout_r": 0.03574504768810445,
+   "median_resid_delta": 0.2283059621647527,
+   "frac_positive": 0.9117647058823529,
+   "p_H2": 9.837094694375992e-09,
+   "H1_tost_pass": true,
+   "H3_tost_pass": true,
+   "median_H1_diff": -0.0048536144656307345,
+   "median_H3_diff": -0.0008611062197712571,
+   "R_minus_Rs": -0.004520458828286245,
+   "H2_ok": true
+  },
+  "seed7": {
+   "n": 34,
+   "tau_ms": 78.125,
+   "heldout_r": 0.03574504768810445,
+   "median_resid_delta": 0.2283059621647527,
+   "frac_positive": 0.9117647058823529,
+   "p_H2": 9.837094694375992e-09,
+   "H1_tost_pass": true,
+   "H3_tost_pass": true,
+   "median_H1_diff": -0.003667119194732671,
+   "median_H3_diff": -5.4714713657692815e-05,
+   "R_minus_Rs": -0.0020675417842435304,
+   "H2_ok": true
+  }
+ },
+ "H2_robust": true,
+ "equivalence_robust": true,
+ "flips": []
+}
