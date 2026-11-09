@@ -965,3 +965,4 @@ subj 34: 91 trials, 13 tempi present
     34      lin: mean held-out r_fc +0.0244  (192s)
     34  d_short: mean held-out r_fc +0.0424  (9s)
     34   d_long: mean held-out r_fc +0.0375  (16s)
+    34      aug: mean held-out r_fc +0.0228  (321s)
