@@ -75,3 +75,7 @@ Reading 0 ... 14992  =      0.000 ...    14.992 secs...
 Reading 0 ... 18228  =      0.000 ...    18.228 secs...
 subj 10: 75 trials, 12 tempi present
     10     hopf: mean held-out r_fc -0.0021  (173s)
+    10       rf: mean held-out r_fc +0.0233  (72s)
+    10      lin: mean held-out r_fc -0.0044  (135s)
+    10  d_short: mean held-out r_fc +0.0328  (5s)
+    10   d_long: mean held-out r_fc +0.0184  (12s)
