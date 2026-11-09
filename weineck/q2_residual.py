@@ -84,22 +84,36 @@ def main():
             idx = [keep.index(names.index(c)) for c in FC if c in names]; drive256.append(resample_poly(X[idx].mean(0), 32, 125))
         fcidx = [keep.index(names.index(c)) for c in FC if c in names]
         rows = []
+        # --- precompute per-trial lag matrices and normal-equation moments (same ridge estimator as mtrf.fit_trf) ---
+        from mtrf import lag_matrix
+        XL = []; A_i = []; B_i = []
+        for m in range(len(keepn)):
+            Xl, _ = lag_matrix(F64[m], FS_TRF, 0.0, 0.4); Xl = np.hstack([Xl, np.ones((len(Xl), 1))])
+            XL.append(Xl); A_i.append(Xl.T @ Xl); B_i.append(Xl.T @ X64[m])
+        A_tot = sum(A_i); B_tot = sum(B_i); nreg = A_tot.shape[0]
+
+        def solve(A, B, lam):
+            reg = lam * np.trace(A) / nreg * np.eye(nreg); reg[-1, -1] = 0.0
+            return np.linalg.solve(A + reg, B)
+
+        def corr_fc(P, Y):
+            Pc = P - P.mean(0); Yc = Y - Y.mean(0)
+            return float(((Pc * Yc).sum(0) / (np.sqrt((Pc ** 2).sum(0) * (Yc ** 2).sum(0)) + 1e-12))[fcidx].mean())
+
         for t_ in range(len(keepn)):
             tr = [m for m in range(len(keepn)) if m != t_]
-            # nested lambda choice on the training trials (leave-one-out within training)
+            A_tr = A_tot - A_i[t_]; B_tr = B_tot - B_i[t_]
             best = None
             for lam in LAMS:
                 rs = []
-                for v in tr[:min(len(tr), 12)]:                                      # inner folds capped at 12 for cost
-                    tr2 = [m for m in tr if m != v]
-                    W, _ = fit_trf([F64[m] for m in tr2], [X64[m] for m in tr2], FS_TRF, 0.0, 0.4, lam)
-                    P = predict(W, F64[v], FS_TRF, 0.0, 0.4); Y = X64[v]
-                    Pc = P - P.mean(0); Yc = Y - Y.mean(0); rs.append(((Pc * Yc).sum(0) / (np.sqrt((Pc ** 2).sum(0) * (Yc ** 2).sum(0)) + 1e-12))[fcidx].mean())
+                for v in tr[:min(len(tr), 12)]:                                      # inner folds capped at 12 (as before)
+                    W = solve(A_tr - A_i[v], B_tr - B_i[v], lam)
+                    rs.append(corr_fc(XL[v] @ W, X64[v]))
                 if best is None or np.mean(rs) > best[1]:
                     best = (lam, float(np.mean(rs)))
-            W, _ = fit_trf([F64[m] for m in tr], [X64[m] for m in tr], FS_TRF, 0.0, 0.4, best[0])
-            P = predict(W, F64[t_], FS_TRF, 0.0, 0.4); Y = X64[t_]
-            Pc = P - P.mean(0); Yc = Y - Y.mean(0); r_fc = float(((Pc * Yc).sum(0) / (np.sqrt((Pc ** 2).sum(0) * (Yc ** 2).sum(0)) + 1e-12))[fcidx].mean())
+            W = solve(A_tr, B_tr, best[0])
+            P = XL[t_] @ W; Y = X64[t_]
+            r_fc = corr_fc(P, Y)
             resid_fc = (Y - P)[:, fcidx].mean(1); resid256 = resample_poly(resid_fc, 4, 1)
             d256 = drive256[t_][:len(resid256)]; resid256 = resid256[:len(d256)]
             rows.append({'f': fbeat[t_], 'lam': best[0], 'pred_r_fc': r_fc, 'drive': stats_on(d256, fbeat[t_], res, res_s, sos_env), 'resid': stats_on(resid256, fbeat[t_], res, res_s, sos_env)})
