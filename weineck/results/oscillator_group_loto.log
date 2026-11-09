@@ -3393,3 +3393,4 @@ Reading 0 ... 14047  =      0.000 ...    14.047 secs...
      aug held-out 2.50 Hz: median r_fc +0.0299 (lam 0.1)  (6122s)
      aug held-out 2.75 Hz: median r_fc +0.0294 (lam 0.1)  (6287s)
      aug held-out 3.00 Hz: median r_fc +0.0292 (lam 0.1)  (6459s)
+     aug held-out 3.25 Hz: median r_fc +0.0328 (lam 0.1)  (6622s)
