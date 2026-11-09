@@ -1164,3 +1164,7 @@ Reading 0 ... 22576  =      0.000 ...    22.576 secs...
 Reading 0 ... 25527  =      0.000 ...    25.527 secs...
 subj 25: 105 trials, 13 tempi present
     25     hopf: mean held-out r_fc +0.0331  (205s)
+    25       rf: mean held-out r_fc +0.0102  (85s)
+    25      lin: mean held-out r_fc +0.0400  (141s)
+    25  d_short: mean held-out r_fc +0.0504  (7s)
+    25   d_long: mean held-out r_fc +0.0473  (14s)
