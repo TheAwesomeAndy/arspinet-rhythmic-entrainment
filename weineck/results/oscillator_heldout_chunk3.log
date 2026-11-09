@@ -530,3 +530,4 @@ subj 30: 86 trials, 12 tempi present
     30      lin: mean held-out r_fc +0.0264  (160s)
     30  d_short: mean held-out r_fc +0.0364  (8s)
     30   d_long: mean held-out r_fc +0.0274  (15s)
+    30      aug: mean held-out r_fc +0.0288  (262s)
