@@ -750,3 +750,4 @@ subj 32: 97 trials, 13 tempi present
     32      lin: mean held-out r_fc +0.0228  (191s)
     32  d_short: mean held-out r_fc +0.0266  (10s)
     32   d_long: mean held-out r_fc +0.0271  (17s)
+    32      aug: mean held-out r_fc +0.0245  (315s)
