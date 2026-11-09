@@ -1306,3 +1306,5 @@ subj 37: 110 trials, 12 tempi present
     37  d_short: mean held-out r_fc +0.0587  (7s)
     37   d_long: mean held-out r_fc +0.0562  (13s)
     37      aug: mean held-out r_fc +0.0444  (208s)
+    37  aug_lin: mean held-out r_fc +0.0547  (166s)
+subj 37 done in 833s
