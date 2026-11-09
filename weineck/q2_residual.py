@@ -111,7 +111,9 @@ def main():
             for st in ('N0', 'N2a', 'N2b', 'R', 'R_pop', 'Rs'):
                 Z = np.array([r[src][st] for r in rows])                   # N x 13
                 obs, z, mu, sd = participant_shuffle_z(Z, own, rng_s, 500)
-                summ[f'{src}_{st}'] = {'obs_mean': obs, 'shuffle_z': z, 'shuffle_mean': mu, 'shuffle_sd': sd}
+                # per-trial standardized effect (trial-count independent): own-tempo minus mean other-tempo, over its sd across trials
+                other = np.array([np.delete(Z[n], own[n]).mean() for n in range(N)]); dd = Z[np.arange(N), own] - other
+                summ[f'{src}_{st}'] = {'obs_mean': obs, 'shuffle_z': z, 'shuffle_mean': mu, 'shuffle_sd': sd, 'delta': float(dd.mean() / (dd.std() + 1e-12)), 'z_over_sqrtN': float(z / np.sqrt(N))}
         summ['pred_r_fc_mean'] = float(np.mean([r['pred_r_fc'] for r in rows])); summ['N'] = N
         out['subjects'][subj] = {'subgroup': int(j), 'trials': rows, 'scores': summ}
         bm = lambda k: summ[k]['shuffle_z']
@@ -121,13 +123,14 @@ def main():
     print(f"\ngroup (n={len(subs)}): participant shuffle-z per statistic; one-sided Wilcoxon > 0")
     out['group'] = {}
     for key in ('drive_N0', 'drive_R', 'resid_N0', 'resid_N2a', 'resid_N2b', 'resid_R', 'resid_R_pop', 'resid_Rs'):
-        v = np.array([out['subjects'][s]['scores'][key]['shuffle_z'] for s in subs])
+        v = np.array([out['subjects'][s]['scores'][key]['shuffle_z'] for s in subs]); dl = np.array([out['subjects'][s]['scores'][key]['delta'] for s in subs])
         p = float(wilcoxon(v, alternative='greater').pvalue) if len(v) >= 5 and np.any(v != 0) else float('nan')
-        out['group'][key] = {'z_values': v.tolist(), 'median_z': float(np.median(v)), 'frac_positive': float((v > 0).mean()), 'p_wilcoxon': p}
-        print(f"  {key:>10}: median z {np.median(v):+.2f}, participants positive {(v>0).mean():.2f}, p={p:.3f}")
+        out['group'][key] = {'z_values': v.tolist(), 'delta_values': dl.tolist(), 'median_z': float(np.median(v)), 'median_delta': float(np.median(dl)), 'frac_positive': float((v > 0).mean()), 'p_wilcoxon': p}
+        print(f"  {key:>10}: median z {np.median(v):+.2f}, median delta {np.median(dl):+.3f}, participants positive {(v>0).mean():.2f}, p={p:.3f}")
     for aa, bb in (('resid_R', 'resid_N0'), ('resid_R', 'resid_N2a'), ('resid_R', 'resid_N2b')):
-        d = np.array([out['subjects'][s]['scores'][aa]['shuffle_z'] - out['subjects'][s]['scores'][bb]['shuffle_z'] for s in subs])
-        print(f"  paired {aa} - {bb}: median {np.median(d):+.2f}, frac>0 {(d>0).mean():.2f}")
+        d = np.array([out['subjects'][s]['scores'][aa]['delta'] - out['subjects'][s]['scores'][bb]['delta'] for s in subs])
+        out['group'][f'{aa}_minus_{bb}'] = {'delta_diff': d.tolist(), 'median': float(np.median(d)), 'frac_positive': float((d > 0).mean())}
+        print(f"  paired {aa} - {bb} (delta): median {np.median(d):+.3f}, frac>0 {(d>0).mean():.2f}  [TOST bounds +-0.10]")
     json.dump(out, open(a.out, 'w'), indent=1)
 
 
