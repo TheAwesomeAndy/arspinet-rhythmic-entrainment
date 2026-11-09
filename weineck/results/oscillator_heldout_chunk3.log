@@ -1074,3 +1074,4 @@ subj 35: 100 trials, 12 tempi present
     35      lin: mean held-out r_fc +0.0304  (177s)
     35  d_short: mean held-out r_fc +0.0341  (8s)
     35   d_long: mean held-out r_fc +0.0253  (16s)
+    35      aug: mean held-out r_fc +0.0153  (295s)
