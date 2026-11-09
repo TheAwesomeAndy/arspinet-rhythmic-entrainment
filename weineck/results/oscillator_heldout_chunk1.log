@@ -715,3 +715,4 @@ subj 9: 103 trials, 12 tempi present
     9  d_short: mean held-out r_fc +0.0341  (9s)
     9   d_long: mean held-out r_fc +0.0321  (16s)
     9      aug: mean held-out r_fc +0.0208  (295s)
+    9  aug_lin: mean held-out r_fc +0.0288  (227s)

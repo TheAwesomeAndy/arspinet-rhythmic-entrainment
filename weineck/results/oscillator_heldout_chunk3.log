@@ -747,3 +747,6 @@ Reading 0 ... 21631  =      0.000 ...    21.631 secs...
 subj 32: 97 trials, 13 tempi present
     32     hopf: mean held-out r_fc +0.0185  (235s)
     32       rf: mean held-out r_fc +0.0028  (108s)
+    32      lin: mean held-out r_fc +0.0228  (191s)
+    32  d_short: mean held-out r_fc +0.0266  (10s)
+    32   d_long: mean held-out r_fc +0.0271  (17s)
