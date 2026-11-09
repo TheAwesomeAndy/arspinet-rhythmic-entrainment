@@ -77,3 +77,9 @@ Reading 0 ... 22568  =      0.000 ...    22.568 secs...
 Reading 0 ... 15985  =      0.000 ...    15.985 secs...
 Reading 0 ... 9693  =      0.000 ...     9.693 secs...
 subj 14: 78 trials, 12 tempi present
+    14     hopf: mean held-out r_fc +0.0063  (142s)
+    14       rf: mean held-out r_fc +0.0347  (79s)
+    14      lin: mean held-out r_fc +0.0142  (155s)
+    14  d_short: mean held-out r_fc +0.0326  (7s)
+    14   d_long: mean held-out r_fc +0.0273  (14s)
+    14      aug: mean held-out r_fc +0.0184  (230s)
