@@ -761,3 +761,4 @@ Reading 0 ... 20693  =      0.000 ...    20.693 secs...
   subj 18 trial 1/71 lam=0.1 pred r(FC)=+0.064 resid N0(own)=+1.73 R(own)=+0.95
   subj 18 trial 21/71 lam=0.1 pred r(FC)=+0.018 resid N0(own)=+2.31 R(own)=+2.26
   subj 18 trial 41/71 lam=0.1 pred r(FC)=+0.126 resid N0(own)=+2.09 R(own)=+2.15
+  subj 18 trial 61/71 lam=0.1 pred r(FC)=+0.036 resid N0(own)=-1.03 R(own)=+0.33
