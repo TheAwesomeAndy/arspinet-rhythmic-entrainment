@@ -832,3 +832,6 @@ Reading 0 ... 12270  =      0.000 ...    12.270 secs...
 subj 22: 86 trials, 12 tempi present
     22     hopf: mean held-out r_fc +0.0181  (218s)
     22       rf: mean held-out r_fc +0.0145  (88s)
+    22      lin: mean held-out r_fc +0.0272  (167s)
+    22  d_short: mean held-out r_fc +0.0326  (8s)
+    22   d_long: mean held-out r_fc +0.0257  (13s)

@@ -862,3 +862,6 @@ Reading 0 ... 20083  =      0.000 ...    20.083 secs...
 subj 33: 106 trials, 13 tempi present
     33     hopf: mean held-out r_fc +0.0294  (282s)
     33       rf: mean held-out r_fc +0.0057  (129s)
+    33      lin: mean held-out r_fc +0.0326  (217s)
+    33  d_short: mean held-out r_fc +0.0439  (10s)
+    33   d_long: mean held-out r_fc +0.0360  (19s)
