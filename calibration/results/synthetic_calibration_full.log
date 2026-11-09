@@ -26,3 +26,7 @@
  evoked f=1.00 snr=0.10: L z1=   0.7 | N2a   -0.0 | R pc1    0.7 frac 0.12 pop   0.2 | Rs pc1    0.6  (424s)
  evoked f=1.00 snr=0.20: L z1=   1.8 | N2a    3.2 | R pc1    1.7 frac 0.24 pop  -0.0 | Rs pc1    1.9  (438s)
  evoked f=1.00 snr=0.40: L z1=   6.7 | N2a   24.8 | R pc1    6.5 frac 0.57 pop   5.6 | Rs pc1    6.7  (450s)
+ evoked f=1.50 snr=0.05: L z1=   1.0 | N2a    0.1 | R pc1    1.1 frac 0.15 pop   0.4 | Rs pc1    1.0  (465s)
+ evoked f=1.50 snr=0.10: L z1=   2.1 | N2a   -0.9 | R pc1    1.9 frac 0.22 pop   1.0 | Rs pc1    2.0  (479s)
+ evoked f=1.50 snr=0.20: L z1=   7.4 | N2a    3.6 | R pc1    7.3 frac 0.60 pop   1.9 | Rs pc1    7.2  (492s)
+ evoked f=1.50 snr=0.40: L z1=  34.4 | N2a   27.1 | R pc1   32.3 frac 0.80 pop   7.0 | Rs pc1   32.7  (513s)
