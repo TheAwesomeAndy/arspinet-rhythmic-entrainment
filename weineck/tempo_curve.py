@@ -73,9 +73,9 @@ def main():
             def pc1(M):
                 U, s_, Vt = np.linalg.svd(M - M.mean(0), full_matrices=False); return U[:, 0] * s_[0]
             row = {'f': f, 'n_trials': d['n'], 'kinds': dict(d['kinds']), 'seconds': len(x) / FS, 'L': tag_z(x, f), 'R_pc1': tag_z(pc1(S), f), 'R_pop': tag_z(S.mean(1), f),
-                   'Rs_pc1': tag_z(pc1(Ss), f), 'R_frac_units': float((np.array([max(tag_z(S[:, u], f)) for u in range(S.shape[1])]) > 1.96).mean()), 'rate': float(S.mean())}
+                   'Rs_pc1': tag_z(pc1(Ss), f), 'R_frac_units': float((np.array([tag_z(S[:, u], f) for u in range(S.shape[1])]) > 1.96).mean()), 'rate': float(S.mean())}
             out[subj]['tempi'][str(f)] = row
-            print(f"subj {subj} f={f:.2f} n={d['n']:2d} ({len(x)/FS:4.0f}s): L {max(row['L']):+5.1f} | R_pc1 {max(row['R_pc1']):+5.1f} | R_pop {max(row['R_pop']):+5.1f} | Rs_pc1 {max(row['Rs_pc1']):+5.1f} | units>1.96 {row['R_frac_units']:.2f}", flush=True)
+            print(f"subj {subj} f={f:.2f} n={d['n']:2d} ({len(x)/FS:4.0f}s): L {row['L']:+5.1f} | R_pc1 {row['R_pc1']:+5.1f} | R_pop {row['R_pop']:+5.1f} | Rs_pc1 {row['Rs_pc1']:+5.1f} | units>1.96 {row['R_frac_units']:.2f}", flush=True)
         json.dump(out, open(a.out, 'w'), indent=1)
     # group table: median over participants of max-k z per tempo
     print("\nmedian over participants of max z at (1x or 2x):")
@@ -84,7 +84,7 @@ def main():
         rows = [out[s]['tempi'][str(float(f))] for s in out if str(float(f)) in out[s]['tempi']]
         if not rows:
             continue
-        L = np.array([max(r['L']) for r in rows]); R = np.array([max(r['R_pc1']) for r in rows]); P = np.array([max(r['R_pop']) for r in rows]); Rs = np.array([max(r['Rs_pc1']) for r in rows])
+        L = np.array([r['L'] for r in rows]); R = np.array([r['R_pc1'] for r in rows]); P = np.array([r['R_pop'] for r in rows]); Rs = np.array([r['Rs_pc1'] for r in rows])
         print(f"{f:5.2f} | {np.median(L):+6.2f} {np.median(R):+6.2f} {np.median(P):+6.2f} {np.median(Rs):+6.2f} | {(L>1.96).mean():.2f} / {(R>1.96).mean():.2f}   (n={len(rows)})")
 
 

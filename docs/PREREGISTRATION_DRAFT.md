@@ -3,7 +3,7 @@
 Title: A fixed spiking reservoir as a beat-locking detector for naturalistic-music EEG:
 calibration and detector-power comparison
 
-Status: v1.0, FROZEN 2026-11-09 (git tag `prereg-v1`). No residual-based statistic had been computed on real data at the time of freezing. All values are now concrete; the document is frozen (timestamped by its commit) before
+Status: v1.0, FROZEN 2026-11-09 at commit `935c80a` (the remote refuses tag refs, so the commit hash is the timestamp; a local tag `prereg-v1` points to it). No residual-based statistic had been computed on real data at the time of freezing. All values are now concrete; the document is frozen (timestamped by its commit) before
 any residual-based statistic is computed on real data. The pilot analyses already run
 (NMED-T songs 21/28/30 tagging; Weineck alignment checks; synthetic calibration) are
 disclosed as exploratory and are excluded from confirmatory claims.

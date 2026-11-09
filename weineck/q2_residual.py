@@ -104,7 +104,7 @@ def main():
             d256 = drive256[t_][:len(resid256)]; resid256 = resid256[:len(d256)]
             rows.append({'f': fbeat[t_], 'lam': best[0], 'pred_r_fc': r_fc, 'drive': stats_on(d256, fbeat[t_], res, res_s, sos_env), 'resid': stats_on(resid256, fbeat[t_], res, res_s, sos_env)})
             if t_ % 20 == 0:
-                print(f"  subj {subj} trial {t_+1}/{len(keepn)} lam={best[0]} pred r(FC)={r_fc:+.3f} resid N0={rows[-1]['resid']['N0']:+.2f} R={rows[-1]['resid']['R']:+.2f}", flush=True)
+                print(f"  subj {subj} trial {t_+1}/{len(keepn)} lam={best[0]} pred r(FC)={r_fc:+.3f} resid N0(own)={rows[-1]['resid']['N0'][int(np.argmin(np.abs(GRID - fbeat[t_])))]:+.2f} R(own)={rows[-1]['resid']['R'][int(np.argmin(np.abs(GRID - fbeat[t_])))]:+.2f}", flush=True)
         N = len(rows); summ = {}; rng_s = np.random.RandomState(int(subj))
         own = np.array([int(np.argmin(np.abs(GRID - r['f']))) for r in rows])
         for src in ('drive', 'resid'):
