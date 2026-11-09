@@ -641,3 +641,6 @@ Reading 0 ... 19235  =      0.000 ...    19.235 secs...
 subj 31: 105 trials, 12 tempi present
     31     hopf: mean held-out r_fc +0.0421  (232s)
     31       rf: mean held-out r_fc +0.0301  (103s)
+    31      lin: mean held-out r_fc +0.0436  (183s)
+    31  d_short: mean held-out r_fc +0.0418  (8s)
+    31   d_long: mean held-out r_fc +0.0367  (18s)

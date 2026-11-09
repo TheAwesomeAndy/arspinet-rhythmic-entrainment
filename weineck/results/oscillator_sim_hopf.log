@@ -613,3 +613,7 @@ Reading 0 ... 14790  =      0.000 ...    14.790 secs...
 Reading 0 ... 20902  =      0.000 ...    20.902 secs...
 subj 30: 86 trials, 12 tempi present
     30     hopf: mean held-out r_fc +0.0226  (206s)
+    30       rf: mean held-out r_fc -0.0072  (83s)
+    30      lin: mean held-out r_fc +0.0222  (157s)
+    30  d_short: mean held-out r_fc +0.0290  (7s)
+    30   d_long: mean held-out r_fc +0.0129  (14s)
