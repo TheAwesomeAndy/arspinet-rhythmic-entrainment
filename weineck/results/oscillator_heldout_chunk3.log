@@ -1070,3 +1070,7 @@ Reading 0 ... 16034  =      0.000 ...    16.034 secs...
 Reading 0 ... 23631  =      0.000 ...    23.631 secs...
 subj 35: 100 trials, 12 tempi present
     35     hopf: mean held-out r_fc +0.0180  (231s)
+    35       rf: mean held-out r_fc +0.0075  (102s)
+    35      lin: mean held-out r_fc +0.0304  (177s)
+    35  d_short: mean held-out r_fc +0.0341  (8s)
+    35   d_long: mean held-out r_fc +0.0253  (16s)
