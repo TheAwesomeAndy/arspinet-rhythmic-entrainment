@@ -74,5 +74,10 @@ def participant_shuffle_z(Z, own, rng, n_shuf=500, min_log_ratio=np.log(1.05)):
     obs = Z[np.arange(N), own].mean()
     logg = np.log(GRID[:G]) if G == len(GRID) else np.log(np.arange(G) + 1.0)
     allowed = [np.where(np.abs(logg - logg[o]) > min_log_ratio)[0] for o in own]
-    null = np.array([Z[np.arange(N), [rng.choice(a) for a in allowed]].mean() for _ in range(n_shuf)])
+    L = np.array([len(a) for a in allowed]); A = np.zeros((N, L.max()), int)
+    for n, a in enumerate(allowed):
+        A[n, :len(a)] = a
+    draws = (rng.random_sample((n_shuf, N)) * L[None, :]).astype(int)          # n_shuf x N
+    picks = A[np.arange(N)[None, :], draws]                                      # n_shuf x N
+    null = Z[np.arange(N)[None, :], picks].mean(1)
     return float(obs), float((obs - null.mean()) / (null.std() + 1e-12)), float(null.mean()), float(null.std())
