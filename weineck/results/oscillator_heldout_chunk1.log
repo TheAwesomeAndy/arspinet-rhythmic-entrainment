@@ -1119,3 +1119,5 @@ subj 13: 99 trials, 12 tempi present
     13  d_short: mean held-out r_fc +0.0165  (7s)
     13   d_long: mean held-out r_fc +0.0145  (15s)
     13      aug: mean held-out r_fc +0.0143  (290s)
+    13  aug_lin: mean held-out r_fc +0.0137  (207s)
+subj 13 done in 1101s
