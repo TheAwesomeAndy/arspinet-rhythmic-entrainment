@@ -944,3 +944,5 @@ subj 23: 102 trials, 12 tempi present
     23     hopf: mean held-out r_fc +0.0240  (235s)
     23       rf: mean held-out r_fc +0.0139  (103s)
     23      lin: mean held-out r_fc +0.0286  (180s)
+    23  d_short: mean held-out r_fc +0.0474  (8s)
+    23   d_long: mean held-out r_fc +0.0448  (17s)

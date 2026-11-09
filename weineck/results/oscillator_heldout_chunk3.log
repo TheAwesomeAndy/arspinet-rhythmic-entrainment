@@ -961,3 +961,7 @@ Reading 0 ... 18229  =      0.000 ...    18.229 secs...
 Reading 0 ... 17985  =      0.000 ...    17.985 secs...
 subj 34: 91 trials, 13 tempi present
     34     hopf: mean held-out r_fc +0.0195  (254s)
+    34       rf: mean held-out r_fc +0.0029  (102s)
+    34      lin: mean held-out r_fc +0.0244  (192s)
+    34  d_short: mean held-out r_fc +0.0424  (9s)
+    34   d_long: mean held-out r_fc +0.0375  (16s)
