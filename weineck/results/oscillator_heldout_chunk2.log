@@ -507,3 +507,6 @@ Reading 0 ... 24158  =      0.000 ...    24.158 secs...
 subj 19: 101 trials, 12 tempi present
     19     hopf: mean held-out r_fc +0.0310  (223s)
     19       rf: mean held-out r_fc +0.0062  (101s)
+    19      lin: mean held-out r_fc +0.0441  (167s)
+    19  d_short: mean held-out r_fc +0.0611  (8s)
+    19   d_long: mean held-out r_fc +0.0538  (17s)
