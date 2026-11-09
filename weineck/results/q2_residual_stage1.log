@@ -762,3 +762,17 @@ Reading 0 ... 20693  =      0.000 ...    20.693 secs...
   subj 18 trial 21/71 lam=0.1 pred r(FC)=+0.018 resid N0(own)=+2.31 R(own)=+2.26
   subj 18 trial 41/71 lam=0.1 pred r(FC)=+0.126 resid N0(own)=+2.09 R(own)=+2.15
   subj 18 trial 61/71 lam=0.1 pred r(FC)=+0.036 resid N0(own)=-1.03 R(own)=+0.33
+subj 18: N=71, mean held-out TRF r(FC)=+0.026 | shuffle-z: drive N0 +2.65 R +2.31 | resid N0 +1.79 N2a -0.55 N2b -1.32 R +2.22 R_pop +0.47 Rs +1.65
+
+group (n=8): participant shuffle-z per statistic; one-sided Wilcoxon > 0
+    drive_N0: median z +2.17, median delta +0.181, participants positive 0.88, p=0.012
+     drive_R: median z +2.17, median delta +0.186, participants positive 1.00, p=0.004
+    resid_N0: median z +0.90, median delta +0.091, participants positive 0.75, p=0.055
+   resid_N2a: median z -0.23, median delta -0.022, participants positive 0.38, p=0.578
+   resid_N2b: median z -0.40, median delta -0.029, participants positive 0.38, p=0.844
+     resid_R: median z +1.03, median delta +0.110, participants positive 0.62, p=0.055
+  resid_R_pop: median z +0.48, median delta +0.037, participants positive 0.62, p=0.578
+    resid_Rs: median z +0.81, median delta +0.085, participants positive 0.62, p=0.074
+  paired resid_R - resid_N0 (delta): median +0.009, frac>0 0.62  [TOST bounds +-0.10]
+  paired resid_R - resid_N2a (delta): median +0.163, frac>0 0.75  [TOST bounds +-0.10]
+  paired resid_R - resid_N2b (delta): median +0.166, frac>0 0.75  [TOST bounds +-0.10]
