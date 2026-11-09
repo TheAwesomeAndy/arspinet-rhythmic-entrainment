@@ -73,3 +73,43 @@ tempo grids for phase-binned statistics, and for phase-sensitive questions
 locking vs circular shift: the negative result), `nmedt_pilot_v3.py` (refined
 tempo, windowed tagging z, phase-randomized surrogate), `nmedt_pilot_v4_units.py`
 (per-unit and unit-PC1 readouts). JSON outputs: `pilot_v3_song{21,28,30}.json`.
+
+## 6. All ten songs (2026-11-09, `nmedt_tensong.py`, `results/nmedt_tensong.{json,md}`)
+
+Same protocol as §3 (group-PC1 drive; canonical reservoir, seed 42; Welch tagging z against
+neighbouring frequencies; 20 single listens per song). Beat frequency refined from the group
+EEG spectrum when the harmonic peak had z > 4, otherwise nominal.
+
+| song | BPM (Table 1) | f used (Hz) | group drive z (1,2,4,8)f | group unit-PC1 z | group pop-rate z | best k | single-listen detected: drive / unit-PC1 / pop |
+|---|---|---|---|---|---|---|---|
+| 21 | 55.97 | 0.9328 | 0.7, 0.1, 0.0, -0.5 | 0.7, 0.1, -0.4, -0.6 | 1.8, 1.6, -0.3, -0.5 | 1 | 0.05 / 0.05 / 0.20 |
+| 22 | 69.44 | 1.1585 | 2.8, 16.4, 47.8, 10.7 | 2.9, 14.8, 44.9, 10.8 | -0.7, 0.7, -0.6, -0.2 | 4 | 0.60 / 0.75 / 0.10 |
+| 23 | 74.26 | 1.2331 | 8.7, 13.6, 14.6, 1.2 | 8.6, 12.7, 13.5, 1.4 | 3.2, -0.9, 2.0, -0.2 | 4 | 0.20 / 0.15 / 0.00 |
+| 24 | 82.42 | 1.3757 | 27.8, 21.4, 2.7, 1.7 | 29.1, 20.3, 3.5, 2.1 | 9.0, 3.5, 1.4, -1.5 | 1 | 0.35 / 0.40 / 0.00 |
+| 25 | 91.46 | 1.5334 | -0.2, 5.6, 58.3, 2.3 | -0.2, 5.3, 54.6, 2.3 | 1.2, -0.1, 6.2, -0.1 | 4 | 0.85 / 0.90 / 0.05 |
+| 26 | 96.15 | 1.6000 | 9.1, 4.1, 64.1, 3.2 | 8.5, 3.9, 63.4, 3.2 | 0.3, -1.4, 2.5, -0.5 | 4 | 0.75 / 0.70 / 0.10 |
+| 27 | 108.70 | 1.8167 | 6.3, 14.4, 19.0, 2.8 | 6.5, 14.3, 17.9, 2.4 | -0.3, 1.1, -0.7, 2.9 | 4 | 0.40 / 0.35 / 0.10 |
+| 28 | 120.00 | 2.0001 | 1.1, 8.9, 24.7, -0.4 | 0.9, 9.3, 22.2, -0.1 | -1.0, -1.4, 1.9, 2.9 | 4 | 0.70 / 0.70 / 0.05 |
+| 29 | 128.21 | 2.1424 | 5.8, 5.7, 41.3, 4.3 | 6.4, 6.0, 39.7, 3.4 | -0.4, 0.5, 4.0, 0.9 | 4 | 0.90 / 0.90 / 0.05 |
+| 30 | 150.00 | 2.5003 | 12.6, 21.4, 7.3, 0.9 | 12.5, 18.2, 6.4, 1.3 | 0.1, -0.5, -1.2, 2.5 | 2 | 0.50 / 0.45 / 0.15 |
+
+Readings:
+1. Group-level beat-related tagging is present in 9 of 10 songs, most often strongest at
+   4x tempo (eighth/sixteenth-note level), at 1x only for song 24 and 2x for song 30; the
+   slowest, bass-heavy song (21) shows none with this spatial filter.
+2. Single-listen detection (fraction of 20 participants with z > 1.96 at the song's best
+   harmonic) ranges 0.05-0.90 for the linear drive. To our knowledge no single-listen
+   reliability table for NMED-T has been published.
+3. The reservoir's unit-PC1 readout tracks the drive song by song (paired differences
+   within +-0.15 in detection fraction, group z within ~10 %); the population mean rate
+   detects in 0-20 % of listens. The canonical reservoir neither adds nor removes much
+   beat-locking information when read out linearly across units, and destroys it when
+   read out as a mean rate.
+4. Where the EEG-refined tempo departs from Table 1 it agrees with the tapping data:
+   song 25, EEG 92.00 BPM, tapping median 92.01, nominal 91.46 (+0.6 %); song 23, EEG
+   73.99, tapping 74.13, nominal 74.26; song 29, EEG 128.54, tapping 128.69, nominal
+   128.21. Two independent sources correct the published value in the same direction.
+
+Caveats: one spatial filter (group PC1 fitted on the same song's data; label-free but
+song-specific), one reservoir seed, no audio; the refined tempo comes from the EEG itself
+and is used only to place the tagging bins, not as a phase reference.

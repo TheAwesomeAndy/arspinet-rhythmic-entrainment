@@ -83,10 +83,14 @@ Equivalence bounds above are the smallest effects the design can exclude.
 ## 6. Calibration (to be completed before unblinding Q2)
 
 Synthetic drives (sinusoid, evoked kernel, forced oscillator; pink noise; SNR 0.05-0.4;
-tempi 1-4 Hz) through every detector: detection curves, reservoir gain and group delay per
-tempo. Preliminary (2026-11-09, reduced run): unit-PC1 z tracks L one-to-one (gain 1.43,
-flat over tempo), Rs identical to R, population rate far weaker; no detector separates
-evoked from oscillator drives.
+tempi 1-4 Hz, 8 repetitions) through every detector (`calibration/RESULTS.md`): the
+reservoir's unit-PC1 detection probability equals the linear detector's in every cell to
+within one repetition (max |difference| 0.12); the weight-shuffled reservoir is
+indistinguishable from it; gain 1.42-1.44 flat over 1-4 Hz with zero measurable group
+delay; population rate and envelope/square statistics far weaker; no detector separates
+evoked from oscillator drives at any SNR. Consequence for H1: the prior expectation is
+equivalence of R and L; a departure in either direction on real data would be the
+finding.
 
 ## 7. Exclusions
 
