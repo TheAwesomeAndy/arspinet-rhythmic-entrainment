@@ -1,11 +1,14 @@
 # Framing: the question is the contribution
 
-Working title (v1):
+Updated 2026-11-09 after stage 2 (`docs/STAGE2_RESULTS.md`). Evidence labels: **measured**
+(real data), **simulated** (synthetic drives or Monte-Carlo), **literature**.
+
+Working title (v2):
 **What can scalp EEG tell us about neural entrainment to music? A pre-registered,
 instrument-calibrated test of beat-locking beyond a linear encoding model**
 
-Shorter alternative: *The limits of beat-locking: what a calibrated spiking reservoir does
-and does not reveal about entrainment in naturalistic-music EEG*
+Shorter alternative: *Beat-locking beyond a linear encoding model: what a calibrated spiking
+reservoir does and does not add in naturalistic-music EEG*
 
 ## The core question
 
@@ -13,89 +16,105 @@ When the brain "locks" to a musical beat, the field disagrees about whether that
 internal oscillator being captured or evoked responses stacking up (Nozaradan 2011; Novembre
 & Iannetti 2018; Doelling 2019; Doelling & Assaneo 2021; Damsma 2025). We ask a narrower,
 answerable question underneath it: **which classes of measurement on single-listen scalp
-EEG can, in principle, carry information about that distinction, and does an interpretable
-nonlinear instrument add anything to them?** The answer is informative whichever way the
-pre-registered test (Q2, H2) comes out.
+EEG can carry information about that distinction, does an interpretable fixed nonlinear
+instrument add anything to them, and how much beat-locked structure does a maximal linear
+encoding model leave unexplained?** The pre-registered test (frozen at commit `935c80a`,
+addendum A1) was designed to be informative whichever way it came out; it has now come out.
 
-## What is already established (evidence labels: measured here / literature)
+## Results (stage 2, 34 participants, frozen rules)
 
-1. **A class-level limit, demonstrated rather than asserted** (measured, synthetic +
-   real). Every stimulus-locked *magnitude* statistic we calibrated, linear tagging,
-   envelope and squared statistics, and a fixed spiking reservoir read out linearly across
-   its units, detects an evoked-kernel drive and a forced oscillator with identical
-   sensitivity at every SNR and tempo. On ten real songs and nine participants' trials the
-   reservoir reproduces the linear detector song by song. This is a statement about the
-   measurement class, not about the brain: these statistics are blind to the oscillator vs
-   evoked distinction by construction, and that is exactly why frequency tagging and
-   tempo-selective enhancement produced a decade of unresolved debate (consistent with
-   Damsma 2025 and Doelling & Assaneo 2021, here shown with a calibrated instrument). The
-   positive content is the design implication: only phase-sensitive, model-comparison, or
-   perturbation designs (missing pulses, tempo changes, offset persistence with ringing
-   controls) can carry the distinction.
-2. **A failure of the obvious null models, measured** (measured, real data). Circular shift
-   and phase randomisation leave beat-locking magnitudes unchanged on a periodic grid;
-   neighbour-debiased scores and pseudo-tempo permutations inflate false positives (0.08-0.36)
-   for identifiable reasons (spectral bias; non-exchangeable labels). The stimulus-label
-   shuffle holds the nominal rate (0.01-0.04). Writing the rejected nulls down is itself
-   useful to a literature that mostly uses the first two.
-3. **What single-listen data can see** (measured). Beat tagging is detectable in 20-90 % of
-   single listens on NMED-T, song-dependent, mostly at metrical subdivisions; a residual beat
-   component of 4 % amplitude (0.16 % of variance) is detectable with nine participants, 2-3 %
-   needs the full cohort. Published for the first time for NMED-T.
-4. **The instrument, characterised** (measured). Gain 1.42-1.44 flat over 1-4 Hz, zero
-   group delay, firing rate 0.126-0.128, weight-shuffled control indistinguishable: the
-   canonical reservoir's linear readout is a scaled copy of its drive in the beat band.
-   "Fixed weights" becomes a calibration statement rather than a limitation.
+1. **H2 supported: beat-locking beyond this linear encoding model** (measured). After a
+   cross-validated four-feature ridge TRF (spectral flux, beat onsets, envelope, derivative;
+   0-400 ms lags; nested lambda) is subtracted, the residual still carries beat-locked power
+   at the trial's own tempo relative to other grid tempi: median per-trial standardized
+   effect delta = 0.228, 31 of 34 participants positive, one-sided Wilcoxon p < 1e-4 against
+   a stimulus-label shuffle null. By the simulated calibration mapping this corresponds to
+   roughly a 4 % amplitude component. **This is a statement about the linear model, not
+   about oscillators**: the TRF predicts single trials at r ~ 0.04 and removes about a
+   quarter of the drive's beat-locking effect (delta 0.317 -> 0.228), so underfitting of a
+   stimulus-locked response at single-listen SNR is the parsimonious account until the
+   underfitting check (Publication plan, item 1) says otherwise. Envelope and squared
+   statistics on the residual are null: what survives is phase-coherent power at the beat
+   and its octave, not amplitude modulation.
+2. **H1 and H3: the reservoir is equivalent to the linear statistic** (measured). On the
+   drive, delta(reservoir unit-PC1) - delta(linear) = -0.005, TOST within +-0.10 passes; on
+   the residual the same, -0.001. The reservoir exceeds the envelope and square statistics
+   only because those are null. A reservoir with shuffled recurrent weights (same spectral
+   radius) matches the real one (0.219 vs 0.223). Its population mean rate loses the
+   information at every tempo.
+3. **A class-level limit, in the configurations calibrated** (simulated). Every
+   stimulus-locked magnitude statistic we tested, linear tagging, envelope and squared
+   statistics, and the reservoir read out linearly across its units, detected an
+   evoked-kernel drive and a forced Stuart-Landau oscillator with the same sensitivity at
+   every SNR and tempo tested. In these configurations such statistics do not distinguish
+   the oscillator from the evoked account; this is consistent with Damsma et al. 2025 and
+   Doelling & Assaneo 2021, who reached the same conclusion for frequency tagging and
+   tempo-selective enhancement with parametric models. The design implication is positive:
+   phase-sensitive, model-comparison or perturbation designs (missing pulses, tempo changes,
+   offset persistence with ringing controls) are where the distinction can live.
+4. **Null models, measured on real data.** Circular shift and phase randomisation leave
+   beat-locking magnitudes unchanged on a periodic grid; a neighbour-debiased score tested
+   against zero and a pseudo-tempo label permutation inflated simulated false positives
+   (0.08-0.26 and 0.10-0.36) for identifiable reasons; the stimulus-label shuffle held the
+   nominal rate (0.00-0.04, simulated). The rejected nulls are recorded in the
+   pre-registration.
+5. **What single-listen data can see** (measured, NMED-T): beat tagging detectable in 5-90 %
+   of single listens depending on the song, mostly at metrical subdivisions. We found no
+   published single-listen tagging table for NMED-T; if one exists we will cite it.
+6. **The instrument, characterised** (simulated and measured): gain 1.42-1.44 flat over
+   1-4 Hz, zero measurable group delay, firing rate 0.126-0.128 on every drive,
+   weight-shuffled control indistinguishable. The canonical reservoir's linear readout is a
+   scaled copy of its drive in the beat band; "fixed weights" is a calibration statement.
 
-## What stage 1 / stage 2 add, either way
+## Interpretability as the lens (planned)
 
-* **H2 supported** (residual carries beat-locked structure beyond a four-feature TRF): the
-  paper reports a measured nonlinearity (or TRF misfit) in beat-locked EEG, with the
-  reservoir's unit-level readout showing *where* in its state space it appears, and the
-  trivial-nonlinear baselines (N2a, N2b) saying whether a reservoir was needed to see it.
-* **H2 not supported**: the paper reports that, at the power available, a maximal linear
-  model accounts for the beat-locked structure a fixed nonlinear instrument can detect,
-  with the inconclusive region stated in amplitude units. That bounds what any future
-  nonlinear-readout claim on such data must exceed.
-Both are refutable, both are pre-registered, neither needs a "winner".
-
-## Interpretability as the lens (planned, not yet run)
-
-Per-unit analyses are cheap and were pre-registered as secondary: which units carry the
-beat (input-weight sign and magnitude, recurrent in-degree), at which harmonics, and whether
-the carrying set is stable across tempi and seeds. Honest scope: all units share one leak
-(beta = 0.05), so "timescales" means effective integration set by recurrent weights, not a
-distribution of membrane constants. This is a modest but concrete account of what rhythm
-tracking requires of a fixed neural transform.
+Per-unit analyses (which units carry the beat, at which harmonics, stable across tempi and
+seeds) are secondary and pre-registered. Honest scope: all units share one leak (beta =
+0.05), so "timescale" means integration set by the recurrent weights; the beta sweep in the
+publication plan (item 3) makes integration time an explicit factor.
 
 ## The bridge to the larger question (discussion, flagged as perspective)
 
 Entrainment is the field's working model for how music takes hold of a listener. If what
-scalp EEG measures at these tempi is dominated by stimulus-driven superposition, then the
-mechanism of being moved by rhythm must be sought elsewhere: prediction and timing
-expectation, motor simulation, absorption. That reframing is a legitimate discussion point
-and a bridge to the author's longer-term interest in rhythmic practice and absorptive
-states; it is not a result of this study and is written as such.
+scalp EEG measures at these tempi is dominated by stimulus-locked responses that a linear
+model underfits rather than by oscillatory capture, the mechanism of being moved by rhythm
+must be sought elsewhere: prediction and timing expectation, motor simulation, absorption.
+This is a discussion point and a bridge to the author's longer-term interest in rhythmic
+practice and absorptive states; it is not a result of this study and is written as such.
 
-## Where this is publishable
+## Publication plan
 
-* Methods / limits framing: *Journal of Neural Engineering*, *NeuroImage*, *eNeuro*, *PLoS
-  Computational Biology* (the calibration + rejected-nulls + pre-registration package fits
-  all four; eNeuro and PLoS CB reward negative-but-informative results explicitly).
-* Instrument framing: *IEEE Transactions on Neural Systems and Rehabilitation Engineering*,
-  *IEEE EMBC* (the reservoir as a characterised measurement operator).
-* Perspective companion (short): *Neuroscience of Consciousness*, *Music Perception*, or
-  a *Frontiers in Human Neuroscience* opinion piece for the bridge section alone.
+Target: **IEEE Transactions on Neural Systems and Rehabilitation Engineering (TNSRE)**, as an
+instrument-calibration and measurement-validity paper. Second choice: **IEEE Transactions on
+Cognitive and Developmental Systems**. Must-adds before submission, in order:
 
-## Monday's research step
+1. **Underfitting check** (exploratory, labelled as such): (A) a group-level pooled TRF,
+   leave-one-participant-out, same features and lags, with the Q2 residual statistic rerun;
+   (B) the tagging statistic of the TRF prediction itself, to report how much of the drive's
+   beat-locked power the linear model reproduces; (C) a linear-world simulation: fitted
+   kernels convolved with each trial's real stimulus features plus noise matched to the
+   observed held-out r (~0.04), run through the identical pipeline and null. Decision rule:
+   a linear-world residual delta comparable to 0.228 means H2 is explained by underfitting;
+   a linear-world delta near zero against the real 0.228 means the residual is structure the
+   linear model misses.
+2. **Held-out-tempo superposition test**, plus a cycle-count control on the tempo curve
+   (the number of beat cycles per trial rises with tempo and could drive the rising tagging
+   curve on its own).
+3. **Pre-registered robustness rows**: seeds 7 and 99; rho in {0, 0.3, 1.2}; spectral-flux-
+   only TRF; 0-600 ms lags; IAAFT surrogate of the residual; plus a beta / integration-time
+   sweep (about 78, 390 and 980 ms).
+4. **A TNSRE-style figure set** built from the existing results JSON: calibration curves
+   with the evoked-vs-oscillator indistinguishability panel; rejected nulls; NMED-T
+   single-listen table; the 13-tempo curve, drive vs reservoir; the Q2 residual result with
+   its inconclusive region and the underfitting check.
+5. **NMED-T generalization** of the Q2 pipeline (requires the ten tracks; alignment via the
+   60-s click grid).
 
-1. Read stage-1 output against the frozen rules (`docs/PREREGISTRATION_DRAFT.md`, commit
-   `935c80a`); stage 2 download proceeds unless H2 is already supported.
-2. Run the per-unit interpretability analysis on the tempo-curve output (secondary,
-   pre-registered).
-3. Draft the paper in Wall order starting from figures: (i) calibration curves and the
-   evoked-vs-oscillator indistinguishability panel; (ii) rejected nulls; (iii) NMED-T
-   single-listen table; (iv) Weineck tempo curve, drive vs reservoir; (v) Q2 residual
-   result with its inconclusive region.
-4. Write the limit statement with the design implication as the first sentence of the
-   discussion.
+## What this contributes regardless of item 1's outcome
+
+A pre-registered, calibrated test with its nulls validated and its rejected nulls recorded;
+a measured answer to whether a fixed spiking reservoir adds detection power over linear
+statistics in this setting (it does not, and a shuffled-weight copy does the same); a
+quantified gap between what a maximal linear encoding model predicts and what single-listen
+EEG carries at the beat frequency; and a demonstration, in the calibrated configurations,
+of which measurement class cannot settle the oscillator question.
