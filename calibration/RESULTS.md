@@ -62,3 +62,23 @@ resolution and its gain is flat over 1-4 Hz.
    on real residuals they remain the honest baseline the reservoir must beat for Q2.
 
 Not tested here: residual-based statistics (N1), seeds 7/99, rho sweep, IAAFT surrogates.
+
+## Power and false-positive check for Q2 (`power_q2.py`, 2026-11-09)
+
+Pipeline as pre-registered: per-trial tagging statistic (local quadratic baseline, max over
+k in {1, 2}) at all 13 grid tempi; participant z from a stimulus-label shuffle (500
+re-labellings of trials with other grid tempi > 5 % away); group one-sided Wilcoxon on
+participant z's. Pink-noise trials of 8-56 s with a planted beat sinusoid of relative
+amplitude a; 100 Monte-Carlo replicates per cell.
+
+| a | n=9 N=40 | n=9 N=75 | n=9 N=94 | n=34 N=40 | n=34 N=75 | n=34 N=94 |
+|---|---|---|---|---|---|---|
+| 0.00 | 0.02 | 0.04 | 0.04 | 0.01 | 0.04 | 0.03 |
+| 0.02 | 0.10 | 0.30 | 0.28 | 0.41 | 0.64 | 0.82 |
+| 0.04 | 0.92 | 0.98 | 1.00 | 1.00 | 1.00 | 1.00 |
+| 0.06 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 |
+
+Under the null the own-tempo and other-tempo per-trial statistics agree (+1.044 vs
++1.052), i.e. the labels are exchangeable. Two earlier nulls failed this check and were
+dropped: a debiased score tested against zero (false positives 0.08-0.26) and a
+pseudo-tempo label permutation (0.10-0.36).

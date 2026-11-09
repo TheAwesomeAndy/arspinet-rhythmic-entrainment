@@ -1,3 +1,36 @@
 a=0.00: per-trial z at own tempo mean +1.044; at other grid tempi mean +1.052
 a=0.02: per-trial z at own tempo mean +1.160; at other grid tempi mean +1.080
 a=0.04: per-trial z at own tempo mean +1.421; at other grid tempi mean +1.091
+a=0.06: per-trial z at own tempo mean +2.092; at other grid tempi mean +1.145
+a=0.10: per-trial z at own tempo mean +4.129; at other grid tempi mean +1.322
+    a  n_p    N | power (stimulus-label shuffle z per participant, one-sided Wilcoxon, alpha .05)
+ 0.00    9   40 | 0.02
+ 0.00    9   75 | 0.04
+ 0.00    9   94 | 0.04
+ 0.00   34   40 | 0.01
+ 0.00   34   75 | 0.04
+ 0.00   34   94 | 0.03
+ 0.02    9   40 | 0.10
+ 0.02    9   75 | 0.30
+ 0.02    9   94 | 0.28
+ 0.02   34   40 | 0.41
+ 0.02   34   75 | 0.64
+ 0.02   34   94 | 0.82
+ 0.04    9   40 | 0.92
+ 0.04    9   75 | 0.98
+ 0.04    9   94 | 1.00
+ 0.04   34   40 | 1.00
+ 0.04   34   75 | 1.00
+ 0.04   34   94 | 1.00
+ 0.06    9   40 | 1.00
+ 0.06    9   75 | 1.00
+ 0.06    9   94 | 1.00
+ 0.06   34   40 | 1.00
+ 0.06   34   75 | 1.00
+ 0.06   34   94 | 1.00
+ 0.10    9   40 | 1.00
+ 0.10    9   75 | 1.00
+ 0.10    9   94 | 1.00
+ 0.10   34   40 | 1.00
+ 0.10   34   75 | 1.00
+ 0.10   34   94 | 1.00

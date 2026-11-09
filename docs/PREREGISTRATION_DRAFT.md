@@ -3,7 +3,7 @@
 Title: A fixed spiking reservoir as a beat-locking detector for naturalistic-music EEG:
 calibration and detector-power comparison
 
-Status: DRAFT v0.1, 2026-11-09. Numbers in brackets are placeholders to be fixed before
+Status: DRAFT v0.2, 2026-11-09, ready to freeze on the author's confirmation. All values are now concrete; the document is frozen (timestamped by its commit) before
 any residual-based statistic is computed on real data. The pilot analyses already run
 (NMED-T songs 21/28/30 tagging; Weineck alignment checks; synthetic calibration) are
 disclosed as exploratory and are excluded from confirmatory claims.
@@ -41,18 +41,29 @@ Reservoir: `experiment_zero.LIFReservoir`, N = 256, beta = 0.05, theta = 0.5, rh
 seed 42 primary; seeds 7 and 99 as replication; weights shuffled (same rho) as instrument
 control; rho in {0, 0.3, 1.2} as robustness.
 
-Detectors (identical null and windowing for all):
-* L: Welch tagging z of the drive at k x tempo, k in {1, 2}, 20 s Hann segments (trial
-  concatenation within tempo), neighbour bins 0.08-0.5 Hz excluding harmonics.
-* N1: phase-locking value of the TRF residual at k x tempo (Q2 only).
-* N2: tagging z of the Hilbert envelope (0.5-8 Hz) and of the squared drive/residual.
-* R: reservoir per-unit tagging z -> fraction of units with z > 1.96, and unit-PC1 z.
-* Rs: R with shuffled weights.
-Primary statistic for R: unit-PC1 z (pre-specified; the per-unit fraction is secondary).
-
-Nulls: neighbour-frequency baseline (primary); neighbour-tempo grids for phase-binned
-statistics; circular shifts and phase randomisation are NOT used as nulls for magnitude
-statistics (shown non-diagnostic for periodic grids in the pilot).
+Detectors (identical statistic, windowing and null for all), `weineck/tagging.py`:
+* Tagging statistic: Welch PSD (Hann, 10 s segments, 50 % overlap) of the per-trial drive;
+  at k x tempo (k in {1, 2}) the bin is compared with a local quadratic baseline fitted to
+  the bins 0.15-0.8 Hz away (other harmonics excluded); z = (bin - baseline) / sd of the
+  baseline residuals; the trial statistic is the max over k. It is computed at every one
+  of the 13 grid tempi for every trial.
+* L: statistic of the drive; N0: of the TRF residual (Q2); N2a: of the 0.5-8 Hz Hilbert
+  envelope; N2b: of the square; R: of the reservoir unit-PC1; R_pop: of the population
+  rate; Rs: of the unit-PC1 with shuffled recurrent weights (same spectral radius).
+  Primary reservoir readout: R (unit-PC1). Reservoir: `experiment_zero.LIFReservoir`,
+  N = 256, beta 0.05, theta 0.5, rho 0.9, seed 42; seeds 7 and 99 and rho in {0, 0.3,
+  1.2} as robustness rows.
+* Null (stimulus-label shuffle): per participant, the observed score is the mean over
+  trials of the statistic at each trial's own tempo; the null distribution re-labels every
+  trial with another grid tempo more than 5 % away (500 shuffles) and the participant's
+  z is (observed - null mean) / null sd. Under the null the own-tempo and other-tempo
+  statistics are draws from the same distribution. Simulated false-positive rate of the
+  group test 0.01-0.04 (`calibration/power_q2.py`).
+* Rejected nulls (simulation, kept for the record): testing a neighbour-debiased score
+  against zero (false positives 0.08-0.26 from residual spectral bias), a pseudo-tempo
+  label permutation (0.10-0.36; adjacent pseudo-tempos are correlated, labels not
+  exchangeable), circular shift and phase randomisation (invariant for magnitude
+  statistics on a periodic grid; pilot).
 
 Linear model for Q2: ridge forward TRF, lags 0-400 ms, features spectral flux, beat
 onsets, envelope, envelope derivative (Weineck features at 128 Hz), lambda by nested CV
@@ -60,25 +71,42 @@ within participant, leave-one-trial-out prediction; residual = EEG minus predict
 
 ## 4. Hypotheses and decision rules
 
-H1 (Q1): detection probability at z > 1.96 differs between R and L. Two one-sided
-equivalence tests on the participant-level paired difference in detection probability,
-bounds +-[0.10]. Outcomes: R > L (reservoir adds power), equivalent, R < L (reservoir
-loses power). All three are reportable.
+Unit of inference: participant; one participant z per statistic (Section 3). Group tests:
+one-sided Wilcoxon signed-rank on participant z's (alpha 0.05) for existence claims; two
+one-sided tests (TOST) on paired participant differences for equivalence claims.
 
-H2 (Q2): residual beat-locked structure exists: participant-level z of N1 at the beat or
-2f exceeds 0 (one-sided Wilcoxon, alpha 0.05, 13 tempi pooled). If H2 is not supported,
-Q2's detector comparison is reported descriptively only.
+H1 (Q1, drive): participant z of R equals that of L. TOST bounds +-0.5 z. Outcomes: R > L
+(reservoir adds detection power), equivalent, R < L (loses power). All reportable. The
+calibration (Section 6) sets the prior expectation at equivalence.
 
-H3 (Q2, conditional on H2): R's residual sensitivity vs N1/N2, same equivalence frame,
-bounds +-[0.2] in participant-level z.
+H2 (Q2, existence): participant z of N0 on the TRF residual > 0 (Wilcoxon). Secondary:
+the same for R. If H2 is not supported, Q2's detector comparison is descriptive only.
 
-Robustness rows (not hypothesis tests): seeds 7/99; rho sweep; Rs; shifted-residual
-surrogate; IAAFT surrogate of the residual; spectral-flux-only TRF.
+H3 (Q2, conditional on H2): participant z of R versus N0, N2a and N2b on the residual,
+TOST bounds +-0.5 z; a positive one-sided test (R > each baseline) is the only outcome
+that supports the reservoir adding sensitivity to nonlinear residual structure.
 
-## 5. Power
+Robustness rows (no hypothesis tests): seeds 7/99; rho sweep; Rs; spectral-flux-only TRF;
+TRF lag range 0-600 ms; IAAFT surrogate of the residual.
 
-n = 34 (Weineck): paired test has 80 % power for d_z ~ 0.5; n = 20 (NMED-T): d_z ~ 0.66.
-Equivalence bounds above are the smallest effects the design can exclude.
+## 5. Power (`calibration/power_q2.py`, `calibration/RESULTS.md`)
+
+Simulated with the exact pipeline of Section 3 on pink-noise trials of Weineck-like
+length with a planted beat-locked sinusoid of relative amplitude a (a^2 = fraction of
+variance):
+
+| a | n = 9, N = 40 | n = 9, N = 94 | n = 34, N = 40 | n = 34, N = 94 |
+|---|---|---|---|---|
+| 0 (null) | 0.02 | 0.04 | 0.01 | 0.03 |
+| 0.02 | 0.10 | 0.28 | 0.41 | 0.82 |
+| 0.04 | 0.92 | 1.00 | 1.00 | 1.00 |
+| 0.06 | 1.00 | 1.00 | 1.00 | 1.00 |
+
+Decision: the minimum of 40 one-to-one trials per participant is adequate to detect a
+residual beat component of a >= 0.04 with the nine participants available; a component of
+a = 0.02 requires the full 34-participant cohort with >= 94 trials. The study therefore
+runs first on the nine participants; the remaining 25 are downloaded only if H2 is not
+supported but the participant z's are predominantly positive (an underpowered signal).
 
 ## 6. Calibration (to be completed before unblinding Q2)
 
@@ -97,8 +125,8 @@ finding.
 Weineck trials are used only when the stimulus is identified one-to-one by duration
 (TRF-based and tempo-tagging resolution of the rest failed their self-tests; see
 `weineck/README.md`); tempo-level analyses may add ambiguous trials whose candidates share
-a tempo. Participants with < [40] usable trials are excluded;
-channels flagged bad by amplitude criterion [> 5 SD]; the Weineck aux channel `33`.
+a tempo. Participants with fewer than 40 one-to-one trials are excluded;
+channels flagged bad by amplitude criterion (> 5 SD of the trial's channel-median SD); the Weineck aux channel `33`.
 
 ## 8. Disclosure
 
