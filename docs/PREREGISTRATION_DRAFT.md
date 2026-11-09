@@ -3,7 +3,7 @@
 Title: A fixed spiking reservoir as a beat-locking detector for naturalistic-music EEG:
 calibration and detector-power comparison
 
-Status: DRAFT v0.2, 2026-11-09, ready to freeze on the author's confirmation. All values are now concrete; the document is frozen (timestamped by its commit) before
+Status: v1.0, FROZEN 2026-11-09 (git tag `prereg-v1`). No residual-based statistic had been computed on real data at the time of freezing. All values are now concrete; the document is frozen (timestamped by its commit) before
 any residual-based statistic is computed on real data. The pilot analyses already run
 (NMED-T songs 21/28/30 tagging; Weineck alignment checks; synthetic calibration) are
 disclosed as exploratory and are excluded from confirmatory claims.
@@ -75,38 +75,56 @@ Unit of inference: participant; one participant z per statistic (Section 3). Gro
 one-sided Wilcoxon signed-rank on participant z's (alpha 0.05) for existence claims; two
 one-sided tests (TOST) on paired participant differences for equivalence claims.
 
-H1 (Q1, drive): participant z of R equals that of L. TOST bounds +-0.5 z. Outcomes: R > L
-(reservoir adds detection power), equivalent, R < L (loses power). All reportable. The
-calibration (Section 6) sets the prior expectation at equivalence.
+Effect size: because a participant's z grows with sqrt(N_trials), equivalence claims use the
+per-trial standardized effect delta = mean over trials of (own-tempo statistic - mean
+other-tempo statistic) divided by its sd across trials; delta is independent of trial count.
+Calibration mapping (Section 5): a planted beat component of relative amplitude a = 0.02,
+0.03, 0.04 gives delta = 0.045, 0.093, 0.208.
+
+H1 (Q1, drive): delta of R equals delta of L. TOST bounds +-0.10 delta (about a 3 %
+amplitude component). Outcomes: R > L (reservoir adds detection power), equivalent, R < L
+(loses power). All reportable. The calibration (Section 6) sets the prior expectation at
+equivalence. With n = 9 the equivalence tests are underpowered, so "not equivalent" is the
+likely stage-1 outcome and is NOT read as "different"; equivalence is decided at stage 2.
 
 H2 (Q2, existence): participant z of N0 on the TRF residual > 0 (Wilcoxon). Secondary:
 the same for R. If H2 is not supported, Q2's detector comparison is descriptive only.
 
-H3 (Q2, conditional on H2): participant z of R versus N0, N2a and N2b on the residual,
-TOST bounds +-0.5 z; a positive one-sided test (R > each baseline) is the only outcome
-that supports the reservoir adding sensitivity to nonlinear residual structure.
+H3 (Q2, conditional on H2): delta of R versus N0, N2a and N2b on the residual, TOST bounds
++-0.10 delta; a positive one-sided test (R > each baseline, paired Wilcoxon on delta) is the
+only outcome that supports the reservoir adding sensitivity to nonlinear residual
+structure. Same underpowered-at-stage-1 caveat as H1.
 
 Robustness rows (no hypothesis tests): seeds 7/99; rho sweep; Rs; spectral-flux-only TRF;
 TRF lag range 0-600 ms; IAAFT surrogate of the residual.
 
-## 5. Power (`calibration/power_q2.py`, `calibration/RESULTS.md`)
+## 5. Power and the two-stage design (`calibration/power_q2.py`, `calibration/RESULTS.md`)
 
 Simulated with the exact pipeline of Section 3 on pink-noise trials of Weineck-like
 length with a planted beat-locked sinusoid of relative amplitude a (a^2 = fraction of
-variance):
+variance); 200 Monte-Carlo replicates per cell; power at the stage alpha.
 
-| a | n = 9, N = 40 | n = 9, N = 94 | n = 34, N = 40 | n = 34, N = 94 |
-|---|---|---|---|---|
-| 0 (null) | 0.02 | 0.04 | 0.01 | 0.03 |
-| 0.02 | 0.10 | 0.28 | 0.41 | 0.82 |
-| 0.04 | 0.92 | 1.00 | 1.00 | 1.00 |
-| 0.06 | 1.00 | 1.00 | 1.00 | 1.00 |
+| a | delta | stage 1: n = 9, alpha 0.01, N = 40 / 75 / 94 | stage 2: n = 34, alpha 0.04, N = 40 / 75 / 94 |
+|---|---|---|---|
+| 0 (null) | 0.000 | 0.00 / 0.01 / 0.01 | 0.04 / 0.04 / 0.04 |
+| 0.02 | 0.045 | 0.01 / 0.04 / 0.07 | 0.41 / 0.61 / 0.77 |
+| 0.03 | 0.093 | 0.14 / 0.32 / 0.39 | 0.96 / 1.00 / 1.00 |
+| 0.04 | 0.208 | 0.81 / 0.98 / 0.99 | 1.00 / 1.00 / 1.00 |
 
-Decision: the minimum of 40 one-to-one trials per participant is adequate to detect a
-residual beat component of a >= 0.04 with the nine participants available; a component of
-a = 0.02 requires the full 34-participant cohort with >= 94 trials. The study therefore
-runs first on the nine participants; the remaining 25 are downloaded only if H2 is not
-supported but the participant z's are predominantly positive (an underpowered signal).
+Pre-specified two-stage rule for H2 (fixed before any residual statistic is computed):
+* Stage 1: the nine participants already on disk (subj 10, 11, 12, 13, 14, 16, 17, 18;
+  participant 18 has three of four blocks). H2 is supported at stage 1 only if the one-sided
+  Wilcoxon p < 0.01.
+* Stage 2 is run whatever stage 1 shows, unless stage 1 already supports H2: the remaining
+  25 participants are downloaded and H2 is tested on all 34 at alpha 0.04. The two looks
+  spend alpha 0.01 + 0.04 = 0.05 in total (Bonferroni bound, conservative under the
+  positive dependence of the two samples).
+* Interpretation of a null: a non-significant stage 1 is inconclusive for components below
+  a = 0.04 (power 0.81 at 40 trials); a non-significant stage 2 is inconclusive below
+  a = 0.03 (power 0.96) and says little about a = 0.02 (power 0.41-0.77). Neither is
+  evidence that the residual carries no beat-locked structure.
+* H1 and H3 (equivalence) are reported descriptively at stage 1 and decided at stage 2.
+The decision to download is therefore not conditional on the stage-1 result.
 
 ## 6. Calibration (to be completed before unblinding Q2)
 
@@ -125,7 +143,7 @@ finding.
 Weineck trials are used only when the stimulus is identified one-to-one by duration
 (TRF-based and tempo-tagging resolution of the rest failed their self-tests; see
 `weineck/README.md`); tempo-level analyses may add ambiguous trials whose candidates share
-a tempo. Participants with fewer than 40 one-to-one trials are excluded;
+a tempo. Participants with fewer than 40 one-to-one trials are excluded (stage 1: none of the nine falls below; checked before freezing: 75, 94, and the rest reported in `weineck/README.md` as the runs complete);
 channels flagged bad by amplitude criterion (> 5 SD of the trial's channel-median SD); the Weineck aux channel `33`.
 
 ## 8. Disclosure

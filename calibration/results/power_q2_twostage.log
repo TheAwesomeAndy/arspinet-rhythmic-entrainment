@@ -1,1 +1,29 @@
 a=0.00: per-trial z at own tempo mean +1.044; at other grid tempi mean +1.044; per-trial standardized effect delta = +0.000
+a=0.02: per-trial z at own tempo mean +1.160; at other grid tempi mean +1.074; per-trial standardized effect delta = +0.045
+a=0.03: per-trial z at own tempo mean +1.241; at other grid tempi mean +1.057; per-trial standardized effect delta = +0.093
+a=0.04: per-trial z at own tempo mean +1.505; at other grid tempi mean +1.068; per-trial standardized effect delta = +0.208
+    a  n_p    N | power (stimulus-label shuffle z per participant, one-sided Wilcoxon at the stage alpha)
+ 0.00    9   40 | alpha 0.01 | 0.00
+ 0.00    9   75 | alpha 0.01 | 0.01
+ 0.00    9   94 | alpha 0.01 | 0.01
+ 0.00   34   40 | alpha 0.04 | 0.04
+ 0.00   34   75 | alpha 0.04 | 0.04
+ 0.00   34   94 | alpha 0.04 | 0.04
+ 0.02    9   40 | alpha 0.01 | 0.01
+ 0.02    9   75 | alpha 0.01 | 0.04
+ 0.02    9   94 | alpha 0.01 | 0.07
+ 0.02   34   40 | alpha 0.04 | 0.41
+ 0.02   34   75 | alpha 0.04 | 0.61
+ 0.02   34   94 | alpha 0.04 | 0.77
+ 0.03    9   40 | alpha 0.01 | 0.14
+ 0.03    9   75 | alpha 0.01 | 0.32
+ 0.03    9   94 | alpha 0.01 | 0.39
+ 0.03   34   40 | alpha 0.04 | 0.96
+ 0.03   34   75 | alpha 0.04 | 1.00
+ 0.03   34   94 | alpha 0.04 | 1.00
+ 0.04    9   40 | alpha 0.01 | 0.81
+ 0.04    9   75 | alpha 0.01 | 0.98
+ 0.04    9   94 | alpha 0.01 | 0.99
+ 0.04   34   40 | alpha 0.04 | 1.00
+ 0.04   34   75 | alpha 0.04 | 1.00
+ 0.04   34   94 | alpha 0.04 | 1.00
