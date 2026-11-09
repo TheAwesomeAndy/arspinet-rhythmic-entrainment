@@ -94,7 +94,10 @@ finding.
 
 ## 7. Exclusions
 
-Trials without an unambiguous stimulus (Q2); participants with < [60] tempo-known trials;
+Weineck trials are used only when the stimulus is identified one-to-one by duration
+(TRF-based and tempo-tagging resolution of the rest failed their self-tests; see
+`weineck/README.md`); tempo-level analyses may add ambiguous trials whose candidates share
+a tempo. Participants with < [40] usable trials are excluded;
 channels flagged bad by amplitude criterion [> 5 SD]; the Weineck aux channel `33`.
 
 ## 8. Disclosure

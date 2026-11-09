@@ -37,11 +37,27 @@ downloaded first:
 | subj10 | 1 | 160 | 81 | 4 | 45 | 30 |
 | subj11 | 2 | 159 | 98 | 5 | 29 | 27 |
 
-Tempo is therefore known for 85/160 and 103/159 trials; the exact stimulus (needed for a
-TRF) for 81 and 98. Assigned per-tempo counts are subsets of the published `TRFcorr`
-counts for both participants. Open item: score the mixed-tempo and no-candidate trials
-against their candidates with the fitted TRF, or widen the tolerance, and validate on the
-published per-tempo counts.
+Each stimulus is presented once per participant, so matching must be one-to-one: 6 (subj10)
+and 4 (subj11) "unique" trials in fact shared a stimulus with another trial and are dropped,
+leaving **75/160 and 94/159 one-to-one trials** with a known stimulus. Note that the
+published `TRFcorr` counts are the authors' analysed trials after exclusions (e.g. 6 at
+tempo 1 where 7 were presented); consistency checks must use the presented set (the
+subgroup's feature counts).
+
+### Resolving the ambiguous trials: two methods tested, both fail (`resolve_trials.py`, `tempo_tiebreak_selftest.py`)
+
+| method | self-test (leave-one-out on one-to-one trials) | subj10 | subj11 |
+|---|---|---|---|
+| forward-TRF prediction score, candidates within 50 ms (2.3 on average) | accuracy vs chance | 0.52 vs 0.45 | 0.60 vs 0.45 |
+| same, candidates within 300 ms (5.2 on average) | accuracy vs chance | 0.37 vs 0.24 | 0.38 vs 0.23 |
+| tempo tagging of the trial's own EEG (3.5 candidate tempi) | accuracy vs chance | 0.43 vs 0.32 | 0.35 vs 0.32 |
+
+No score margin reaches 0.9 precision, so no resolved trial is accepted. Single-trial
+stimulus-EEG coupling (r ~ 0.04) and single-trial tagging on 32 channels are too weak to
+identify the stimulus or even its tempo. Consequence: Q2 analyses use the one-to-one trials
+only (~50-60 % of trials); tempo-level analyses may add the ambiguous trials whose
+candidates all share a tempo (4-5 per participant). The Hungarian assignment of the
+remainder reproduces the presented set exactly, which is a tautology, not a validation.
 
 ## Validation numbers (`align_scan.py`, `trf_align_check.py`)
 
