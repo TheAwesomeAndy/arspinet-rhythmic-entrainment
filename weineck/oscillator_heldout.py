@@ -61,51 +61,61 @@ def model_outputs(F64, name, params):
     return [(o - mu) / sd for o in outs]
 
 
-def build(F64, X64, name, params):
-    """Return per-trial lag matrices for a model: list of (T x p)."""
-    if name == 'd_short':
-        return [lagmat(F, LAG_SHORT) for F in F64]
-    if name == 'd_long':
-        return [lagmat(F, LAG_LONG) for F in F64]
-    if name in ('hopf', 'rf', 'lin'):
-        return [lagmat(o, LAG_OSC) for o in model_outputs(F64, name, params)]
-    if name in ('aug', 'aug_lin'):
-        base = 'hopf' if name == 'aug' else 'lin'
-        return [np.hstack([lagmat(o, LAG_OSC)[:, :-1], lagmat(F, LAG_SHORT)]) for o, F in zip(model_outputs(F64, base, params), F64)]
-    raise ValueError(name)
+class Config:
+    """Memory-light model configuration: keeps only pre-lag outputs per trial and rebuilds the
+    lag matrix for one trial on demand."""
+    def __init__(self, name, F64, params):
+        self.name = name
+        if name in ('d_short', 'd_long'):
+            self.parts = [('trf', F64, LAG_SHORT if name == 'd_short' else LAG_LONG)]
+        elif name in ('hopf', 'rf', 'lin'):
+            self.parts = [('osc', model_outputs(F64, name, params), LAG_OSC)]
+        elif name in ('aug', 'aug_lin'):
+            base = 'hopf' if name == 'aug' else 'lin'
+            self.parts = [('osc', model_outputs(F64, base, params), LAG_OSC), ('trf', F64, LAG_SHORT)]
+        else:
+            raise ValueError(name)
+        self.n = len(F64)
+
+    def xl(self, i):
+        mats = [lagmat(outs[i], spec) for (_, outs, spec) in self.parts]
+        if len(mats) == 1:
+            return mats[0]
+        return np.hstack([m[:, :-1] for m in mats[:-1]] + [mats[-1]])
 
 
-def tempo_moments(XL, X64, tidx, n_tempi=13):
-    p = XL[0].shape[1]; nch = X64[0].shape[1]
+def tempo_moments_cfg(cfg, X64, tidx, n_tempi=13):
+    p = cfg.xl(0).shape[1]; nch = X64[0].shape[1]
     A = np.zeros((n_tempi, p, p)); B = np.zeros((n_tempi, p, nch))
-    for Xl, Y, t in zip(XL, X64, tidx):
-        A[t] += Xl.T @ Xl; B[t] += Xl.T @ Y
+    for i in range(cfg.n):
+        Xl = cfg.xl(i); A[tidx[i]] += Xl.T @ Xl; B[tidx[i]] += Xl.T @ X64[i]
     return A, B
 
 
-def loto(XL, X64, tidx, fcidx, configs_XL):
+def loto(cfgs, X64, tidx, fcidx):
     """Leave-one-tempo-out with inner (config, lambda) selection on the training tempi.
-    configs_XL: dict config_key -> list of per-trial lag matrices. Returns per held-out tempo:
-    r_fc, chosen key/lambda, predictions and residuals for the held-out trials."""
+    cfgs: dict key -> Config. Returns per held-out tempo: r_fc, chosen key/lambda, predictions."""
     tempi_present = sorted(set(tidx)); results = {}
-    mom = {k: tempo_moments(xl, X64, tidx) for k, xl in configs_XL.items()}
+    mom = {k: tempo_moments_cfg(c, X64, tidx) for k, c in cfgs.items()}
+    by_t = {t: [n for n in range(len(X64)) if tidx[n] == t] for t in tempi_present}
     for ho in tempi_present:
         train_t = [t for t in tempi_present if t != ho]
         best = None
         for k, (A, B) in mom.items():
             A_tr = A.sum(0) - A[ho]; B_tr = B.sum(0) - B[ho]
+            xl_cache = {n: cfgs[k].xl(n) for t in train_t for n in by_t[t]}
             for lam in LAMS:
                 rs = []
                 for v in train_t:
-                    W = solve(A_tr - A[v], B_tr - B[v], lam)
-                    rs += [corr_cols(configs_XL[k][n] @ W, X64[n], fcidx) for n in range(len(X64)) if tidx[n] == v]
+                    Wv = solve(A_tr - A[v], B_tr - B[v], lam)
+                    rs += [corr_cols(xl_cache[n] @ Wv, X64[n], fcidx) for n in by_t[v]]
                 if best is None or np.mean(rs) > best[0]:
                     best = (float(np.mean(rs)), k, lam)
+            del xl_cache
         _, k, lam = best; A, B = mom[k]
-        W = solve(A.sum(0) - A[ho], B.sum(0) - B[ho], lam)
-        idx = [n for n in range(len(X64)) if tidx[n] == ho]
-        preds = {n: configs_XL[k][n] @ W for n in idx}
-        r = float(np.mean([corr_cols(preds[n], X64[n], fcidx) for n in idx]))
+        Wf = solve(A.sum(0) - A[ho], B.sum(0) - B[ho], lam)
+        preds = {n: cfgs[k].xl(n) @ Wf for n in by_t[ho]}
+        r = float(np.mean([corr_cols(preds[n], X64[n], fcidx) for n in by_t[ho]]))
         results[ho] = {'r_fc': r, 'config': k, 'lam': lam, 'inner_r': best[0], 'pred': preds}
     return results
 
@@ -129,25 +139,25 @@ def line_free_noise(E, rng):
 def run_participant(subj, X64, F64, fbeat, fcidx, drive, rng, simulate=None):
     tidx = [int(np.argmin(np.abs(GRID - f))) for f in fbeat]
     cfg = {
-        'hopf': {f"hopf|{i}": build(F64, X64, 'hopf', p) for i, p in enumerate(ob.HOPF_GRID)},
-        'rf': {f"rf|{i}": build(F64, X64, 'rf', p) for i, p in enumerate(ob.RF_GRID)},
-        'lin': {f"lin|{i}": build(F64, X64, 'lin', p) for i, p in enumerate(ob.LIN_GRID)},
-        'd_short': {'d_short': build(F64, X64, 'd_short', None)},
-        'd_long': {'d_long': build(F64, X64, 'd_long', None)},
-        'aug': {f"aug|{i}": build(F64, X64, 'aug', p) for i, p in enumerate(ob.HOPF_GRID)},
-        'aug_lin': {f"aug_lin|{i}": build(F64, X64, 'aug_lin', p) for i, p in enumerate(ob.LIN_GRID)},
+        'hopf': {f"hopf|{i}": Config('hopf', F64, p) for i, p in enumerate(ob.HOPF_GRID)},
+        'rf': {f"rf|{i}": Config('rf', F64, p) for i, p in enumerate(ob.RF_GRID)},
+        'lin': {f"lin|{i}": Config('lin', F64, p) for i, p in enumerate(ob.LIN_GRID)},
+        'd_short': {'d_short': Config('d_short', F64, None)},
+        'd_long': {'d_long': Config('d_long', F64, None)},
+        'aug': {f"aug|{i}": Config('aug', F64, p) for i, p in enumerate(ob.HOPF_GRID)},
+        'aug_lin': {f"aug_lin|{i}": Config('aug_lin', F64, p) for i, p in enumerate(ob.LIN_GRID)},
     }
     Y = X64
     if simulate:                                                 # validation worlds
         src = 'aug' if simulate == 'hopf' else 'd_short'
         key = list(cfg[src])[1] if simulate == 'hopf' else 'd_short'
-        XLs = cfg[src][key]; A, B = tempo_moments(XLs, X64, tidx); W = solve(A.sum(0), B.sum(0), 1.0)
+        c = cfg[src][key]; A, B = tempo_moments_cfg(c, X64, tidx); W = solve(A.sum(0), B.sum(0), 1.0)
         Y = []
-        for Xl, Yr in zip(XLs, X64):
-            P = Xl @ W; Y.append(P + line_free_noise(Yr - P, rng))
+        for i, Yr in enumerate(X64):
+            P = c.xl(i) @ W; Y.append(P + line_free_noise(Yr - P, rng))
     out = {'N': len(Y), 'tempi': {}, 'models': {}}
     for m, configs in cfg.items():
-        t0 = time.time(); res = loto(configs, Y, tidx, fcidx, configs)
+        t0 = time.time(); res = loto(configs, Y, tidx, fcidx)
         out['models'][m] = {}
         for ho, r in res.items():
             f = float(GRID[ho]); idx = sorted(r['pred'])
