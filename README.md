@@ -6,14 +6,21 @@ Standalone project, separate from the BIBM/SPL affective line. Nothing here touc
 
 ## Status (2026-11-09)
 
-The pre-registered two-stage study is complete; the underfitting check (exploratory) and
-the pre-registered robustness rows are next, per the publication plan.
+The pre-registered two-stage study is complete (H2 supported at stage 2; H1 and H3 equivalent). The
+exploratory follow-ups are complete too: the underfitting check (H2 not explained by underfitting),
+Theory 3 (oscillator encoding model not supported, no preferred-rate effect; validated in both
+directions), and the eleven-row robustness grid (no row flipped). Remaining publication-plan items:
+the held-out-tempo superposition test with a cycle-count control, the TNSRE figure set, and the
+NMED-T generalization.
 
 | Document | What it holds |
 |---|---|
 | [`docs/FRAMING.md`](docs/FRAMING.md) | the question, results with evidence labels, publication plan (TNSRE, then IEEE TCDS) and must-adds |
 | [`docs/PREREGISTRATION_DRAFT.md`](docs/PREREGISTRATION_DRAFT.md) | pre-registration v1.0, frozen at commit `935c80a`; addendum A1 (eight stage-1 participants, power at n = 8) recorded before the stage-1 group test |
 | [`docs/STAGE1_RESULTS.md`](docs/STAGE1_RESULTS.md) | stage 1 (8 participants): H2 not supported at alpha 0.01 (p = 0.055), inconclusive below a 4 % component; stage 2 proceeded unconditionally |
+| [`docs/UNDERFIT_CHECK.md`](docs/UNDERFIT_CHECK.md) | exploratory: H2 not explained by underfitting (linear-world residual delta 0.039 vs real 0.228; pooled 33-participant TRF leaves it unchanged) |
+| [`docs/OSCILLATOR_DECISION_RULE.md`](docs/OSCILLATOR_DECISION_RULE.md), [`docs/THEORY3_RESULTS.md`](docs/THEORY3_RESULTS.md), [`docs/lit_oscillator_models.md`](docs/lit_oscillator_models.md) | exploratory Theory 3: Hopf / resonate-and-fire / linear oscillator banks vs TRF kernels at held-out tempi; rule fixed in advance; NOT SUPPORTED, no preferred-rate effect; recovery and false-positive worlds; literature |
+| [`docs/ROBUSTNESS_PLAN.md`](docs/ROBUSTNESS_PLAN.md), [`docs/ROBUSTNESS_RESULTS.md`](docs/ROBUSTNESS_RESULTS.md) | exploratory robustness grid (seeds, rho, beta, TRF variants, IAAFT): no row flipped |
 | [`docs/STAGE2_RESULTS.md`](docs/STAGE2_RESULTS.md) | stage 2 (34 participants): H2 supported (residual beat-locked power beyond the four-feature TRF, median delta 0.228, 31/34 positive, p < 1e-4); H1 and H3 equivalent to the linear statistic; shuffled-weight reservoir matches; 13-tempo curve |
 | [`WEEK1_ASSESSMENT.md`](WEEK1_ASSESSMENT.md) | the original literature-backed assessment of the proposal and the redesign |
 | `docs/lit_*.md` | three literature reviews (entrainment-vs-evoked debate; open music-EEG datasets; reservoir/EEG novelty) |
