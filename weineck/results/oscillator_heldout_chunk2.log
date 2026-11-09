@@ -625,3 +625,4 @@ subj 20: 106 trials, 13 tempi present
     20      lin: mean held-out r_fc +0.0288  (194s)
     20  d_short: mean held-out r_fc +0.0418  (10s)
     20   d_long: mean held-out r_fc +0.0375  (19s)
+    20      aug: mean held-out r_fc +0.0270  (339s)
