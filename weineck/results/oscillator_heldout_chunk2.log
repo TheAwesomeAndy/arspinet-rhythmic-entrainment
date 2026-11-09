@@ -1169,3 +1169,5 @@ subj 25: 105 trials, 13 tempi present
     25  d_short: mean held-out r_fc +0.0504  (7s)
     25   d_long: mean held-out r_fc +0.0473  (14s)
     25      aug: mean held-out r_fc +0.0311  (242s)
+    25  aug_lin: mean held-out r_fc +0.0427  (183s)
+subj 25 done in 963s
