@@ -3379,3 +3379,5 @@ Reading 0 ... 14047  =      0.000 ...    14.047 secs...
      lin held-out 2.25 Hz: median r_fc +0.0341 (lam 1.0)  (4084s)
      lin held-out 2.50 Hz: median r_fc +0.0230 (lam 1.0)  (4206s)
      lin held-out 2.75 Hz: median r_fc +0.0243 (lam 1.0)  (4327s)
+     lin held-out 3.00 Hz: median r_fc +0.0236 (lam 1.0)  (4450s)
+     lin held-out 3.25 Hz: median r_fc +0.0259 (lam 1.0)  (4579s)
