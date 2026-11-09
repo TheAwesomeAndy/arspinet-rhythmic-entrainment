@@ -3359,3 +3359,5 @@ Reading 0 ... 14047  =      0.000 ...    14.047 secs...
   d_long held-out 3.75 Hz: median r_fc +0.0345 (lam 0.1)  (1700s)
   d_long held-out 4.00 Hz: median r_fc +0.0388 (lam 0.1)  (1744s)
     hopf held-out 1.00 Hz: median r_fc +0.0424 (lam 1.0)  (1874s)
+    hopf held-out 1.25 Hz: median r_fc +0.0372 (lam 1.0)  (2005s)
+    hopf held-out 1.50 Hz: median r_fc +0.0293 (lam 1.0)  (2130s)
