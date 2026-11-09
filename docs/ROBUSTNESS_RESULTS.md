@@ -12,9 +12,9 @@ Rule (docs/ROBUSTNESS_PLAN.md): 'H2 robust' = residual delta > 0 with one-sided 
 | rho1.2 | 78 | +0.036 | +0.228 | 31 / 34 | 0.0000 | pass (-0.010) | pass (-0.003) | -0.003 | yes |
 | beta0.01 | 391 | +0.036 | +0.228 | 31 / 34 | 0.0000 | pass (+0.007) | pass (-0.010) | -0.004 | yes |
 | beta0.004 | 977 | +0.036 | +0.228 | 31 / 34 | 0.0000 | pass (-0.014) | pass (-0.006) | +0.001 | yes |
-| trf_flux | - | - | in progress (29/34) | | | | | | |
-| trf_long | - | - | in progress (25/34) | | | | | | |
-| iaaft | - | - | in progress (3/34) | | | | | | |
+| trf_flux | 78 | +0.037 | +0.238 | 30 / 34 | 0.0000 | pass (-0.005) | pass (-0.004) | -0.011 | yes |
+| trf_long | - | - | in progress (31/34) | | | | | | |
+| iaaft | - | - | in progress (5/34) | | | | | | |
 
 **H2 robust (rule): YES.**  **H1/H3 equivalence robust (rule): YES.**
 
