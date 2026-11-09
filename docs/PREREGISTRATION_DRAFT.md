@@ -175,3 +175,18 @@ Exploratory analyses already run are listed in `WEEK1_ASSESSMENT.md` and
    tempo-curve (Q1) log was likewise partially visible. These lines are exploratory until
    the group test is run exactly as frozen.
 5. All other rules, statistics, nulls, exclusions and bounds are unchanged.
+
+### A1-power (appended 2026-11-09; group lines in the run log at this moment: 1)
+
+Same pipeline as Section 5, stage-1 alpha 0.01, n = 8; 200 replicates per cell. Calibration mapping
+at this run: a = 0.03 -> delta 0.105, a = 0.04 -> delta 0.177.
+
+| a | stage 1: n = 8, alpha 0.01, N = 40 / 75 / 94 | stage 2: n = 34, alpha 0.04, N = 40 / 75 / 94 |
+|---|---|---|
+| 0.00 | 0.01 / 0.00 / 0.00 | 0.04 / 0.03 / 0.02 |
+| 0.03 | 0.16 / 0.34 / 0.38 | 0.96 / 1.00 / 1.00 |
+| 0.04 | 0.52 / 0.84 / 0.93 | 1.00 / 1.00 / 1.00 |
+
+Reading: with eight participants carrying 75-107 trials each, the stage-1 rule (p < 0.01) detects a
+component of a = 0.04 with power about 0.84-0.93 and a = 0.03 with 0.34-0.38; a null stage 1 is
+inconclusive below a = 0.04. The stage-1 decision rule is unchanged.
