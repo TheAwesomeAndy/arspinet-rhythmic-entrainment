@@ -96,6 +96,7 @@ def main():
             print(f"subj {s}: excluded ({len(X64)} trials)"); continue
         XL = build_XL(F64, cfg['feats'], cfg['tmax']); resid, rs = loo_residuals(X64, XL, fcidx)
         rng = np.random.RandomState(int(s))
+        resid = [r_[:min(len(d), len(r_))] for d, r_ in zip(drive, resid)]       # common length, as in q2_residual.py
         if a.row == 'iaaft':
             real = participant_scores(resid, fbeat, np.random.RandomState(int(s)))
             surr = []
@@ -108,6 +109,7 @@ def main():
         else:
             rows = []
             for d, r_, f in zip(drive, resid, fbeat):
+                n = min(len(d), len(r_)); d = d[:n]; r_ = r_[:n]          # common length, exactly as in q2_residual.py
                 rows.append({'f': f, 'drive': q2.stats_on(d, f, res, res_s, sos_env), 'resid': q2.stats_on(r_, f, res, res_s, sos_env)})
             N = len(rows); own = np.array([int(np.argmin(np.abs(GRID - r['f']))) for r in rows]); summ = {'N': N, 'heldout_r': float(np.mean(rs))}
             for src in ('drive', 'resid'):
