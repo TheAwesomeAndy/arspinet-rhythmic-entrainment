@@ -150,3 +150,28 @@ channels flagged bad by amplitude criterion (> 5 SD of the trial's channel-media
 
 Exploratory analyses already run are listed in `WEEK1_ASSESSMENT.md` and
 `pilot/RESULTS.md`; none used the Q2 residual statistic on real data.
+
+---
+
+## Addendum A1 (2026-11-09, recorded before the stage-1 group test was computed; group lines in the run log at this moment: 0)
+
+1. **Participant count.** Stage 1 comprises **eight** participants (subj 10, 11, 12, 13, 14,
+   16, 17, 18), not nine as written in Section 5. The frozen text lists the eight IDs
+   correctly; "nine" was a counting error by the analyst, discovered on independent review
+   before the group test. No participant was dropped or added. Subj 18 has three of four
+   recording blocks (an incomplete download) and is subject to the frozen 40-trial minimum
+   like everyone else.
+2. **Power at n = 8.** The Section 5 table was simulated at n = 9. It is being re-simulated
+   at n = 8 with the same pipeline and the stage-1 alpha of 0.01 (`calibration/power_q2.py
+   --alphas 8:0.01,34:0.04`); the numbers are appended below (A1-power) as soon as the run
+   finishes and before the group test is read. The stage-1 decision rule (p < 0.01) is
+   unchanged.
+3. **Stage-2 alpha.** Confirmed as already frozen: stage 2 tests all 34 participants at
+   alpha 0.04; the two looks spend 0.01 + 0.04 = 0.05 in total.
+4. **Disclosure.** At the time of this addendum the Q2 run log contained the per-participant
+   summary lines (shuffle-z per statistic) for subj 10-17, and the analyst had seen those for
+   subj 14, 16 and 17 while checking that the run was alive. No group statistic, no
+   participant-level p-value and no stage-1 decision had been computed or viewed. The
+   tempo-curve (Q1) log was likewise partially visible. These lines are exploratory until
+   the group test is run exactly as frozen.
+5. All other rules, statistics, nulls, exclusions and bounds are unchanged.
