@@ -97,6 +97,20 @@
    "median_H3_diff": -0.0097069390784668,
    "R_minus_Rs": -0.0038918049070914354,
    "H2_ok": true
+  },
+  "beta0.004": {
+   "n": 34,
+   "tau_ms": 976.5625,
+   "heldout_r": 0.03574504768810445,
+   "median_resid_delta": 0.2283059621647527,
+   "frac_positive": 0.9117647058823529,
+   "p_H2": 9.837094694375992e-09,
+   "H1_tost_pass": true,
+   "H3_tost_pass": true,
+   "median_H1_diff": -0.014493645058160282,
+   "median_H3_diff": -0.005964142097901387,
+   "R_minus_Rs": 0.0010850401260830249,
+   "H2_ok": true
   }
  },
  "H2_robust": true,

@@ -3400,3 +3400,5 @@ Reading 0 ... 14047  =      0.000 ...    14.047 secs...
  aug_lin held-out 1.00 Hz: median r_fc +0.0280 (lam 0.1)  (7272s)
  aug_lin held-out 1.25 Hz: median r_fc +0.0452 (lam 0.1)  (7438s)
  aug_lin held-out 1.50 Hz: median r_fc +0.0380 (lam 0.1)  (7601s)
+ aug_lin held-out 1.75 Hz: median r_fc +0.0411 (lam 0.1)  (7765s)
+ aug_lin held-out 2.00 Hz: median r_fc +0.0425 (lam 0.1)  (7904s)
