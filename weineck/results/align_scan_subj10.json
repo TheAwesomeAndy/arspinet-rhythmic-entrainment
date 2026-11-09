@@ -1,0 +1,72 @@
+{
+ "0.0": {
+  "spec_flux": {
+   "peak_z": -4.343878687151478,
+   "peak_lag_ms": 1000.0
+  },
+  "beat_onsets": {
+   "peak_z": -3.7841348599570876,
+   "peak_lag_ms": -351.5625
+  },
+  "envelope": {
+   "peak_z": -2.6359220536025116,
+   "peak_lag_ms": -343.75
+  }
+ },
+ "0.25": {
+  "spec_flux": {
+   "peak_z": 4.474324944342539,
+   "peak_lag_ms": 828.125
+  },
+  "beat_onsets": {
+   "peak_z": -3.432965191613914,
+   "peak_lag_ms": 843.75
+  },
+  "envelope": {
+   "peak_z": 2.4428439645833855,
+   "peak_lag_ms": -78.125
+  }
+ },
+ "0.5": {
+  "spec_flux": {
+   "peak_z": 5.463090672956342,
+   "peak_lag_ms": 574.21875
+  },
+  "beat_onsets": {
+   "peak_z": 4.2225076372515185,
+   "peak_lag_ms": 796.875
+  },
+  "envelope": {
+   "peak_z": -3.5148685855617994,
+   "peak_lag_ms": 738.28125
+  }
+ },
+ "0.75": {
+  "spec_flux": {
+   "peak_z": 5.642016089933374,
+   "peak_lag_ms": 449.21875
+  },
+  "beat_onsets": {
+   "peak_z": -4.641434807497995,
+   "peak_lag_ms": 343.75
+  },
+  "envelope": {
+   "peak_z": -3.3870397438783475,
+   "peak_lag_ms": 476.5625
+  }
+ },
+ "1.0": {
+  "spec_flux": {
+   "peak_z": 5.069724338372715,
+   "peak_lag_ms": 70.3125
+  },
+  "beat_onsets": {
+   "peak_z": -4.318096380110477,
+   "peak_lag_ms": 93.75
+  },
+  "envelope": {
+   "peak_z": -2.9266757105023506,
+   "peak_lag_ms": -46.875
+  }
+ }
+}
