@@ -1,1 +1,2 @@
   w=0.5 r=0.02 n=40 t=12 dataset 1/20: supported=False median delta_r +0.0009 p=0.273 realised r_short 0.0160 (49s)
+  w=0.5 r=0.02 n=40 t=12 dataset 2/20: supported=False median delta_r -0.0005 p=0.962 realised r_short 0.0164 (94s)
