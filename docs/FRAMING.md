@@ -90,10 +90,17 @@ addendum A1) was designed to be informative whichever way it came out; it has no
     participant slopes of the tagging statistic over tempo fall from +0.48 z/Hz (p = 0.0001) to
     +0.015 z/Hz (p = 0.37) for the drive, and the same for the reservoir unit-PC1. Beat-locked
     power is present at all 13 tempi; there is no evidence of a rate preference.
-11. **Identifiability map** (simulated, `docs/IDENTIFIABILITY_PLAN.md`): how large an oscillator
-    contribution the committed Theory 3 rule could detect at Weineck's SNR, trial count and tempo
-    count. Results in `docs/IDENTIFIABILITY_RESULTS.md` when the grid completes; this bounds what
-    the Theory 3 null in item 8 can mean.
+11. **Identifiability map: the committed held-out-tempo rule is conservative and nearly blind**
+    (simulated, `docs/IDENTIFIABILITY_RESULTS.md`, 94 cells x 20 datasets x 20 participants). At
+    Weineck's operating point (held-out r 0.04, 40 trials per tempo, 12 training tempi) the rule
+    reaches 80 % power only when the oscillator supplies about 89 % of the stimulus-locked amplitude
+    (99 % of the variance); the false-positive rate is 0.00 in all 18 evoked-only cells. The blind
+    spot does not move with an eightfold increase in SNR or trials or with 4 to 12 training tempi,
+    because the augmented model's penalty at w = 0 and its gain at w = 1 scale together and cancel at
+    w = 0.5. The Theory 3 null in item 8 therefore excludes only near-pure oscillator worlds; a mixed
+    world with an oscillator at half the amplitude would have produced the same null. This is the
+    methods contribution: a calibrated statement of what an encoding-model comparison can decide at
+    single-listen SNR.
 
 ## Interpretability as the lens (planned)
 

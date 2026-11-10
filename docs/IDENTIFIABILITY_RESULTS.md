@@ -72,7 +72,20 @@ Median delta r of the augmented model against the best TRF, by world:
 
 ## Training-tempi axis (r 0.04, 40 trials per tempo)
 
-TEMPI_AXIS_PLACEHOLDER
+Entries: rate (median delta r). 20 datasets per cell; leave-one-tempo-out over n + 1 tempi.
+
+| training tempi | w = 0 | 0.1 | 0.25 | 0.5 | 1.0 |
+|---|---|---|---|---|---|
+| 4 | 0.00 (-0.0097) | 0.00 (-0.0078) | 0.00 (-0.0056) | 0.00 (-0.0006) | 0.30 (+0.0083) |
+| 8 | 0.00 (-0.0076) | 0.00 (-0.0064) | 0.00 (-0.0041) | 0.00 (+0.0004) | 1.00 (+0.0077) |
+| 12 (Weineck) | 0.00 (-0.0067) | 0.00 (-0.0056) | 0.00 (-0.0038) | 0.00 (-0.0000) | 1.00 (+0.0069) |
+
+![training-tempi axis](figures/identifiability_tempi.png)
+
+Fewer training tempi lower the power for the oscillator-only world (0.30 at 4 tempi; the 20-participant
+Wilcoxon rarely clears p < 0.01 when the per-participant delta r is noisier) and deepen the augmented
+model's penalty at w = 0 (-0.010 at 4 tempi vs -0.007 at 12), but they do not move the crossing: the
+mixture at w = 0.5 sits at delta r = 0 on every row. The blind spot is the same with 4, 8 or 12 tempi.
 
 ## Limitations (stated, not corrected)
 

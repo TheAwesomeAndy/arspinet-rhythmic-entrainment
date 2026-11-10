@@ -94,12 +94,25 @@
    "r_target": 0.04,
    "trials_per_tempo": 40,
    "training_tempi": 4,
-   "datasets": 8,
+   "datasets": 20,
    "rate": 0.0,
    "kind": "false_positive",
-   "median_delta_r": -0.010101816562039127,
-   "realised_r_short": 0.03672749862968043,
-   "complete": false
+   "median_delta_r": -0.00971412763027307,
+   "realised_r_short": 0.03724288929853365,
+   "complete": true
+  },
+  {
+   "w": 0.0,
+   "variance_share": 0.0,
+   "r_target": 0.04,
+   "trials_per_tempo": 40,
+   "training_tempi": 8,
+   "datasets": 20,
+   "rate": 0.0,
+   "kind": "false_positive",
+   "median_delta_r": -0.007569938139202053,
+   "realised_r_short": 0.03872079350437914,
+   "complete": true
   },
   {
    "w": 0.0,
@@ -315,12 +328,25 @@
    "r_target": 0.04,
    "trials_per_tempo": 40,
    "training_tempi": 4,
-   "datasets": 6,
+   "datasets": 20,
    "rate": 0.0,
    "kind": "detection",
-   "median_delta_r": -0.008016121617743703,
-   "realised_r_short": 0.03463773978495247,
-   "complete": false
+   "median_delta_r": -0.00782882927103453,
+   "realised_r_short": 0.034713523855034734,
+   "complete": true
+  },
+  {
+   "w": 0.1,
+   "variance_share": 0.012195121951219514,
+   "r_target": 0.04,
+   "trials_per_tempo": 40,
+   "training_tempi": 8,
+   "datasets": 20,
+   "rate": 0.0,
+   "kind": "detection",
+   "median_delta_r": -0.006353335200908695,
+   "realised_r_short": 0.03758069135390297,
+   "complete": true
   },
   {
    "w": 0.1,
@@ -536,12 +562,25 @@
    "r_target": 0.04,
    "trials_per_tempo": 40,
    "training_tempi": 4,
-   "datasets": 5,
+   "datasets": 20,
    "rate": 0.0,
    "kind": "detection",
-   "median_delta_r": -0.005300357191246044,
-   "realised_r_short": 0.032304318102714266,
-   "complete": false
+   "median_delta_r": -0.005577963366610058,
+   "realised_r_short": 0.03230186181455806,
+   "complete": true
+  },
+  {
+   "w": 0.25,
+   "variance_share": 0.1,
+   "r_target": 0.04,
+   "trials_per_tempo": 40,
+   "training_tempi": 8,
+   "datasets": 20,
+   "rate": 0.0,
+   "kind": "detection",
+   "median_delta_r": -0.0041051864534677315,
+   "realised_r_short": 0.03510721526615943,
+   "complete": true
   },
   {
    "w": 0.25,
@@ -757,12 +796,25 @@
    "r_target": 0.04,
    "trials_per_tempo": 40,
    "training_tempi": 4,
-   "datasets": 4,
+   "datasets": 20,
    "rate": 0.0,
    "kind": "detection",
-   "median_delta_r": -2.2248299499163203e-05,
-   "realised_r_short": 0.029835761149818042,
-   "complete": false
+   "median_delta_r": -0.0005668682590320344,
+   "realised_r_short": 0.02917822279897774,
+   "complete": true
+  },
+  {
+   "w": 0.5,
+   "variance_share": 0.5,
+   "r_target": 0.04,
+   "trials_per_tempo": 40,
+   "training_tempi": 8,
+   "datasets": 20,
+   "rate": 0.0,
+   "kind": "detection",
+   "median_delta_r": 0.0003509166251742246,
+   "realised_r_short": 0.030914553921707014,
+   "complete": true
   },
   {
    "w": 0.5,
@@ -1029,6 +1081,32 @@
    "variance_share": 1.0,
    "r_target": 0.04,
    "trials_per_tempo": 40,
+   "training_tempi": 4,
+   "datasets": 20,
+   "rate": 0.3,
+   "kind": "detection",
+   "median_delta_r": 0.008332261154256162,
+   "realised_r_short": 0.026392732091919585,
+   "complete": true
+  },
+  {
+   "w": 1.0,
+   "variance_share": 1.0,
+   "r_target": 0.04,
+   "trials_per_tempo": 40,
+   "training_tempi": 8,
+   "datasets": 20,
+   "rate": 1.0,
+   "kind": "detection",
+   "median_delta_r": 0.007678007334914918,
+   "realised_r_short": 0.02862324142652584,
+   "complete": true
+  },
+  {
+   "w": 1.0,
+   "variance_share": 1.0,
+   "r_target": 0.04,
+   "trials_per_tempo": 40,
    "training_tempi": 12,
    "datasets": 20,
    "rate": 1.0,
@@ -1231,7 +1309,7 @@
   }
  },
  "false_positive_summary": {
-  "cells": 16,
+  "cells": 18,
   "max_rate": 0.0,
   "cells_above_0.05": []
  }
