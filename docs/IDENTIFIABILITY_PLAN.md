@@ -58,3 +58,11 @@ Weineck's operating point marked (`docs/figures/identifiability_*.png`); the hea
 interpolation of detection rate over w at the operating point, with the false-positive rate at
 that point stated beside it. If the false-positive rate exceeds 0.05 anywhere, that is reported as
 a property of the rule, not corrected.
+
+## Addendum (2026-11-10, after the five operating-point cells had run)
+
+At the operating point the detection rate was 0.00 at w in {0.1, 0.25, 0.5} and 1.00 at w = 1, so
+the 80 % point falls between w = 0.5 and 1 and a linear interpolation over that interval is coarse.
+Four refinement cells, w in {0.6, 0.7, 0.8, 0.9} at the operating point only, were added to the
+queue. The headline W is solved on the refined w grid; the coarse-grid interpolation (0.90) is
+reported beside it. No other cell and no model or rule was changed.
