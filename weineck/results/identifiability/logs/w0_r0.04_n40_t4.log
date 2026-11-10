@@ -1,2 +1,7 @@
   w=0.0 r=0.04 n=40 t=4 dataset 1/20: supported=False median delta_r -0.0084 p=1.000 realised r_short 0.0364 (24s)
   w=0.0 r=0.04 n=40 t=4 dataset 2/20: supported=False median delta_r -0.0112 p=1.000 realised r_short 0.0370 (44s)
+  w=0.0 r=0.04 n=40 t=4 dataset 3/20: supported=False median delta_r -0.0109 p=1.000 realised r_short 0.0377 (57s)
+  w=0.0 r=0.04 n=40 t=4 dataset 4/20: supported=False median delta_r -0.0083 p=1.000 realised r_short 0.0363 (70s)
+  w=0.0 r=0.04 n=40 t=4 dataset 5/20: supported=False median delta_r -0.0084 p=1.000 realised r_short 0.0343 (83s)
+  w=0.0 r=0.04 n=40 t=4 dataset 6/20: supported=False median delta_r -0.0103 p=1.000 realised r_short 0.0371 (96s)
+  w=0.0 r=0.04 n=40 t=4 dataset 7/20: supported=False median delta_r -0.0119 p=1.000 realised r_short 0.0358 (108s)
