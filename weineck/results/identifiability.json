@@ -1,0 +1,341 @@
+{
+ "plan": "docs/IDENTIFIABILITY_PLAN.md",
+ "calibration": {
+  "0.02": {
+   "gamma": 47.28057765582808,
+   "realised_r_oracle_gamma": 0.018916413636548935,
+   "realised_r": 0.0202270508147921
+  },
+  "0.04": {
+   "gamma": 24.504543289505854,
+   "realised_r_oracle_gamma": 0.039239856388469274,
+   "realised_r": 0.04048302421422871
+  },
+  "0.08": {
+   "gamma": 12.371554972322619,
+   "realised_r_oracle_gamma": 0.07943613737788083,
+   "realised_r": 0.08040109482826094
+  },
+  "0.16": {
+   "gamma": 6.0966264200527105,
+   "realised_r_oracle_gamma": 0.15815810995249657,
+   "realised_r": 0.1603649836868135
+  }
+ },
+ "cells": [
+  {
+   "w": 0.0,
+   "variance_share": 0.0,
+   "r_target": 0.02,
+   "trials_per_tempo": 20,
+   "training_tempi": 12,
+   "datasets": 20,
+   "rate": 0.0,
+   "kind": "false_positive",
+   "median_delta_r": -0.005720109207362415,
+   "realised_r_short": 0.01857063953620263,
+   "complete": true
+  },
+  {
+   "w": 0.0,
+   "variance_share": 0.0,
+   "r_target": 0.02,
+   "trials_per_tempo": 40,
+   "training_tempi": 12,
+   "datasets": 20,
+   "rate": 0.0,
+   "kind": "false_positive",
+   "median_delta_r": -0.005236404236377107,
+   "realised_r_short": 0.01955191192464771,
+   "complete": true
+  },
+  {
+   "w": 0.0,
+   "variance_share": 0.0,
+   "r_target": 0.02,
+   "trials_per_tempo": 80,
+   "training_tempi": 12,
+   "datasets": 1,
+   "rate": 0.0,
+   "kind": "false_positive",
+   "median_delta_r": -0.004321251943825041,
+   "realised_r_short": 0.020915941226352496,
+   "complete": false
+  },
+  {
+   "w": 0.0,
+   "variance_share": 0.0,
+   "r_target": 0.04,
+   "trials_per_tempo": 40,
+   "training_tempi": 12,
+   "datasets": 20,
+   "rate": 0.0,
+   "kind": "false_positive",
+   "median_delta_r": -0.006723160324052744,
+   "realised_r_short": 0.039786181982681926,
+   "complete": true
+  },
+  {
+   "w": 0.1,
+   "variance_share": 0.012195121951219514,
+   "r_target": 0.02,
+   "trials_per_tempo": 20,
+   "training_tempi": 12,
+   "datasets": 20,
+   "rate": 0.0,
+   "kind": "detection",
+   "median_delta_r": -0.0049373341985849,
+   "realised_r_short": 0.01772381318528803,
+   "complete": true
+  },
+  {
+   "w": 0.1,
+   "variance_share": 0.012195121951219514,
+   "r_target": 0.02,
+   "trials_per_tempo": 40,
+   "training_tempi": 12,
+   "datasets": 20,
+   "rate": 0.0,
+   "kind": "detection",
+   "median_delta_r": -0.004326677804602509,
+   "realised_r_short": 0.019144310269033078,
+   "complete": true
+  },
+  {
+   "w": 0.1,
+   "variance_share": 0.012195121951219514,
+   "r_target": 0.04,
+   "trials_per_tempo": 40,
+   "training_tempi": 12,
+   "datasets": 20,
+   "rate": 0.0,
+   "kind": "detection",
+   "median_delta_r": -0.005587680648915467,
+   "realised_r_short": 0.03829818402064182,
+   "complete": true
+  },
+  {
+   "w": 0.25,
+   "variance_share": 0.1,
+   "r_target": 0.02,
+   "trials_per_tempo": 20,
+   "training_tempi": 12,
+   "datasets": 20,
+   "rate": 0.0,
+   "kind": "detection",
+   "median_delta_r": -0.0033838571755082382,
+   "realised_r_short": 0.016162229689035648,
+   "complete": true
+  },
+  {
+   "w": 0.25,
+   "variance_share": 0.1,
+   "r_target": 0.02,
+   "trials_per_tempo": 40,
+   "training_tempi": 12,
+   "datasets": 1,
+   "rate": 0.0,
+   "kind": "detection",
+   "median_delta_r": -0.002455572515632892,
+   "realised_r_short": 0.017726612258679778,
+   "complete": false
+  },
+  {
+   "w": 0.25,
+   "variance_share": 0.1,
+   "r_target": 0.04,
+   "trials_per_tempo": 40,
+   "training_tempi": 12,
+   "datasets": 20,
+   "rate": 0.0,
+   "kind": "detection",
+   "median_delta_r": -0.0038496663395107588,
+   "realised_r_short": 0.03556148918158659,
+   "complete": true
+  },
+  {
+   "w": 0.5,
+   "variance_share": 0.5,
+   "r_target": 0.02,
+   "trials_per_tempo": 20,
+   "training_tempi": 12,
+   "datasets": 20,
+   "rate": 0.0,
+   "kind": "detection",
+   "median_delta_r": -0.0005029064593884912,
+   "realised_r_short": 0.014466173153820736,
+   "complete": true
+  },
+  {
+   "w": 0.5,
+   "variance_share": 0.5,
+   "r_target": 0.02,
+   "trials_per_tempo": 40,
+   "training_tempi": 12,
+   "datasets": 1,
+   "rate": 0.0,
+   "kind": "detection",
+   "median_delta_r": 0.0008875234026139737,
+   "realised_r_short": 0.016042699097041806,
+   "complete": false
+  },
+  {
+   "w": 0.5,
+   "variance_share": 0.5,
+   "r_target": 0.04,
+   "trials_per_tempo": 40,
+   "training_tempi": 12,
+   "datasets": 20,
+   "rate": 0.0,
+   "kind": "detection",
+   "median_delta_r": -2.28653633777701e-05,
+   "realised_r_short": 0.03240473276937515,
+   "complete": true
+  },
+  {
+   "w": 0.6,
+   "variance_share": 0.6923076923076923,
+   "r_target": 0.04,
+   "trials_per_tempo": 40,
+   "training_tempi": 12,
+   "datasets": 20,
+   "rate": 0.0,
+   "kind": "detection",
+   "median_delta_r": 0.0016486548752837147,
+   "realised_r_short": 0.03161955685787872,
+   "complete": true
+  },
+  {
+   "w": 0.7,
+   "variance_share": 0.8448275862068965,
+   "r_target": 0.04,
+   "trials_per_tempo": 40,
+   "training_tempi": 12,
+   "datasets": 20,
+   "rate": 0.0,
+   "kind": "detection",
+   "median_delta_r": 0.003195037421090172,
+   "realised_r_short": 0.03068784172511779,
+   "complete": true
+  },
+  {
+   "w": 0.8,
+   "variance_share": 0.9411764705882353,
+   "r_target": 0.04,
+   "trials_per_tempo": 40,
+   "training_tempi": 12,
+   "datasets": 20,
+   "rate": 0.15,
+   "kind": "detection",
+   "median_delta_r": 0.0047314787133816375,
+   "realised_r_short": 0.029616644739964813,
+   "complete": true
+  },
+  {
+   "w": 0.9,
+   "variance_share": 0.9878048780487805,
+   "r_target": 0.04,
+   "trials_per_tempo": 40,
+   "training_tempi": 12,
+   "datasets": 20,
+   "rate": 0.85,
+   "kind": "detection",
+   "median_delta_r": 0.00581168482979694,
+   "realised_r_short": 0.029921747443293595,
+   "complete": true
+  },
+  {
+   "w": 1.0,
+   "variance_share": 1.0,
+   "r_target": 0.02,
+   "trials_per_tempo": 20,
+   "training_tempi": 12,
+   "datasets": 20,
+   "rate": 0.6,
+   "kind": "detection",
+   "median_delta_r": 0.0036710033083160996,
+   "realised_r_short": 0.012323638049481262,
+   "complete": true
+  },
+  {
+   "w": 1.0,
+   "variance_share": 1.0,
+   "r_target": 0.02,
+   "trials_per_tempo": 40,
+   "training_tempi": 12,
+   "datasets": 1,
+   "rate": 1.0,
+   "kind": "detection",
+   "median_delta_r": 0.003947857508355522,
+   "realised_r_short": 0.01423318399707229,
+   "complete": false
+  },
+  {
+   "w": 1.0,
+   "variance_share": 1.0,
+   "r_target": 0.04,
+   "trials_per_tempo": 40,
+   "training_tempi": 12,
+   "datasets": 20,
+   "rate": 1.0,
+   "kind": "detection",
+   "median_delta_r": 0.006882925786571411,
+   "realised_r_short": 0.029375688383224872,
+   "complete": true
+  }
+ ],
+ "headline": {
+  "operating_point": {
+   "r_target": 0.04,
+   "trials_per_tempo": 40,
+   "training_tempi": 12
+  },
+  "rate_by_w": {
+   "0.0": 0.0,
+   "0.1": 0.0,
+   "0.25": 0.0,
+   "0.5": 0.0,
+   "0.6": 0.0,
+   "0.7": 0.0,
+   "0.8": 0.15,
+   "0.9": 0.85,
+   "1.0": 1.0
+  },
+  "false_positive_rate": 0.0,
+  "realised_r_short_by_w": {
+   "0.0": 0.039786181982681926,
+   "0.1": 0.03829818402064182,
+   "0.25": 0.03556148918158659,
+   "0.5": 0.03240473276937515,
+   "0.6": 0.03161955685787872,
+   "0.7": 0.03068784172511779,
+   "0.8": 0.029616644739964813,
+   "0.9": 0.029921747443293595,
+   "1.0": 0.029375688383224872
+  },
+  "median_delta_r_by_w": {
+   "0.0": -0.006723160324052744,
+   "0.1": -0.005587680648915467,
+   "0.25": -0.0038496663395107588,
+   "0.5": -2.28653633777701e-05,
+   "0.6": 0.0016486548752837147,
+   "0.7": 0.003195037421090172,
+   "0.8": 0.0047314787133816375,
+   "0.9": 0.00581168482979694,
+   "1.0": 0.006882925786571411
+  },
+  "W_80_percent_power_amplitude_share": 0.8928571428571429,
+  "W_80_percent_power_variance_share": 0.9858044164037856,
+  "W_80_coarse_grid": 0.9,
+  "W_80_coarse_by_cell": {
+   "r0.02_n20": null,
+   "r0.02_n40": 0.9,
+   "r0.04_n40": 0.9
+  }
+ },
+ "false_positive_summary": {
+  "cells": 3,
+  "max_rate": 0.0,
+  "cells_above_0.05": []
+ }
+}

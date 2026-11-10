@@ -21,14 +21,20 @@ def main():
         out['cells'].append({'w': k[0], 'variance_share': k[0] ** 2 / (k[0] ** 2 + (1 - k[0]) ** 2), 'r_target': k[1], 'trials_per_tempo': k[2], 'training_tempi': k[3], 'datasets': d['datasets_done'],
                              'rate': d['detection_rate'], 'kind': 'false_positive' if k[0] == 0 else 'detection', 'median_delta_r': d['median_delta_r'], 'realised_r_short': d['realised_r_short'], 'complete': d['datasets_done'] >= 20})
     # headline at the operating point
-    op = {w: cells.get((w,) + OP) for w in WS}
-    rates = [op[w]['detection_rate'] if op[w] else np.nan for w in WS]
-    head = {'operating_point': {'r_target': OP[0], 'trials_per_tempo': OP[1], 'training_tempi': OP[2]}, 'rate_by_w': dict(zip(map(str, WS), rates)), 'false_positive_rate': rates[0]}
-    ws = np.array(WS[1:]); rs = np.array(rates[1:])
-    if np.all(np.isfinite(rs)):
-        if rs.max() < 0.8: head['W_80_percent_power'] = None; head['note'] = f'detection rate never reaches 0.80 at the operating point (max {rs.max():.2f} at w = {ws[rs.argmax()]})'
-        else:
-            i = int(np.argmax(rs >= 0.8)); head['W_80_percent_power'] = float(ws[i]) if i == 0 else float(ws[i - 1] + (0.8 - rs[i - 1]) * (ws[i] - ws[i - 1]) / (rs[i] - rs[i - 1]))
+    def w80(ws, rs):
+        ws, rs = np.array(ws), np.array(rs)
+        if rs.max() < 0.8: return None
+        i = int(np.argmax(rs >= 0.8)); return float(ws[i]) if i == 0 else float(ws[i - 1] + (0.8 - rs[i - 1]) * (ws[i] - ws[i - 1]) / (rs[i] - rs[i - 1]))
+    wop = sorted(k[0] for k in cells if k[1:] == OP)                      # refined w grid at the operating point (plan addendum)
+    rates = [cells[(w,) + OP]['detection_rate'] for w in wop]
+    head = {'operating_point': {'r_target': OP[0], 'trials_per_tempo': OP[1], 'training_tempi': OP[2]}, 'rate_by_w': dict(zip(map(str, wop), rates)), 'false_positive_rate': cells[(0.0,) + OP]['detection_rate'] if (0.0,) + OP in cells else None,
+            'realised_r_short_by_w': {str(w): cells[(w,) + OP]['realised_r_short'] for w in wop}, 'median_delta_r_by_w': {str(w): cells[(w,) + OP]['median_delta_r'] for w in wop}}
+    pos = [(w, r) for w, r in zip(wop, rates) if w > 0]
+    if pos:
+        W = w80(*zip(*pos)); head['W_80_percent_power_amplitude_share'] = W; head['W_80_percent_power_variance_share'] = None if W is None else W ** 2 / (W ** 2 + (1 - W) ** 2)
+        coarse = [(w, r) for w, r in pos if w in WS]; head['W_80_coarse_grid'] = w80(*zip(*coarse)) if coarse else None
+    # W80 for every (r, n) at 12 tempi on the coarse w grid
+    head['W_80_coarse_by_cell'] = {f'r{r}_n{n}': w80(*zip(*[(w, cells[(w, r, n, 12)]['detection_rate']) for w in WS[1:] if (w, r, n, 12) in cells])) for r in RS for n in NS if all((w, r, n, 12) in cells for w in WS[1:])}
     out['headline'] = head
     fp = [c for c in out['cells'] if c['kind'] == 'false_positive' and c['complete']]
     out['false_positive_summary'] = {'cells': len(fp), 'max_rate': max([c['rate'] for c in fp], default=None), 'cells_above_0.05': [(c['r_target'], c['trials_per_tempo'], c['training_tempi'], c['rate']) for c in fp if c['rate'] > 0.05]}
@@ -53,7 +59,7 @@ def main():
     fig.savefig(f'{FIG}/identifiability_heatmap.png', dpi=150); plt.close(fig)
     # n-tempi axis and operating-point curve
     fig, axes = plt.subplots(1, 2, figsize=(9, 3.4), constrained_layout=True)
-    axes[0].plot(WS, rates, 'ko-'); axes[0].axhline(0.8, color='grey', ls='--'); axes[0].set_xlabel('w (amplitude share of the oscillator component)'); axes[0].set_ylabel('rate'); axes[0].set_title('operating point: r 0.04, 40 trials, 12 tempi'); axes[0].set_ylim(-0.02, 1.02)
+    axes[0].plot(wop, rates, 'ko-'); axes[0].axhline(0.8, color='grey', ls='--'); axes[0].set_xlabel('w (amplitude share of the oscillator component)'); axes[0].set_ylabel('rate'); axes[0].set_title('operating point: r 0.04, 40 trials, 12 tempi'); axes[0].set_ylim(-0.02, 1.02)
     for t, mk in zip(TS, ['s', '^', 'o']):
         rr = [cells[(w, 0.04, 40, t)]['detection_rate'] if (w, 0.04, 40, t) in cells else np.nan for w in WS]; axes[1].plot(WS, rr, marker=mk, color='k', ls='-' if t == 12 else ':', label=f'{t} training tempi')
     axes[1].axhline(0.8, color='grey', ls='--'); axes[1].legend(); axes[1].set_xlabel('w'); axes[1].set_title('training-tempi axis (r 0.04, 40 trials)'); axes[1].set_ylim(-0.02, 1.02)
