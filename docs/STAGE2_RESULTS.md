@@ -81,6 +81,11 @@ rises from 1-2 Hz to 3.75-4 Hz. Weineck et al. report TRF/SRC synchronization st
 correlation) and the discrepancy is recorded, not resolved. (Only 14 participants' subgroups
 include a tempo-known 1.00 Hz trial after one-to-one matching.)
 
+**Correction (2026-11-10, exploratory cycle-count control, `docs/CYCLE_COUNT_CONTROL.md`):** the rise
+toward 3.75-4 Hz does not survive scoring every tempo on the same number of beat cycles (participant
+slopes +0.48 z/Hz, p = 0.0001, full duration; +0.015 z/Hz, p = 0.37, fixed cycles). The curve above
+is the originally reported, duration-confounded one and is kept as reported.
+
 ## Pre-registered robustness rows still to run
 
 Seeds 7 and 99; rho in {0, 0.3, 1.2}; spectral-flux-only TRF; TRF lag range 0-600 ms; IAAFT

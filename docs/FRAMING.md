@@ -66,6 +66,35 @@ addendum A1) was designed to be informative whichever way it came out; it has no
    weight-shuffled control indistinguishable. The canonical reservoir's linear readout is a
    scaled copy of its drive in the beat band; "fixed weights" is a calibration statement.
 
+## Follow-up results (exploratory, after the stage-2 merge; pre-registration untouched)
+
+7. **Not underfitting** (simulated and measured, `docs/UNDERFIT_CHECK.md`): a linear world built
+   from the fitted kernels and the real stimulus features at the observed SNR leaves a residual
+   delta of 0.039 against the real 0.228; a pooled 33-participant TRF leaves the real result
+   unchanged (0.245). The residual is structure this linear encoding model misses, not noise from
+   a model fitted on too little data.
+8. **Theory 3 (oscillator encoding) not supported** (measured, rule fixed in advance,
+   `docs/THEORY3_RESULTS.md`): at held-out tempi, Hopf, resonate-and-fire and linear oscillator
+   banks added to the TRF do not predict EEG better than the TRF alone (median delta r = -0.010,
+   3/34 participants positive; group-level -0.002), and there is no preferred-rate effect. The
+   recovery and false-positive worlds behaved as required before the real data were touched.
+9. **Robustness grid: no row flipped** (`docs/ROBUSTNESS_RESULTS.md`). Audit: the H2 statistic is
+   the tagging of the TRF residual and never touches the reservoir, so the seed, rho and tau rows
+   are identical by construction and are labelled so; the reservoir-sensitive quantities are the
+   H1/H3 equivalence and R minus Rs, which also held. The IAAFT decomposition splits the residual
+   effect into a spectral part the surrogates keep (0.156) and a phase-dependent part they destroy
+   (0.045, 95 % CI [0.022, 0.072], 26/34 positive, p = 0.0003): the residual beat-locking is
+   nonlinear and predominantly spectral, with a smaller but reliable phase-coherent component.
+10. **The rise of the tempo curve toward 4 Hz is a cycle-count artefact**
+    (`docs/CYCLE_COUNT_CONTROL.md`). Scored on a fixed number of beat cycles per tempo, the
+    participant slopes of the tagging statistic over tempo fall from +0.48 z/Hz (p = 0.0001) to
+    +0.015 z/Hz (p = 0.37) for the drive, and the same for the reservoir unit-PC1. Beat-locked
+    power is present at all 13 tempi; there is no evidence of a rate preference.
+11. **Identifiability map** (simulated, `docs/IDENTIFIABILITY_PLAN.md`): how large an oscillator
+    contribution the committed Theory 3 rule could detect at Weineck's SNR, trial count and tempo
+    count. Results in `docs/IDENTIFIABILITY_RESULTS.md` when the grid completes; this bounds what
+    the Theory 3 null in item 8 can mean.
+
 ## Interpretability as the lens (planned)
 
 Per-unit analyses (which units carry the beat, at which harmonics, stable across tempi and
@@ -88,7 +117,7 @@ Target: **IEEE Transactions on Neural Systems and Rehabilitation Engineering (TN
 instrument-calibration and measurement-validity paper. Second choice: **IEEE Transactions on
 Cognitive and Developmental Systems**. Must-adds before submission, in order:
 
-1. **Underfitting check** (exploratory, labelled as such): (A) a group-level pooled TRF,
+1. **Underfitting check** (DONE, `docs/UNDERFIT_CHECK.md`; exploratory, labelled as such): (A) a group-level pooled TRF,
    leave-one-participant-out, same features and lags, with the Q2 residual statistic rerun;
    (B) the tagging statistic of the TRF prediction itself, to report how much of the drive's
    beat-locked power the linear model reproduces; (C) a linear-world simulation: fitted
@@ -97,15 +126,15 @@ Cognitive and Developmental Systems**. Must-adds before submission, in order:
    a linear-world residual delta comparable to 0.228 means H2 is explained by underfitting;
    a linear-world delta near zero against the real 0.228 means the residual is structure the
    linear model misses.
-2. **Held-out-tempo superposition test**, plus a cycle-count control on the tempo curve
+2. **Held-out-tempo superposition test** (DONE as Theory 3, `docs/THEORY3_RESULTS.md`; identifiability map in progress), plus a cycle-count control on the tempo curve (DONE, `docs/CYCLE_COUNT_CONTROL.md`: the rise does not survive)
    (the number of beat cycles per trial rises with tempo and could drive the rising tagging
    curve on its own).
-3. **Pre-registered robustness rows**: seeds 7 and 99; rho in {0, 0.3, 1.2}; spectral-flux-
+3. **Pre-registered robustness rows** (DONE, `docs/ROBUSTNESS_RESULTS.md`, no row flipped): seeds 7 and 99; rho in {0, 0.3, 1.2}; spectral-flux-
    only TRF; 0-600 ms lags; IAAFT surrogate of the residual; plus a beta / integration-time
    sweep (about 78, 390 and 980 ms).
 4. **A TNSRE-style figure set** built from the existing results JSON: calibration curves
    with the evoked-vs-oscillator indistinguishability panel; rejected nulls; NMED-T
-   single-listen table; the 13-tempo curve, drive vs reservoir; the Q2 residual result with
+   single-listen table; the 13-tempo curve, drive vs reservoir, with the cycle-count control; the identifiability heat map; the Q2 residual result with
    its inconclusive region and the underfitting check.
 5. **NMED-T generalization** of the Q2 pipeline (requires the ten tracks; alignment via the
    60-s click grid).
