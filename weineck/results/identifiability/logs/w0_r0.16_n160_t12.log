@@ -17,3 +17,5 @@
   w=0.0 r=0.16 n=160 t=12 dataset 17/20: supported=False median delta_r -0.0206 p=1.000 realised r_short 0.1594 (713s)
   w=0.0 r=0.16 n=160 t=12 dataset 18/20: supported=False median delta_r -0.0222 p=1.000 realised r_short 0.1593 (753s)
   w=0.0 r=0.16 n=160 t=12 dataset 19/20: supported=False median delta_r -0.0212 p=1.000 realised r_short 0.1583 (793s)
+  w=0.0 r=0.16 n=160 t=12 dataset 20/20: supported=False median delta_r -0.0208 p=1.000 realised r_short 0.1596 (835s)
+cell done: w=0.0 r=0.16 n=160 t=12: detection rate 0.00 (835s)
