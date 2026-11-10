@@ -1,0 +1,22 @@
+{
+ "w": 0.1,
+ "r_target": 0.04,
+ "trials": 20,
+ "ntempi": 12,
+ "gamma": 24.504543289505854,
+ "datasets_done": 1,
+ "detection_rate": 0.0,
+ "median_delta_r": -0.00506666754546467,
+ "realised_r_short": 0.03727008351273121,
+ "per_dataset": {
+  "supported": [
+   false
+  ],
+  "delta_r": [
+   -0.00506666754546467
+  ],
+  "r_short": [
+   0.03727008351273121
+  ]
+ }
+}
