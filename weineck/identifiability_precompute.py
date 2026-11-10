@@ -4,10 +4,10 @@
 Part A (--part stimuli): for a pool of real stimulus-feature vectors (up to 30 per tempo, all four
 subgroups), build the regressor matrices of the four compared models with the committed
 configurations and store, per stimulus, in float32 memmaps:
-    A_a  = Xa'Xa   (885x885)  Xa  = [Hopf-bank lags (780) | 4-feature TRF 0-400 ms with bias (105)]
-    A_al = Xal'Xal (885x885)  Xal = [linear-bank lags (780) | same TRF block (105)]
-    A_l  = Xl'Xl   (261x261)  Xl  = 4-feature TRF 0-1000 ms with bias
-    C_la = Xl'Xa   (261x885),  C_alh = Xlin'Xh (780x780)
+    A_a  = Xa'Xa   (949x949)  Xa  = [Hopf-bank lags (60 outputs x 14 lags = 840) | 4-feature TRF 0-400 ms, 27 lags, with bias (109)]
+    A_al = Xal'Xal (949x949)  Xal = [linear-bank lags (840) | same TRF block (109)]
+    A_l  = Xl'Xl   (261x261)  Xl  = 4-feature TRF 0-1000 ms with bias (65 lags)
+    C_la = Xl'Xa   (261x949),  C_alh = Xlin'Xh (840x840)
     noise bank: Xm' n_k for K unit-variance noise realisations per stimulus (pooled 1/f-like
     spectrum, no spectral lines), plus sum(n_k), sum(n_k^2), and T.
 Bias columns are last, so column sums and T are read off A directly. Hopf/linear outputs are
@@ -15,7 +15,7 @@ standardised over the whole pool (a stimulus-only, label-free scaling).
 
 Part B (--part kernels): for each of the 34 real participants, fit on all one-to-one trials, target =
 fronto-central channel mean of the z-scored 32-channel EEG at 64 Hz:
-    W_trf (105; lambda 1.0)   evoked kernel          W_osc (781; lambda 10.0)  Hopf-only kernel
+    W_trf (109; lambda 1.0)   evoked kernel          W_osc (841; lambda 10.0)  Hopf-only kernel
 and record the pooled residual spectrum shape used for the noise bank.
 """
 import argparse, json, os, sys, time
@@ -29,6 +29,7 @@ import oscillator_bank as ob
 
 FS = 64.0; OUT = '/home/user/arspinet-rhythmic-entrainment/weineck/results/identifiability'
 HOPF = ob.HOPF_GRID[0]; LIN = ob.LIN_GRID[2]; LAM_TRF = 1.0; LAM_OSC = 10.0; K_NOISE = 6; PER_TEMPO = 30
+NH = 60 * 14; NS = 4 * 27 + 1; NL = 4 * 65 + 1; NA = NH + NS   # 840, 109, 261, 949 (lag counts from lag_matrix at 64 Hz)
 
 
 def feat64(feats, i, j, k):
@@ -79,13 +80,13 @@ def main():
             z = np.load(f'{OUT}/noise_shape.npz'); fr, shape = z['fr'], z['shape']
         else:
             fr = np.linspace(0, 32, 257); shape = 1 / np.sqrt(np.maximum(fr, 0.25)); shape /= shape.mean(); print("WARNING: using 1/f noise shape (kernels part not run yet)")
-        n = len(pool); A_a = np.lib.format.open_memmap(f'{OUT}/A_a.npy', 'w+', np.float32, (n, 885, 885)); A_al = np.lib.format.open_memmap(f'{OUT}/A_al.npy', 'w+', np.float32, (n, 885, 885))
-        A_l = np.lib.format.open_memmap(f'{OUT}/A_l.npy', 'w+', np.float32, (n, 261, 261)); C_la = np.lib.format.open_memmap(f'{OUT}/C_la.npy', 'w+', np.float32, (n, 261, 885)); C_alh = np.lib.format.open_memmap(f'{OUT}/C_alh.npy', 'w+', np.float32, (n, 780, 780))
-        Bn_a = np.zeros((n, K_NOISE, 885), np.float32); Bn_al = np.zeros((n, K_NOISE, 885), np.float32); Bn_l = np.zeros((n, K_NOISE, 261), np.float32); nsum = np.zeros((n, K_NOISE)); nsq = np.zeros((n, K_NOISE)); Tn = np.zeros(n, int); tempo = np.zeros(n)
+        n = len(pool); A_a = np.lib.format.open_memmap(f'{OUT}/A_a.npy', 'w+', np.float32, (n, NA, NA)); A_al = np.lib.format.open_memmap(f'{OUT}/A_al.npy', 'w+', np.float32, (n, NA, NA))
+        A_l = np.lib.format.open_memmap(f'{OUT}/A_l.npy', 'w+', np.float32, (n, NL, NL)); C_la = np.lib.format.open_memmap(f'{OUT}/C_la.npy', 'w+', np.float32, (n, NL, NA)); C_alh = np.lib.format.open_memmap(f'{OUT}/C_alh.npy', 'w+', np.float32, (n, NH, NH))
+        Bn_a = np.zeros((n, K_NOISE, NA), np.float32); Bn_al = np.zeros((n, K_NOISE, NA), np.float32); Bn_l = np.zeros((n, K_NOISE, NL), np.float32); nsum = np.zeros((n, K_NOISE)); nsq = np.zeros((n, K_NOISE)); Tn = np.zeros(n, int); tempo = np.zeros(n)
         rng = np.random.RandomState(123)
         for q, ((i, j, k), F) in enumerate(zip(pool, F64)):
             Xs = lagmat(F, LAG_SHORT); Xl = lagmat(F, LAG_LONG); Xh = lagmat((H[q] - hmu) / hsd, LAG_OSC)[:, :-1]; Xlin = lagmat((L[q] - lmu) / lsd, LAG_OSC)[:, :-1]
-            Xa = np.hstack([Xh, Xs]); Xal = np.hstack([Xlin, Xs]); T = len(F)
+            Xa = np.hstack([Xh, Xs]); Xal = np.hstack([Xlin, Xs]); T = len(F); assert Xa.shape[1] == NA and Xl.shape[1] == NL and Xh.shape[1] == NH, (Xa.shape, Xl.shape, Xh.shape)
             A_a[q] = Xa.T @ Xa; A_al[q] = Xal.T @ Xal; A_l[q] = Xl.T @ Xl; C_la[q] = Xl.T @ Xa; C_alh[q] = Xlin.T @ Xh
             for kk in range(K_NOISE):
                 nz = make_noise(T, fr, shape, rng); Bn_a[q, kk] = Xa.T @ nz; Bn_al[q, kk] = Xal.T @ nz; Bn_l[q, kk] = Xl.T @ nz; nsum[q, kk] = nz.sum(); nsq[q, kk] = (nz ** 2).sum()

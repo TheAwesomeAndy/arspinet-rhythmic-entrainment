@@ -1,0 +1,10 @@
+pool: 388 stimuli over 13 tempi; bank outputs in 18s
+  stimulus 0/388 (18s)
+  stimulus 50/388 (28s)
+  stimulus 100/388 (36s)
+  stimulus 150/388 (43s)
+  stimulus 200/388 (50s)
+  stimulus 250/388 (56s)
+  stimulus 300/388 (62s)
+  stimulus 350/388 (68s)
+stimuli part done in 75s

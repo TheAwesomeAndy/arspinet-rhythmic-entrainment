@@ -1,0 +1,5 @@
+usage: identifiability_sim.py [-h] --w W --r R --trials TRIALS
+                              [--ntempi NTEMPI] [--datasets DATASETS]
+                              [--participants PARTICIPANTS] [--seed SEED]
+                              [--gamma GAMMA] [--calibrate] [--out OUT]
+identifiability_sim.py: error: the following arguments are required: --w
