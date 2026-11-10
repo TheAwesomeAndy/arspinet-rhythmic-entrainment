@@ -87,6 +87,14 @@ Wilcoxon rarely clears p < 0.01 when the per-participant delta r is noisier) and
 model's penalty at w = 0 (-0.010 at 4 tempi vs -0.007 at 12), but they do not move the crossing: the
 mixture at w = 0.5 sits at delta r = 0 on every row. The blind spot is the same with 4, 8 or 12 tempi.
 
+## Overlap of the two generating predictions (added 2026-11-10, after the grid)
+
+Pearson r between the evoked-kernel prediction (TRF) and the oscillator-kernel prediction (Hopf bank)
+on the real stimulus pool, one kernel pair per participant (34 pairs, 388 stimuli;
+`weineck/results/identifiability/prediction_overlap.json`): pooled over the pool, median 0.53
+(IQR 0.48 to 0.58, range 0.34 to 0.65); median within a stimulus 0.56. The two worlds share about a
+quarter of their variance, which is part of why a mixture is hard to tell from the evoked-only world.
+
 ## Limitations (stated, not corrected)
 
 * The simulated rule fixes lambda per model at the modal value chosen on the real data (10 for the
