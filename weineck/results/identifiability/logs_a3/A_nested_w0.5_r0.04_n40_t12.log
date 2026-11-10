@@ -1,3 +1,6 @@
   world A nested w=0.5 r=0.04 n=40 t=12 dataset 1/10: supported=False median delta_r -0.0007 p=0.861 realised r_short 0.0328 (559s)
   world A nested w=0.5 r=0.04 n=40 t=12 dataset 2/10: supported=False median delta_r +0.0007 p=0.029 realised r_short 0.0316 (1126s)
   world A nested w=0.5 r=0.04 n=40 t=12 dataset 3/10: supported=False median delta_r +0.0002 p=0.676 realised r_short 0.0326 (1698s)
+  world A nested w=0.5 r=0.04 n=40 t=12 dataset 4/10: supported=False median delta_r -0.0004 p=0.522 realised r_short 0.0328 (2260s)
+  world A nested w=0.5 r=0.04 n=40 t=12 dataset 5/10: supported=False median delta_r +0.0006 p=0.351 realised r_short 0.0313 (2818s)
+  world A nested w=0.5 r=0.04 n=40 t=12 dataset 6/10: supported=False median delta_r -0.0011 p=0.980 realised r_short 0.0328 (3372s)
