@@ -100,7 +100,8 @@ addendum A1) was designed to be informative whichever way it came out; it has no
     real pipeline's nested lambda selection (0.9-1.0), or with an oscillator restricted to its
     TRF-inexpressible part (80 % never reached). Addendum A3's pre-committed decision: the 0.89 headline
     stands as a property of the rule. What holds it there is the rule's second criterion, the Hopf bank
-    beating a linear oscillator bank.
+    beating a linear oscillator bank; near w = 1 that criterion passes only with the committed lambda pair
+    (10 for Hopf + TRF, 1 for linear bank + TRF), not with lambda 1 for both (criterion-2 diagnostic).
     (b) *Exploratory, outside the committed rule.* The comparison against the TRF alone (criterion 1)
     reaches 80 % power at about 47 % amplitude for TRF-inexpressible oscillatory structure (World C; 58 %
     in Worlds A and B). On the real data criterion 1 itself failed (median delta r -0.010, 3/34
