@@ -1,6 +1,3 @@
-C nested 0.7 10
-C nested 0.8 10
-C nested 0.9 10
 C nested 1 10
 A lampair 0.8 20
 A lampair 0.9 20

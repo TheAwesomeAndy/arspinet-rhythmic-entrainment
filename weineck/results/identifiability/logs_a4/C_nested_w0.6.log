@@ -5,3 +5,7 @@
   world C nested w=0.6 r=0.04 n=40 t=12 dataset 5/10: supported=False median delta_r +0.0053 p=0.000 realised r_short 0.0203 (2717s)
   world C nested w=0.6 r=0.04 n=40 t=12 dataset 6/10: supported=False median delta_r +0.0051 p=0.000 realised r_short 0.0205 (3244s)
   world C nested w=0.6 r=0.04 n=40 t=12 dataset 7/10: supported=False median delta_r +0.0060 p=0.000 realised r_short 0.0210 (3782s)
+  world C nested w=0.6 r=0.04 n=40 t=12 dataset 8/10: supported=False median delta_r +0.0074 p=0.000 realised r_short 0.0198 (4306s)
+  world C nested w=0.6 r=0.04 n=40 t=12 dataset 9/10: supported=False median delta_r +0.0054 p=0.000 realised r_short 0.0201 (4820s)
+  world C nested w=0.6 r=0.04 n=40 t=12 dataset 10/10: supported=False median delta_r +0.0050 p=0.000 realised r_short 0.0214 (5341s)
+cell done: world C nested w=0.6 r=0.04 n=40 t=12: detection rate 0.00 (5341s)
