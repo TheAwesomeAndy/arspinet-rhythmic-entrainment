@@ -1,0 +1,19 @@
+{
+ "participant": "10",
+ "trials": 75,
+ "length_differences_samples_256Hz": [
+  -4,
+  -2,
+  -1,
+  0,
+  1,
+  2,
+  3
+ ],
+ "delta_untruncated_recomputed": -0.08167146424503227,
+ "delta_truncated_recomputed": -0.05741718947292498,
+ "underfit_merged_value": -0.08167146424503227,
+ "stage2_value": -0.05741718947292498,
+ "trials_with_length_mismatch": 52,
+ "note": "underfit_check.py scores the TRF residual at its own length; q2_residual.py (stage 2) first truncates residual and 256 Hz drive to their common length. Recomputing participant 10 both ways reproduces both stored values exactly."
+}

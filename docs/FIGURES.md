@@ -37,7 +37,10 @@ real stimuli, noise matched to the observed held-out r). Real residual median
 0.039 [-0.032, 0.074], p(real > linear world) =
 7.3e-08: H2 is not explained by underfitting. The underfitting check
 recomputes the real-residual deltas in its own pipeline: same median as Fig. 2, per-participant values correlate at
-r = 0.999 (largest difference 0.024), so its interval differs slightly from Fig. 2's.
+r = 0.999 (largest difference 0.024, identical in 18/34), so its interval differs slightly from Fig. 2's. Confirmed cause:
+the underfitting check scores the residual at its own length, while stage 2 first truncates residual and 256 Hz drive
+to their common length (they differ by up to 4 samples, 16 ms); recomputing participant 10 both ways reproduces both
+stored values exactly (-0.0817 untruncated, -0.0574 truncated). [`residual_discrepancy_check.json`]
 [`underfit_merged.json: rows.*.delta, decision`; `figure_numbers.json: fig3`] (b) Residual delta split by IAAFT
 surrogates (200 per participant): spectral part retained by the surrogates, median 0.156
 [0.113, 0.231]; phase-dependent part (real minus surrogate mean), median
@@ -47,8 +50,8 @@ Wilcoxon p = 0.0003. [`robustness/iaaft.json: subjects.*.resid_N0_real.delta, ia
 
 **Fig. 4. The reservoir adds nothing over its linear readout (exploratory robustness rows).** (a) Median R minus
 shuffled-weight Rs on the residual per row, 95 % bootstrap CI; baseline -0.0045
-[-0.011, 0.006]. At rho 0 both reservoirs have no recurrence and the difference is zero by
-construction. (b) Median R in each row minus R in the rho 0 row for the same participant; baseline
+[-0.011, 0.006]. At rho 0 neither reservoir has recurrence, so R minus Rs is undefined by
+construction and the row is marked n/a. (b) Median R in each row minus R in the rho 0 row for the same participant (rho 0 row: reference, n/a); baseline
 -0.0035 [-0.016, 0.013]. (c) Per participant,
 R at rho 0.9 against R at rho 0 (r = 0.984). Shaded bands, +-0.10 delta.
 [`robustness/<row>.json: subjects.*.resid_R.delta, resid_Rs.delta`; `figure_numbers.json: fig4`]
@@ -85,5 +88,5 @@ at w = 1 over held-out r and trials per tempo, operating point circled. [`oscill
 CI; every non-IAAFT row has p < .01 (baseline 0.228 [0.121, 0.277]).
 Seed, rho and beta rows equal the baseline by construction: the H2 statistic is computed on the TRF residual and never
 passes through the reservoir. IAAFT row: median surrogate delta 0.156
-[0.113, 0.231]. (b) Median R minus Rs per row, 95 % bootstrap CI, all within +-0.10.
+[0.113, 0.231]. (b) Median R minus Rs per row, 95 % bootstrap CI, all within +-0.10; rho 0 row n/a (no recurrence by construction).
 [`robustness_table.json: rows`; `robustness/<row>.json`; `figure_numbers.json: fig7`]

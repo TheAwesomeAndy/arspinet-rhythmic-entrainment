@@ -40,7 +40,7 @@ generalization.
 
 | Folder | Contents |
 |---|---|
-| `weineck/` | Weineck, Wen & Henry (2022) loader and trial-to-stimulus matching (`README.md` there documents the data facts), ridge mTRF, shared tagging statistic and stimulus-label shuffle null (`tagging.py`), Q2 residual pipeline, 13-tempo curve, group merge; `results/` holds aggregate JSON only |
+| `weineck/` | Weineck, Wen & Henry (2022) loader and trial-to-stimulus matching (`README.md` there documents the data facts), ridge mTRF, shared tagging statistic and stimulus-label shuffle null (`tagging.py`), Q2 residual pipeline, 13-tempo curve, group merge; `results/` holds aggregate JSON only, with one exception: `results/fig1_traces.npz`, a single 15 s example trial (participant 10) for Fig. 1b; `figures/make_figures.py` builds the TNSRE figure set |
 | `calibration/` | synthetic calibration of all detectors (`RESULTS.md`), Q2 power simulations (false-positive and power tables at the stage alphas) |
 | `pilot/` | NMED-T feasibility pilot and the ten-song single-listen table (`RESULTS.md`) |
 

@@ -52,9 +52,15 @@ def box(ax, xy, w, h, text, fc='white', ec='black'):
 def arrow(ax, a, b): ax.add_patch(FancyArrowPatch(a, b, arrowstyle='-|>', mutation_scale=7, lw=0.7, color='black'))
 
 
+TRACES = f'{RES}/fig1_traces.npz'
+
+
 def example_traces():
     """Participant 10, one tempo-known trial near 2 Hz: beat feature, FC EEG, leave-one-trial-out TRF prediction, residual,
-    reservoir unit-PC1 driven by the residual (as in q2_residual.stats_on). Requires the raw data; returns None otherwise."""
+    reservoir unit-PC1 driven by the residual (as in q2_residual.stats_on). Read from weineck/results/fig1_traces.npz; if that
+    file is absent, computed once from the raw data and saved there (--rebuild-traces forces recomputation)."""
+    if os.path.exists(TRACES) and '--rebuild-traces' not in sys.argv:
+        z = np.load(TRACES); return {k: (float(z[k]) if z[k].ndim == 0 else z[k]) for k in z.files}
     data = '/home/user/data_local/weineck2022'
     feats_mat = glob.glob('/tmp/claude-0/*/c557f3fa-*/scratchpad/weineck/small/SourceData__Figure1_SourceData1.mat') + glob.glob(f'{ROOT}/../data_local/weineck_features/SourceData__Figure1_SourceData1.mat')
     if not (os.path.isdir(data) and feats_mat): return None
@@ -70,7 +76,8 @@ def example_traces():
     W = solve(A, B, 1.0); P = XL[n] @ W; y = X64[n][:, fcidx].mean(1); p = P[:, fcidx].mean(1); r = y - p
     r256 = resample_poly(r, 4, 1); r256 = (r256 - r256.mean()) / (r256.std() + 1e-12); S = LIFReservoir(seed=42).forward(r256)
     U, s_, _ = np.linalg.svd(S - S.mean(0), full_matrices=False); pc = U[:, 0] * s_[0]
-    return {'f': float(fbeat[n]), 'beat': F64[n][:, 1], 'y': y, 'p': p, 'r': r, 'pc1': resample_poly(pc, 1, 4)}
+    tr = {'f': float(fbeat[n]), 'beat': F64[n][:, 1], 'y': y, 'p': p, 'r': r, 'pc1': resample_poly(pc, 1, 4)}
+    np.savez(TRACES, **tr); return tr
 
 
 def fig1():
@@ -180,6 +187,9 @@ def fig4(rd):
     for i, r in enumerate(ROWS):
         y = len(ROWS) - 1 - i; d1 = rd[r]['R'] - rd[r]['Rs']; d2 = rd[r]['R'] - np.array([base0[s] for s in rd[r]['subs']])
         for ax, d, key, col in [(a, d1, 'R_minus_Rs', COL['Rs']), (b, d2, 'R_minus_R_rho0', COL['R'])]:
+            if r == 'rho0':                            # no recurrence in either reservoir (or no difference to itself): undefined, not zero
+                txt = 'n/a (no recurrence by construction)' if key == 'R_minus_Rs' else 'n/a (reference row)'
+                NUM['fig4'][key][r] = txt; ax.text(0, y, txt, ha='center', va='center', fontsize=5.2, color='#555555'); continue
             ci = boot_ci(d); m = float(np.median(d)); NUM['fig4'][key][r] = {'median': m, 'ci95_boot': ci}
             ax.plot(ci, [y, y], color=col, lw=2); ax.plot(m, y, 'o', color='black', ms=2.5)
     for ax, t in [(a, 'R minus shuffled-weight Rs'), (b, 'R minus R at rho 0')]:
@@ -252,8 +262,11 @@ def fig7(rd):
         d = sur if r == 'iaaft' else rd[r]['H2']; ci = boot_ci(d); m = float(np.median(d)); NUM['fig7']['H2'][r] = {'median': m, 'ci95_boot': ci, 'p_H2': table[r].get('p_H2') if r != 'iaaft' else table[r].get('p_iaaft_gt0')}
         a.plot(ci, [y, y], color=COL['env'] if r == 'iaaft' else COL['L'], lw=2); a.plot(m, y, 'o' if r != 'iaaft' else 'D', color='black', ms=2.5)
         if r != 'iaaft':
-            d2 = rd[r]['R'] - rd[r]['Rs']; ci2 = boot_ci(d2); m2 = float(np.median(d2)); NUM['fig7']['R_minus_Rs'][r] = {'median': m2, 'ci95_boot': ci2}
-            b.plot(ci2, [y, y], color=COL['Rs'], lw=2); b.plot(m2, y, 'o', color='black', ms=2.5)
+            if r == 'rho0':
+                NUM['fig7']['R_minus_Rs'][r] = 'n/a (no recurrence by construction)'; b.text(0, y, 'n/a (no recurrence by construction)', ha='center', va='center', fontsize=5.2, color='#555555')
+            else:
+                d2 = rd[r]['R'] - rd[r]['Rs']; ci2 = boot_ci(d2); m2 = float(np.median(d2)); NUM['fig7']['R_minus_Rs'][r] = {'median': m2, 'ci95_boot': ci2}
+                b.plot(ci2, [y, y], color=COL['Rs'], lw=2); b.plot(m2, y, 'o', color='black', ms=2.5)
     a.axvline(0, color='grey', lw=0.6); a.set_yticks(range(len(rows))); a.set_yticklabels([ROWLAB[r] for r in rows[::-1]], fontsize=5.8); a.set_xlabel('median residual delta (H2)\n95 % bootstrap CI'); a.set_title('H2 per row (IAAFT: surrogate delta)', loc='left'); lab(a, 'a')
     b.set_xticks([-0.1, -0.05, 0, 0.05, 0.1]); b.axvline(0, color='grey', lw=0.6); b.axvspan(-0.10, 0.10, color='#EEEEEE', zorder=0); b.set_xlabel('median R minus Rs\n95 % bootstrap CI'); b.set_title('reservoir vs shuffled weights', loc='left'); lab(b, 'b')
     fig.tight_layout(); save(fig, 'fig7_robustness')
@@ -310,7 +323,10 @@ real stimuli, noise matched to the observed held-out r). Real residual median
 {f3['real_vs_linear_world']['median_linear_world']:.3f} {ci(f3['linear_world_median_ci95_boot'])}, p(real > linear world) =
 {f3['real_vs_linear_world']['p_real_gt_linear_world']:.1e}: H2 is not explained by underfitting. The underfitting check
 recomputes the real-residual deltas in its own pipeline: same median as Fig. 2, per-participant values correlate at
-r = 0.999 (largest difference 0.024), so its interval differs slightly from Fig. 2's.
+r = 0.999 (largest difference 0.024, identical in 18/34), so its interval differs slightly from Fig. 2's. Confirmed cause:
+the underfitting check scores the residual at its own length, while stage 2 first truncates residual and 256 Hz drive
+to their common length (they differ by up to 4 samples, 16 ms); recomputing participant 10 both ways reproduces both
+stored values exactly (-0.0817 untruncated, -0.0574 truncated). [`residual_discrepancy_check.json`]
 [{k('underfit_merged.json: rows.*.delta, decision')}; {k('figure_numbers.json: fig3')}] (b) Residual delta split by IAAFT
 surrogates (200 per participant): spectral part retained by the surrogates, median {f3['iaaft']['spectral_median']:.3f}
 {ci(f3['iaaft']['spectral_ci95_boot'])}; phase-dependent part (real minus surrogate mean), median
@@ -320,8 +336,8 @@ Wilcoxon p = {f3['iaaft']['p']:.4f}. [{k('robustness/iaaft.json: subjects.*.resi
 
 **Fig. 4. The reservoir adds nothing over its linear readout (exploratory robustness rows).** (a) Median R minus
 shuffled-weight Rs on the residual per row, 95 % bootstrap CI; baseline {f4['R_minus_Rs']['baseline']['median']:+.4f}
-{ci(f4['R_minus_Rs']['baseline']['ci95_boot'])}. At rho 0 both reservoirs have no recurrence and the difference is zero by
-construction. (b) Median R in each row minus R in the rho 0 row for the same participant; baseline
+{ci(f4['R_minus_Rs']['baseline']['ci95_boot'])}. At rho 0 neither reservoir has recurrence, so R minus Rs is undefined by
+construction and the row is marked n/a. (b) Median R in each row minus R in the rho 0 row for the same participant (rho 0 row: reference, n/a); baseline
 {f4['R_minus_R_rho0']['baseline']['median']:+.4f} {ci(f4['R_minus_R_rho0']['baseline']['ci95_boot'])}. (c) Per participant,
 R at rho 0.9 against R at rho 0 (r = {f4['baseline_vs_rho0_corr']:.3f}). Shaded bands, +-0.10 delta.
 [{k('robustness/<row>.json: subjects.*.resid_R.delta, resid_Rs.delta')}; {k('figure_numbers.json: fig4')}]
@@ -358,7 +374,7 @@ at w = 1 over held-out r and trials per tempo, operating point circled. [{k('osc
 CI; every non-IAAFT row has p < .01 (baseline {f7['H2']['baseline']['median']:.3f} {ci(f7['H2']['baseline']['ci95_boot'])}).
 Seed, rho and beta rows equal the baseline by construction: the H2 statistic is computed on the TRF residual and never
 passes through the reservoir. IAAFT row: median surrogate delta {f7['H2']['iaaft']['median']:.3f}
-{ci(f7['H2']['iaaft']['ci95_boot'])}. (b) Median R minus Rs per row, 95 % bootstrap CI, all within +-0.10.
+{ci(f7['H2']['iaaft']['ci95_boot'])}. (b) Median R minus Rs per row, 95 % bootstrap CI, all within +-0.10; rho 0 row n/a (no recurrence by construction).
 [{k('robustness_table.json: rows')}; {k('robustness/<row>.json')}; {k('figure_numbers.json: fig7')}]
 """
     open(f'{ROOT}/docs/FIGURES.md', 'w').write(t)

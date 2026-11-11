@@ -120,7 +120,7 @@ def heldout_r(blk, s0, Wst, rec_t):
     return np.mean(cov / np.sqrt(np.maximum(vp, 1e-30) * np.maximum(vy, 1e-30)[:, None]), 0)
 
 
-def simulate_participant(st, subj, w, gamma, n_trials, tempi, rng, world='A', nested=False, diag=False):
+def simulate_participant(st, subj, w, gamma, n_trials, tempi, rng, world='A', nested=False, diag=False, lampair=False):
     """One simulated participant: n_trials trials per tempo drawn with replacement from the pool of that tempo,
     y = alpha P_e + beta P_o + gamma n_k; leave-one-tempo-out fits of the four models; returns the mean over
     held-out tempi of the mean per-trial held-out r per model (and, if nested, the chosen lambdas)."""
@@ -153,8 +153,14 @@ def simulate_participant(st, subj, w, gamma, n_trials, tempi, rng, world='A', ne
     r_model = {M: np.zeros(nT) for M in P}; chosen = {M: [] for M in P}
     if not nested:
         if diag: r_model['a1'] = np.zeros(nT)
+        if lampair:
+            for k in ('a_1', 'a_10', 'al_1', 'al_10'): r_model[k] = np.zeros(nT)
         for ho in range(nT):
             b = blk_of(ho); s0 = st.block[tempi[ho]][0]
+            if lampair:                                # A4.2: both augmented models at lambda 1 and at lambda 10
+                for M in ('a', 'al'):
+                    A_, B_ = Atot[M] - Asum[M][ho], Btot[M] - Bsum[M][ho]
+                    rr = heldout_r(b[M], s0, np.stack([ridge(A_, B_, 1.0), ridge(A_, B_, 10.0)], 1), rec_M(ho, M)); r_model[f'{M}_1'][ho], r_model[f'{M}_10'][ho] = rr
             for M in P:
                 if M == 'a' and diag:                  # DIAGNOSTIC: aug at lambda 10 (committed) and at lambda 1
                     A_, B_ = Atot[M] - Asum[M][ho], Btot[M] - Bsum[M][ho]
@@ -196,6 +202,7 @@ def main():
     ap.add_argument('--gamma', type=float, default=None, help='noise scale; if omitted, read from calibration.json for --r'); ap.add_argument('--calibrate', action='store_true'); ap.add_argument('--out', default=None)
     ap.add_argument('--world', default='A', choices=['A', 'B', 'C']); ap.add_argument('--nested', action='store_true')
     ap.add_argument('--diag', action='store_true', help='criterion-2 diagnostic: store per-dataset aug-minus-linear-bank statistics and aug at lambda 1')
+    ap.add_argument('--lampair', action='store_true', help='A4.2: criterion 2 with both augmented models at lambda 1 and at lambda 10')
     a = ap.parse_args(); st = Store(); rng = np.random.RandomState(a.seed)
     tempi = GRID[np.round(np.linspace(0, 12, a.ntempi + 1)).astype(int)]
     if a.calibrate:
@@ -209,16 +216,25 @@ def main():
         cal[str(a.r)] = {'gamma': float(gam2), 'realised_r_oracle_gamma': r_real, 'realised_r': float(np.median(res2))}; json.dump(cal, open(f'{OUT}/calibration.json', 'w'), indent=1)
         print(f"calibration r*={a.r}: oracle gamma {gam:.3f} -> realised {r_real:.4f}; corrected gamma {gam2:.3f} -> realised {np.median(res2):.4f}"); return
     gamma = a.gamma if a.gamma is not None else json.load(open(f'{OUT}/calibration.json'))[str(a.r)]['gamma']
-    sub = 'cells_diag' if a.diag else ('cells' if (a.world == 'A' and not a.nested) else ('cells_nested' if a.nested else f'cells_{a.world}'))
-    out = a.out or (f'{OUT}/{sub}/{a.world}_w{a.w}_r{a.r}_n{a.trials}_t{a.ntempi}.json' if a.diag else None)
+    sub = 'cells_lampair' if a.lampair else ('cells_diag' if a.diag else ('cells' if (a.world == 'A' and not a.nested) else (('cells_nested' if a.world == 'A' else f'cells_nested_{a.world}') if a.nested else f'cells_{a.world}')))
+    out = a.out or (f'{OUT}/{sub}/{a.world}_w{a.w}_r{a.r}_n{a.trials}_t{a.ntempi}.json' if (a.diag or a.lampair) else None)
     out = out or f'{OUT}/{sub}/w{a.w}_r{a.r}_n{a.trials}_t{a.ntempi}.json'; os.makedirs(os.path.dirname(out), exist_ok=True)
-    t0 = time.time(); det = []; dmed = []; rreal = []; lams = []; diag = {}; c2 = []
+    t0 = time.time(); det = []; dmed = []; rreal = []; lams = []; diag = {}; c2 = []; P1 = []; P2 = []; DL = []; LP = []
     for d in range(a.datasets):
         subs = [st.ksubs[(d * a.participants + k) % len(st.ksubs)] for k in range(a.participants)]
-        part = [simulate_participant(st, s, a.w, gamma, a.trials, tempi, rng, a.world, a.nested, a.diag) for s in subs]
+        part = [simulate_participant(st, s, a.w, gamma, a.trials, tempi, rng, a.world, a.nested, a.diag, a.lampair) for s in subs]
         if a.world == 'C':
             for s in subs: diag[s] = st.pieces(s, 'C')['diag']
         sup, dm, p1, rs = decide(part); det.append(sup); dmed.append(dm); rreal.append(rs)
+        aug_ = np.array([p['a'] for p in part]); al_ = np.array([p['al'] for p in part]); best_ = np.maximum([p['s'] for p in part], [p['l'] for p in part])
+        P1.append(float(p1)); P2.append(float(wilcoxon(aug_ - al_, alternative='greater').pvalue) if np.any(aug_ != al_) else 1.0); DL.append(float(np.median(aug_ - al_)))
+        if a.lampair:
+            pw = lambda x, y: float(wilcoxon(x - y, alternative='greater').pvalue)
+            g = {k: np.array([p[k] for p in part]) for k in ('a_1', 'a_10', 'al_1', 'al_10')}
+            LP.append({'committed_10_vs_1': {'p2': pw(g['a_10'], g['al_1']), 'median': float(np.median(g['a_10'] - g['al_1']))},
+                       'both_1': {'p2': pw(g['a_1'], g['al_1']), 'median': float(np.median(g['a_1'] - g['al_1']))},
+                       'both_10': {'p2': pw(g['a_10'], g['al_10']), 'median': float(np.median(g['a_10'] - g['al_10']))},
+                       'criterion1_committed_p': float(p1), 'criterion1_committed_median': float(dm)})
         if a.nested: lams += [p['lams'] for p in part]
         if a.diag:
             aug = np.array([p['a'] for p in part]); al = np.array([p['al'] for p in part]); a1 = np.array([p['a1'] for p in part]); best = np.maximum([p['s'] for p in part], [p['l'] for p in part])
@@ -226,10 +242,11 @@ def main():
                        'median_aug_lam1_minus_lin': float(np.median(a1 - al)), 'p2_aug_lam1_vs_lin': float(wilcoxon(a1 - al, alternative='greater').pvalue), 'median_lin_minus_best': float(np.median(al - best)),
                        'median_r': {'s': float(np.median([p['s'] for p in part])), 'l': float(np.median([p['l'] for p in part])), 'a': float(np.median(aug)), 'a_lam1': float(np.median(a1)), 'al': float(np.median(al))}})
         print(f"  world {a.world}{' nested' if a.nested else ''} w={a.w} r={a.r} n={a.trials} t={a.ntempi} dataset {d+1}/{a.datasets}: supported={sup} median delta_r {dm:+.4f} p={p1:.3f} realised r_short {rs:.4f} ({time.time()-t0:.0f}s)", flush=True)
-        res = {'world': a.world, 'nested_lambda': a.nested, 'seed': a.seed, 'w': a.w, 'r_target': a.r, 'trials': a.trials, 'ntempi': a.ntempi, 'gamma': gamma, 'datasets_done': d + 1, 'detection_rate': float(np.mean(det)), 'median_delta_r': float(np.median(dmed)), 'realised_r_short': float(np.median(rreal)), 'per_dataset': {'supported': det, 'delta_r': dmed, 'r_short': rreal}}
+        res = {'world': a.world, 'nested_lambda': a.nested, 'seed': a.seed, 'w': a.w, 'r_target': a.r, 'trials': a.trials, 'ntempi': a.ntempi, 'gamma': gamma, 'datasets_done': d + 1, 'detection_rate': float(np.mean(det)), 'median_delta_r': float(np.median(dmed)), 'realised_r_short': float(np.median(rreal)), 'per_dataset': {'supported': det, 'delta_r': dmed, 'r_short': rreal, 'p1': P1, 'p2': P2, 'aug_minus_lin': DL}}
         if a.nested: res['chosen_lambda_counts'] = {M: {str(l): int(sum(x[M].count(l) for x in lams)) for l in LAMS} for M in P}
         if diag: res['world_C_diagnostics'] = diag
         if c2: res['criterion2_diagnostic'] = c2
+        if LP: res['lambda_pair'] = LP
         json.dump(res, open(out, 'w'), indent=1)
     print(f"cell done: world {a.world}{' nested' if a.nested else ''} w={a.w} r={a.r} n={a.trials} t={a.ntempi}: detection rate {np.mean(det):.2f} ({time.time()-t0:.0f}s)")
 

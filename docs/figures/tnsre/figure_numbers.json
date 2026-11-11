@@ -108,13 +108,7 @@
      0.019473553702236857
     ]
    },
-   "rho0": {
-    "median": 0.0,
-    "ci95_boot": [
-     0.0,
-     0.0
-    ]
-   },
+   "rho0": "n/a (no recurrence by construction)",
    "rho0.3": {
     "median": -0.0024211850697829843,
     "ci95_boot": [
@@ -180,13 +174,7 @@
      0.005730979623461141
     ]
    },
-   "rho0": {
-    "median": 0.0,
-    "ci95_boot": [
-     0.0,
-     0.0
-    ]
-   },
+   "rho0": "n/a (reference row)",
    "rho0.3": {
     "median": -0.0022475788164772748,
     "ci95_boot": [
@@ -585,13 +573,7 @@
      0.019473553702236857
     ]
    },
-   "rho0": {
-    "median": 0.0,
-    "ci95_boot": [
-     0.0,
-     0.0
-    ]
-   },
+   "rho0": "n/a (no recurrence by construction)",
    "rho0.3": {
     "median": -0.0024211850697829843,
     "ci95_boot": [
