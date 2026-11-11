@@ -14,7 +14,9 @@ construction; IAAFT decomposition: spectral 0.156, phase-dependent 0.045, p = 0.
 cycle-count control (the rise of the tempo curve toward 4 Hz does not survive a fixed cycle count),
 and the identifiability map (the committed Theory 3 rule has zero false positives but 80 % power only
 for an oscillator supplying about 89 % of the stimulus-locked amplitude at Weineck's operating point;
-the blind spot is independent of SNR, trial count and tempo count). Remaining publication-plan items:
+the blind spot is independent of SNR, trial count and tempo count, and addendum A3 found it survives
+power-matching, nested lambda selection and a TRF-inexpressible oscillator; the cause is the rule's
+Hopf-vs-linear-bank criterion). Remaining publication-plan items:
 the TNSRE figure set and the NMED-T generalization.
 
 | Document | What it holds |
@@ -26,7 +28,7 @@ the TNSRE figure set and the NMED-T generalization.
 | [`docs/OSCILLATOR_DECISION_RULE.md`](docs/OSCILLATOR_DECISION_RULE.md), [`docs/THEORY3_RESULTS.md`](docs/THEORY3_RESULTS.md), [`docs/lit_oscillator_models.md`](docs/lit_oscillator_models.md) | exploratory Theory 3: Hopf / resonate-and-fire / linear oscillator banks vs TRF kernels at held-out tempi; rule fixed in advance; NOT SUPPORTED, no preferred-rate effect; recovery and false-positive worlds; literature |
 | [`docs/ROBUSTNESS_PLAN.md`](docs/ROBUSTNESS_PLAN.md), [`docs/ROBUSTNESS_RESULTS.md`](docs/ROBUSTNESS_RESULTS.md) | exploratory robustness grid (seeds, rho, beta, TRF variants, IAAFT): no row flipped; audit of which rows can move; IAAFT spectral / phase decomposition |
 | [`docs/CYCLE_COUNT_CONTROL.md`](docs/CYCLE_COUNT_CONTROL.md) | exploratory: tempo curve rescored on a fixed number of beat cycles; the rise toward 4 Hz does not survive |
-| [`docs/IDENTIFIABILITY_PLAN.md`](docs/IDENTIFIABILITY_PLAN.md), [`docs/IDENTIFIABILITY_RESULTS.md`](docs/IDENTIFIABILITY_RESULTS.md) | exploratory methods contribution: simulated map of what the Theory 3 rule can detect (94 cells); 80 % power only at amplitude share 0.89 at Weineck's operating point, zero false positives, heat maps in `docs/figures/` |
+| [`docs/IDENTIFIABILITY_PLAN.md`](docs/IDENTIFIABILITY_PLAN.md), [`docs/IDENTIFIABILITY_RESULTS.md`](docs/IDENTIFIABILITY_RESULTS.md) | exploratory methods contribution: simulated map of what the Theory 3 rule can detect (94 cells plus addendum A3: power-matched, TRF-inexpressible and nested-lambda worlds); 80 % power only at amplitude share 0.89 at Weineck's operating point, zero false positives; figures in `docs/figures/` |
 | [`docs/STAGE2_RESULTS.md`](docs/STAGE2_RESULTS.md) | stage 2 (34 participants): H2 supported (residual beat-locked power beyond the four-feature TRF, median delta 0.228, 31/34 positive, p < 1e-4); H1 and H3 equivalent to the linear statistic; shuffled-weight reservoir matches; 13-tempo curve |
 | [`WEEK1_ASSESSMENT.md`](WEEK1_ASSESSMENT.md) | the original literature-backed assessment of the proposal and the redesign |
 | `docs/lit_*.md` | three literature reviews (entrainment-vs-evoked debate; open music-EEG datasets; reservoir/EEG novelty) |

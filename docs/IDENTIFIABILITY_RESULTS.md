@@ -59,6 +59,11 @@ Median delta r of the augmented model against the best TRF, by world:
    a penalty that scales with the SNR (-0.006 at r 0.02, -0.022 at r 0.16), and the gain from a true
    oscillator component scales the same way, so the two cancel at w close to 0.5 at every SNR and
    the one-sided test on "aug beats the best TRF" cannot fire until the oscillator share is near 0.9.
+   **Correction (2026-11-11, addendum A3):** the last clause is wrong. Parsed per dataset, the first
+   criterion (aug beats the best TRF, p < 0.01) already passes in 20 of 20 datasets at w = 0.6, 0.7
+   and 0.8 at the operating point. Between w = 0.6 and 0.9 the rule is held back by its second
+   criterion (Hopf-augmented model beats the linear-bank-augmented model, p < 0.05). The cancellation
+   at w close to 0.5 is correct and sets where criterion 1 starts to pass; see the A3 section.
 2. **The rule is conservative.** No evoked-only dataset triggered it anywhere (0 of 320 datasets).
 3. **What the Theory 3 null means.** `docs/THEORY3_RESULTS.md` reports "not supported" on the real
    data. By this map, that null excludes only worlds in which an oscillator supplies at least about
@@ -95,13 +100,94 @@ on the real stimulus pool, one kernel pair per participant (34 pairs, 388 stimul
 (IQR 0.48 to 0.58, range 0.34 to 0.65); median within a stimulus 0.56. The two worlds share about a
 quarter of their variance, which is part of why a mixture is hard to tell from the evoked-only world.
 
+## Addendum A3 (exploratory; plan and decision rule committed at `cf0a65e` before any A3 cell ran)
+
+World A is the grid above, unchanged. World B rescales the signal at every w to the variance of World
+A's w = 0 signal (constant total SNR). World C keeps only the part of the oscillator prediction that the
+short TRF design cannot express (OLS residual per participant kernel), power-matched as in B. The
+nested-lambda check reruns World A with lambda chosen per model and outer fold by inner
+leave-one-tempo-out over {0.1, 1, 10, 100, 1000}, as the real pipeline does (oscillator configuration
+fixed at the committed one). Every A3 cell reuses the seed of the World A cell with the same w, so the
+comparisons are paired on the same trials and noise. Code: `weineck/identifiability_sim.py` (`--world`,
+`--nested`), `weineck/run_identifiability_a3.sh`, `weineck/identifiability_merge_a3.py`; numbers in
+`weineck/results/identifiability.json`, key `A3`. Checks: World A reproduces the committed cells to
+1e-10; World B and World C at w = 0 are bit-identical to World A at w = 0.
+
+### Decision (rule applied verbatim)
+
+**W80 > 0.8 in World B, World C and the nested-lambda check: the 0.89 headline stands as a property of
+the rule.**
+
+| world (operating point) | W80 | bracket | false-positive rate [95 % CI] | datasets per w |
+|---|---|---|---|---|
+| A (committed) | 0.89 | 0.8-0.9 | 0.00 [0.00, 0.17] | 20 |
+| B (power-matched) | 0.92 | 0.9-1.0 | 0.00 [0.00, 0.17] | 20 |
+| C (TRF-inexpressible part only) | not reached (max 0.10) | - | 0.00 [0.00, 0.17] | 20 |
+| A, nested lambda | 0.96 | 0.9-1.0 | 0.00 [0.00, 0.31] | 10 |
+| A refined, r 0.08, 40 trials | 0.88 | 0.8-0.9 | 0.00 [0.00, 0.17] | 20 |
+| A refined, r 0.04, 160 trials | 0.89 | 0.8-0.9 | 0.00 [0.00, 0.17] | 20 |
+
+Detection rate by w at the operating point, 95 % Clopper-Pearson intervals in brackets:
+
+| w | A | B | C | A, nested lambda |
+|---|---|---|---|---|
+| 0 | 0.00 [0.00, 0.17] | 0.00 [0.00, 0.17] | 0.00 [0.00, 0.17] | 0.00 [0.00, 0.31] |
+| 0.1 | 0.00 [0.00, 0.17] | 0.00 [0.00, 0.17] | 0.00 [0.00, 0.17] | |
+| 0.25 | 0.00 [0.00, 0.17] | 0.00 [0.00, 0.17] | 0.00 [0.00, 0.17] | |
+| 0.5 | 0.00 [0.00, 0.17] | 0.00 [0.00, 0.17] | 0.00 [0.00, 0.17] | 0.00 [0.00, 0.31] |
+| 0.6 | 0.00 [0.00, 0.17] | 0.00 [0.00, 0.17] | 0.00 [0.00, 0.17] | |
+| 0.7 | 0.00 [0.00, 0.17] | 0.00 [0.00, 0.17] | 0.00 [0.00, 0.17] | |
+| 0.8 | 0.15 [0.03, 0.38] | 0.05 [0.00, 0.25] | 0.10 [0.01, 0.32] | |
+| 0.9 | 0.85 [0.62, 0.97] | 0.75 [0.51, 0.91] | 0.10 [0.01, 0.32] | 0.50 [0.19, 0.81] |
+| 1.0 | 1.00 [0.83, 1.00] | 1.00 [0.83, 1.00] | 0.05 [0.00, 0.25] | 1.00 [0.69, 1.00] |
+
+![A3](figures/identifiability_a3.png)
+
+Refined World A cells (rate at w = 0.6 / 0.7 / 0.8 / 0.9): r 0.08 with 40 trials 0.00 / 0.00 / 0.00 /
+1.00; r 0.04 with 160 trials 0.00 / 0.00 / 0.10 / 0.90. The 0.90 entries of the original map at these
+cells were interpolation; the real crossings are 0.88 and 0.89.
+
+**Nested lambda vs fixed lambda, paired on the same 10 datasets:** w = 0: 0.00 vs 0.00 (median delta r
+-0.0045 vs -0.0067); w = 0.5: 0.00 vs 0.00; w = 0.9: 0.50 vs 0.90 (+0.0050 vs +0.0060); w = 1: 1.00 vs
+1.00. Inner selection mostly chose lambda 1 for the Hopf-augmented model at w = 0 (fixed: 10), which
+shrinks its evoked-only penalty, and moved the linear-bank-augmented model from 0.1-1 up to 10 when an
+oscillator was present (fixed: 1), which makes the Hopf-vs-linear criterion harder to pass. Net effect:
+less sensitive, not more.
+
+**TRF-expressible fraction of the oscillator prediction** (R^2 of P_o on the TRF design, pooled over the
+388-stimulus pool, 34 kernels): short TRF (0-400 ms) median 0.62 (IQR 0.57-0.71, range 0.29-0.85); long
+TRF (0-1000 ms) median 0.82 (IQR 0.78-0.88, range 0.47-0.93). The evoked and oscillator generating
+predictions correlate at a median r of 0.53.
+
+### Diagnostic outside the committed rule: which criterion fails
+
+The rule says "oscillator supported" when (1) the Hopf-augmented model beats the best TRF (median delta r
+> 0, one-sided Wilcoxon p < 0.01) and (2) it beats the linear-bank-augmented model (p < 0.05). Parsed from
+the per-dataset log lines, the fraction of datasets passing criterion 1 alone:
+
+| w | A | B | C | A, nested lambda |
+|---|---|---|---|---|
+| 0-0.25 | 0.00 | 0.00 | 0.00 | 0.00 (w = 0) |
+| 0.5 | 0.00 | 0.00 | 0.90 | 0.00 |
+| 0.6 | 1.00 | 0.95 | 1.00 | |
+| 0.7-1.0 | 1.00 | 1.00 | 1.00 | 1.00 (w = 0.9, 1) |
+| W80, criterion 1 only | 0.58 | 0.58 | 0.47 | 0.5-0.9 |
+
+Reading, labelled as inference: the comparison against the TRF is not what makes the rule blind between
+w = 0.6 and 0.9. Criterion 1 crosses 80 % at about 0.58 in Worlds A and B and at about 0.47 in World C,
+so the test does see oscillator structure the TRF cannot express once it supplies about half the
+amplitude. What holds the full rule back is criterion 2, the requirement that the Hopf bank beat a linear
+oscillator bank. In World C that requirement almost never passes, even at w = 1: the TRF-inexpressible
+part of the Hopf prediction is fitted about as well by the linear bank. I don't know from these runs why
+criterion 2 passes at w = 1 in World A but not in World C; the per-dataset aug-minus-aug_lin statistic was
+not stored. This diagnostic is not part of the committed rule and does not change the A3 decision above.
+
 ## Limitations (stated, not corrected)
 
-* The simulated rule fixes lambda per model at the modal value chosen on the real data (10 for the
-  augmented Hopf model, 1 for the others); the real pipeline selects lambda in an inner loop from
-  {0.1, 1, 10, 100, 1000}. A larger inner lambda would shrink the augmented model's penalty at w = 0
-  and could move the blind spot downward; the map is therefore a statement about the rule with the
-  lambdas it actually chose, not a bound over all lambdas.
+* The main grid fixes lambda per model at the modal value chosen on the real data (10 for the
+  augmented Hopf model, 1 for the others). Addendum A3 checked this at the operating point: nested
+  selection shrinks the evoked-only penalty but makes the Hopf-vs-linear criterion harder, and W80
+  moves from 0.89 to the 0.9-1.0 bracket (10 datasets per w).
 * 20 datasets per cell (the brief asked for 50): a rate of 0.00 over 20 datasets has a one-sided
   97.5 % upper bound of about 0.17; the refinement cells at w = 0.8 and 0.9 (0.15 and 0.85) carry
   binomial standard errors of about 0.08.
