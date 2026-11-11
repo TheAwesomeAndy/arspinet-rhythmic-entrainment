@@ -7,3 +7,5 @@
   world A nested w=0.7 r=0.04 n=40 t=12 dataset 7/10: supported=False median delta_r +0.0034 p=0.000 realised r_short 0.0309 (3833s)
   world A nested w=0.7 r=0.04 n=40 t=12 dataset 8/10: supported=False median delta_r +0.0027 p=0.000 realised r_short 0.0306 (4363s)
   world A nested w=0.7 r=0.04 n=40 t=12 dataset 9/10: supported=False median delta_r +0.0031 p=0.000 realised r_short 0.0323 (4887s)
+  world A nested w=0.7 r=0.04 n=40 t=12 dataset 10/10: supported=False median delta_r +0.0029 p=0.000 realised r_short 0.0296 (5418s)
+cell done: world A nested w=0.7 r=0.04 n=40 t=12: detection rate 0.00 (5418s)
