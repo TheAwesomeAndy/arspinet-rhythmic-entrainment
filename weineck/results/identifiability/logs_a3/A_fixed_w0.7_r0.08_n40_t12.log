@@ -17,3 +17,5 @@
   world A w=0.7 r=0.08 n=40 t=12 dataset 17/20: supported=False median delta_r +0.0044 p=0.000 realised r_short 0.0597 (462s)
   world A w=0.7 r=0.08 n=40 t=12 dataset 18/20: supported=False median delta_r +0.0059 p=0.000 realised r_short 0.0609 (488s)
   world A w=0.7 r=0.08 n=40 t=12 dataset 19/20: supported=False median delta_r +0.0059 p=0.000 realised r_short 0.0603 (514s)
+  world A w=0.7 r=0.08 n=40 t=12 dataset 20/20: supported=False median delta_r +0.0051 p=0.000 realised r_short 0.0614 (541s)
+cell done: world A w=0.7 r=0.08 n=40 t=12: detection rate 0.00 (541s)
