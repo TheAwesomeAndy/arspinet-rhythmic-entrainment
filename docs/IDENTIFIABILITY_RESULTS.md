@@ -192,6 +192,39 @@ Reading, labelled as inference:
 * World C gives the lowest number of the three, not the highest: removing the TRF-expressible part
   leaves a signal the best TRF cannot fit at all, so criterion 1 passes sooner.
 
+### Criterion-2 diagnostic (exploratory, outside the committed rule)
+
+World A and World C rerun at the operating point, w = 1, 10 datasets each, on the seeds of the committed
+cells (dataset 1 reproduces the committed values: +0.0070 and +0.0112), storing per dataset the median
+Hopf-augmented minus linear-bank-augmented delta r and its one-sided Wilcoxon p, at the committed lambda
+(10 for aug, 1 for aug_lin) and with aug refitted at lambda 1. Expressibility is computed exactly from the
+pooled statistics: the part of the oscillator generator that the linear-bank-augmented design cannot
+express is the only part aug can fit and aug_lin cannot. Code `weineck/identifiability_crit2_diag.py`;
+numbers in `weineck/results/identifiability/criterion2_diagnostic.json`.
+
+| | World A, w = 1 | World C, w = 1 |
+|---|---|---|
+| full rule, rate | 1.00 (10/10) | 0.00 (0/10) |
+| median aug minus best TRF | +0.0068 | +0.0103 |
+| median aug minus aug_lin, committed lambdas | +0.0009 | +0.0001 |
+| criterion 2 passes (p < 0.05), committed lambdas | 10/10 | 0/10 |
+| median aug minus aug_lin, aug refitted at lambda 1 | -0.0006 | +0.0004 |
+| criterion 2 passes, aug at lambda 1 | 0/10 | 0/10 |
+| generator variance the linear-bank design cannot express (median over 34 kernels) | 5.5 % | 17.6 % |
+
+The Hopf-specific variance is identical in absolute size in the two worlds (largest relative difference
+5e-11), because World C only removes a part of the generator that lies inside the TRF design, which both
+augmented designs contain.
+
+**Why World C fails criterion 2:** the Hopf-specific structure, though a larger share of the World C
+signal, gives the Hopf model almost no held-out-tempo advantage over the linear bank (median +0.0001), and
+criterion 2 passes in World A only through the committed lambda asymmetry (10 for aug, 1 for aug_lin):
+with aug refitted at lambda 1 its World A advantage turns to -0.0006 and criterion 2 passes in 0 of 10.
+I don't know why the asymmetry helps in World A and not in World C; the runs do not isolate it.
+Consequence for tier (a) of the headline: at w near 1 the full rule's passes in World A rest on the
+committed lambda pair, not on a lambda-independent held-out advantage of Hopf-specific structure. Under
+the real pipeline's nested lambda the rule still detected World A at w = 1 in 10 of 10 datasets.
+
 ### Placement of the real data (exploratory)
 
 On the 34 real participants criterion 1 itself failed: delta r (aug minus best evoked baseline) median
