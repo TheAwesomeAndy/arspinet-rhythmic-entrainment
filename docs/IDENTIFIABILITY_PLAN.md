@@ -136,3 +136,31 @@ original headline as committed and adds the A3 table; FRAMING item 11 and the RE
 inner loop (78 distinct training sets x 5 lambdas x 4 models per participant), single-threaded, 4
 workers. If the nested cells would exceed about 6 hours, the dataset count stays at 10 and that is
 stated; nothing else is cut.
+
+## Addendum A4 (exploratory, outside the committed rule; committed 2026-11-11 before any A4 cell ran)
+
+Nothing here changes the committed rule, models, lambdas or any existing cell. Every A4 cell is reported.
+All A4 cells are at the operating point (held-out r 0.04, 40 trials per tempo, 12 training tempi) and use the
+seed of the A3 / World A cell with the same w, so they reuse the same simulated datasets.
+
+**A4.1 Nested-lambda cells to pin tier (b).** Worlds A and C with the real pipeline's nested lambda selection
+(as in A3.3), w in {0.6, 0.7, 0.8}, 10 datasets x 20 participants. Reported: criterion-1 pass rate
+(Hopf-augmented model beats the best TRF, median delta r > 0 and one-sided Wilcoxon p < 0.01) with
+Clopper-Pearson 95 % intervals, and the criterion-1 W80 bracket under nested lambda for each world, combined
+with the existing nested World A cells at w = 0, 0.5, 0.9 and 1. World C under nested lambda also gets w = 0.9
+and 1.0 (needed by A4.2).
+
+**A4.2 Sensitivity of the committed rule to the lambda pair (criterion 2).** Criterion 2 (Hopf-augmented beats
+linear-bank-augmented, one-sided Wilcoxon p < 0.05) recomputed for Worlds A and C at w in {0.8, 0.9, 1.0} with
+both augmented models at the same lambda: both 1, both 10 (fixed-lambda reruns on the A3 seeds, 20 datasets),
+and both nested (each model's lambda chosen by its own inner loop; from the nested cells, 10 datasets). The
+committed pair (Hopf 10, linear bank 1) is reported beside them. Pass rates with Clopper-Pearson intervals.
+Labelled throughout as the sensitivity of the committed rule to its lambda pair; the committed rule and its
+results are not changed.
+
+**A4.3 Reporting.** FRAMING item 11: tier (b)'s conservative bound is the largest criterion-1 W80 among the
+worlds, with the nested-lambda bracket stated until A4.1 resolves it; tier (a) states in the text that criterion-2
+passes in World A depend on the committed lambda pair. The results go into `docs/IDENTIFIABILITY_RESULTS.md`.
+
+**Cost.** Eight nested cells at about 95 min each and six fixed-lambda reruns at about 10 min each, single-threaded,
+4 workers: about 3.5 h.
