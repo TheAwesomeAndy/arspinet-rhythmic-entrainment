@@ -1,0 +1,2 @@
+  world C w=1.0 r=0.04 n=40 t=12 dataset 1/20: supported=False median delta_r +0.0112 p=0.000 realised r_short -0.0026 (38s)
+  world C w=1.0 r=0.04 n=40 t=12 dataset 2/20: supported=False median delta_r +0.0119 p=0.000 realised r_short -0.0036 (72s)
