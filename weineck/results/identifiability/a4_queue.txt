@@ -1,2 +1,0 @@
-C lampair 0.9 20
-C lampair 1 20
