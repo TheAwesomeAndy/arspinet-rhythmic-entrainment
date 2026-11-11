@@ -1,0 +1,3 @@
+  world C nested w=0.6 r=0.04 n=40 t=12 dataset 1/10: supported=False median delta_r +0.0069 p=0.000 realised r_short 0.0208 (571s)
+  world C nested w=0.6 r=0.04 n=40 t=12 dataset 2/10: supported=False median delta_r +0.0052 p=0.000 realised r_short 0.0207 (1105s)
+  world C nested w=0.6 r=0.04 n=40 t=12 dataset 3/10: supported=False median delta_r +0.0056 p=0.000 realised r_short 0.0205 (1644s)
