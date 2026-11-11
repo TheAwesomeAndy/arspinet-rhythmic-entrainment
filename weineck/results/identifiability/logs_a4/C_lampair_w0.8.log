@@ -16,3 +16,4 @@
   world C w=0.8 r=0.04 n=40 t=12 dataset 16/20: supported=False median delta_r +0.0098 p=0.000 realised r_short 0.0056 (924s)
   world C w=0.8 r=0.04 n=40 t=12 dataset 17/20: supported=False median delta_r +0.0085 p=0.000 realised r_short 0.0052 (978s)
   world C w=0.8 r=0.04 n=40 t=12 dataset 18/20: supported=False median delta_r +0.0093 p=0.000 realised r_short 0.0053 (1032s)
+  world C w=0.8 r=0.04 n=40 t=12 dataset 19/20: supported=False median delta_r +0.0093 p=0.000 realised r_short 0.0047 (1087s)
