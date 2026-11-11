@@ -90,22 +90,28 @@ addendum A1) was designed to be informative whichever way it came out; it has no
     participant slopes of the tagging statistic over tempo fall from +0.48 z/Hz (p = 0.0001) to
     +0.015 z/Hz (p = 0.37) for the drive, and the same for the reservoir unit-PC1. Beat-locked
     power is present at all 13 tempi; there is no evidence of a rate preference.
-11. **Identifiability map: the committed held-out-tempo rule is conservative and nearly blind**
-    (simulated, `docs/IDENTIFIABILITY_RESULTS.md`, 94 cells plus 26 addendum cells, 20 participants
-    per dataset). At Weineck's operating point (held-out r 0.04, 40 trials per tempo, 12 training
-    tempi) the rule reaches 80 % power only when the oscillator supplies about 89 % of the
-    stimulus-locked amplitude (99 % of the variance); the false-positive rate is 0.00 in every
-    evoked-only cell. The blind spot does not move with an eightfold increase in SNR or trials or
-    with 4 to 12 training tempi. Addendum A3 (decision rule committed in advance) found that it also
-    survives power-matching (W80 0.92), the real pipeline's nested lambda selection (0.9-1.0), and
-    restricting the oscillator to its TRF-inexpressible part (80 % never reached), so the 0.89 headline
-    stands as a property of the rule. A diagnostic outside the rule locates the cause: the comparison
-    against the TRF alone passes from about w = 0.5-0.6, and it is the second criterion, Hopf beating
-    a linear oscillator bank, that holds detection back. The Theory 3 null in item 8 therefore excludes
-    only near-pure Hopf-specific worlds; it does not exclude an oscillator supplying half the
-    stimulus-locked amplitude, and it says little about oscillator structure that a linear oscillator
-    bank also captures. This is the methods contribution: a calibrated statement of what an
-    encoding-model comparison can decide at single-listen SNR.
+11. **Identifiability map** (simulated, `docs/IDENTIFIABILITY_RESULTS.md`; 94 grid cells plus 26
+    addendum cells, 20 participants per simulated dataset; false-positive rate 0.00 in every evoked-only
+    cell). Two tiers:
+    (a) *Committed rule.* At Weineck's operating point (held-out r 0.04, 40 trials per tempo, 12
+    training tempi) the rule needs Hopf-specific oscillator structure supplying about 89 % of the
+    stimulus-locked amplitude (99 % of its variance) for 80 % detection. This does not move with an
+    eightfold change in SNR or trials, with 4 to 12 training tempi, with power matching (0.92), with the
+    real pipeline's nested lambda selection (0.9-1.0), or with an oscillator restricted to its
+    TRF-inexpressible part (80 % never reached). Addendum A3's pre-committed decision: the 0.89 headline
+    stands as a property of the rule. What holds it there is the rule's second criterion, the Hopf bank
+    beating a linear oscillator bank.
+    (b) *Exploratory, outside the committed rule.* The comparison against the TRF alone (criterion 1)
+    reaches 80 % power at about 47 % amplitude for TRF-inexpressible oscillatory structure (World C; 58 %
+    in Worlds A and B). On the real data criterion 1 itself failed (median delta r -0.010, 3/34
+    positive, p = 1.00). So the real data exclude, at about 80 % power, TRF-inexpressible oscillatory
+    structure supplying more than about half of the stimulus-locked amplitude. Stated limits: 0.47 is the
+    smallest of the three world values, and under the real pipeline's nested lambda the criterion-1
+    crossing is known only to lie between 0.5 and 0.9.
+    The Theory 3 null therefore does not exclude an oscillator at half the amplitude under the committed
+    rule, but the exploratory reading bounds TRF-inexpressible oscillatory structure at roughly that
+    level. This is the methods contribution: a calibrated statement of what an encoding-model comparison
+    can and cannot decide at single-listen SNR.
 
 ## Interpretability as the lens (planned)
 

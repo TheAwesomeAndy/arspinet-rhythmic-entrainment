@@ -159,28 +159,59 @@ less sensitive, not more.
 TRF (0-1000 ms) median 0.82 (IQR 0.78-0.88, range 0.47-0.93). The evoked and oscillator generating
 predictions correlate at a median r of 0.53.
 
-### Diagnostic outside the committed rule: which criterion fails
+### Criterion 1 alone: exploratory decomposition, outside the committed rule
 
 The rule says "oscillator supported" when (1) the Hopf-augmented model beats the best TRF (median delta r
-> 0, one-sided Wilcoxon p < 0.01) and (2) it beats the linear-bank-augmented model (p < 0.05). Parsed from
-the per-dataset log lines, the fraction of datasets passing criterion 1 alone:
+> 0, one-sided Wilcoxon p < 0.01) and (2) it beats the linear-bank-augmented model (p < 0.05). The table
+gives the fraction of datasets passing criterion 1 alone at the operating point (r 0.04, 40 trials, 12
+tempi), parsed from the per-dataset log lines of the existing cells (no new runs), with 95 %
+Clopper-Pearson intervals. W80 is linear interpolation between the bracketing w values. Source:
+`weineck/results/identifiability.json`, key `A3.diagnostic_criterion1_only`.
 
 | w | A | B | C | A, nested lambda |
 |---|---|---|---|---|
-| 0-0.25 | 0.00 | 0.00 | 0.00 | 0.00 (w = 0) |
-| 0.5 | 0.00 | 0.00 | 0.90 | 0.00 |
-| 0.6 | 1.00 | 0.95 | 1.00 | |
-| 0.7-1.0 | 1.00 | 1.00 | 1.00 | 1.00 (w = 0.9, 1) |
-| W80, criterion 1 only | 0.58 | 0.58 | 0.47 | 0.5-0.9 |
+| 0 | 0.00 [0.00, 0.17] | 0.00 [0.00, 0.17] | 0.00 [0.00, 0.17] | 0.00 [0.00, 0.31] |
+| 0.1 | 0.00 [0.00, 0.17] | 0.00 [0.00, 0.17] | 0.00 [0.00, 0.17] |  |
+| 0.25 | 0.00 [0.00, 0.17] | 0.00 [0.00, 0.17] | 0.00 [0.00, 0.17] |  |
+| 0.5 | 0.00 [0.00, 0.17] | 0.00 [0.00, 0.17] | 0.90 [0.68, 0.99] | 0.00 [0.00, 0.31] |
+| 0.6 | 1.00 [0.83, 1.00] | 0.95 [0.75, 1.00] | 1.00 [0.83, 1.00] |  |
+| 0.7 | 1.00 [0.83, 1.00] | 1.00 [0.83, 1.00] | 1.00 [0.83, 1.00] |  |
+| 0.8 | 1.00 [0.83, 1.00] | 1.00 [0.83, 1.00] | 1.00 [0.83, 1.00] |  |
+| 0.9 | 1.00 [0.83, 1.00] | 1.00 [0.83, 1.00] | 1.00 [0.83, 1.00] | 1.00 [0.69, 1.00] |
+| 1 | 1.00 [0.83, 1.00] | 1.00 [0.83, 1.00] | 1.00 [0.83, 1.00] | 1.00 [0.69, 1.00] |
+| **W80, criterion 1 alone** | **0.58** (bracket 0.5-0.6) | **0.58** (bracket 0.5-0.6) | **0.47** (bracket 0.25-0.5) | **0.82** (bracket 0.5-0.9) |
 
-Reading, labelled as inference: the comparison against the TRF is not what makes the rule blind between
-w = 0.6 and 0.9. Criterion 1 crosses 80 % at about 0.58 in Worlds A and B and at about 0.47 in World C,
-so the test does see oscillator structure the TRF cannot express once it supplies about half the
-amplitude. What holds the full rule back is criterion 2, the requirement that the Hopf bank beat a linear
-oscillator bank. In World C that requirement almost never passes, even at w = 1: the TRF-inexpressible
-part of the Hopf prediction is fitted about as well by the linear bank. I don't know from these runs why
-criterion 2 passes at w = 1 in World A but not in World C; the per-dataset aug-minus-aug_lin statistic was
-not stored. This diagnostic is not part of the committed rule and does not change the A3 decision above.
+Reading, labelled as inference:
+* Criterion 1 crosses 80 % at about w = 0.58 in Worlds A and B and at about 0.47 in World C. The test
+  against the TRF does register oscillator structure once it supplies about half the stimulus-locked
+  amplitude; between w = 0.6 and 0.9 the full rule is held back by criterion 2 (Hopf beating the linear
+  oscillator bank).
+* The steps are sharp (0.00 at w = 0.5, 0.95-1.00 at w = 0.6 in A and B), so each W80 is known only to
+  within its bracket. The nested-lambda bracket (0.5-0.9) is wide because only w = 0, 0.5, 0.9 and 1 were
+  run.
+* World C gives the lowest number of the three, not the highest: removing the TRF-expressible part
+  leaves a signal the best TRF cannot fit at all, so criterion 1 passes sooner.
+
+### Placement of the real data (exploratory)
+
+On the 34 real participants criterion 1 itself failed: delta r (aug minus best evoked baseline) median
+-0.010, positive in 3 of 34, one-sided Wilcoxon p = 1.00 (`docs/THEORY3_RESULTS.md`;
+`weineck/results/oscillator_heldout_merged.json`, keys `delta_r_aug`, `p_aug`). The simulated evoked-only
+world gives -0.007 at this operating point, so the real data sit at the evoked-only end of the curve.
+
+By the criterion-1 table, a world in which TRF-inexpressible oscillatory structure supplied about 47 % or
+more of the stimulus-locked amplitude (World C) would have passed criterion 1 in at least 80 % of
+simulated datasets; the real data did not pass it. This is the exploratory exclusion, with four
+qualifications stated, not corrected:
+1. World C's 0.47 is the smallest of the criterion-1 W80 values. Using World A's or B's 0.58 instead would
+   exclude less.
+2. The real pipeline selected lambda (and the oscillator configuration) in a nested loop. In World A,
+   nested lambda moved the criterion-1 crossing from 0.58 to somewhere in 0.5-0.9; World C was not run with
+   nested lambda, so the exclusion under the real pipeline's procedure is not pinned below 0.9.
+3. The real group test had 34 participants; each simulated dataset had 20. More participants give more
+   power, so on this count the simulated W80 is conservative.
+4. The simulation fixes the oscillator configuration and uses Gaussian noise with a smooth spectrum; see
+   the limitations below.
 
 ## Limitations (stated, not corrected)
 
