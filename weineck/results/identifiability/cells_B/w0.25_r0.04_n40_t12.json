@@ -1,0 +1,28 @@
+{
+ "world": "B",
+ "nested_lambda": false,
+ "seed": 79512,
+ "w": 0.25,
+ "r_target": 0.04,
+ "trials": 40,
+ "ntempi": 12,
+ "gamma": 24.504543289505854,
+ "datasets_done": 2,
+ "detection_rate": 0.0,
+ "median_delta_r": -0.004356183085017314,
+ "realised_r_short": 0.038594775263987864,
+ "per_dataset": {
+  "supported": [
+   false,
+   false
+  ],
+  "delta_r": [
+   -0.0040157674415397665,
+   -0.004696598728494861
+  ],
+  "r_short": [
+   0.038421729725299975,
+   0.038767820802675754
+  ]
+ }
+}
