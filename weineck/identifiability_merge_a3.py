@@ -27,6 +27,21 @@ def load(sub, r, n, t):
     return dict(sorted(out.items()))
 
 
+def crit1_rates(logdir, prefix, r, n, t):
+    """DIAGNOSTIC, not part of the committed rule: fraction of datasets passing criterion 1 alone
+    (median delta r > 0 and one-sided Wilcoxon p < 0.01 for aug vs best TRF), parsed from the per-dataset
+    log lines; the remaining failures are criterion 2 (aug vs aug_lin, p < 0.05)."""
+    import re
+    out = {}
+    for f in glob.glob(f'{D}/{logdir}/{prefix}w*_r{r}_n{n}_t{t}.log'):
+        rows = [re.search(r'w=([\d.]+) .*supported=(\w+) median delta_r ([+-][\d.]+) p=([\d.]+)', l) for l in open(f)]
+        rows = [m for m in rows if m]
+        if not rows: continue
+        w = float(rows[0].group(1)); c1 = [float(m.group(3)) > 0 and float(m.group(4)) < 0.01 for m in rows]; sup = [m.group(2) == 'True' for m in rows]
+        out[str(w)] = {'n': len(rows), 'criterion1_pass': float(np.mean(c1)), 'criterion1_ci95': cp(int(sum(c1)), len(rows)), 'full_rule': float(np.mean(sup))}
+    return dict(sorted(out.items(), key=lambda kv: float(kv[0])))
+
+
 def w80(cells):
     ws = [w for w in cells if w > 0]; rs = [cells[w]['rate'] for w in ws]
     for i, (w, r) in enumerate(zip(ws, rs)):
@@ -54,6 +69,9 @@ def main():
                         'fixed_all_20': {'rate': fx['rate'], 'median_delta_r': fx['median_delta_r']},
                         'chosen_lambda_counts': c['raw'].get('chosen_lambda_counts')}
     res['nested_vs_fixed'] = pair
+    res['diagnostic_criterion1_only'] = {'note': 'not part of the committed rule; criterion 1 = aug beats the best TRF (median > 0, p < 0.01); full rule also needs aug > aug_lin (p < 0.05)',
+        'A': crit1_rates('logs', '', *OP), 'B': crit1_rates('logs_a3', 'B_fixed_', *OP), 'C': crit1_rates('logs_a3', 'C_fixed_', *OP), 'A_nested_lambda': crit1_rates('logs_a3', 'A_nested_', *OP)}
+    res['diagnostic_criterion1_only']['W80_criterion1_only'] = {k: w80({float(w): {'rate': v['criterion1_pass']} for w, v in d.items()}) for k, d in res['diagnostic_criterion1_only'].items() if isinstance(d, dict) and d}
     # R^2 of P_o on the TRF designs, all 34 kernels
     st = Store(); r2 = {s: st.osc_kernel(s, 'C')[1] for s in st.ksubs}
     a = np.array([v['R2_short_trf'] for v in r2.values()]); b = np.array([v['R2_long_trf'] for v in r2.values()])
@@ -83,7 +101,7 @@ def main():
     ax.set_ylim(-0.03, 1.03); ax.legend(fontsize=8, loc='upper left'); ax.set_title('Addendum A3 at the operating point (r 0.04, 40 trials, 12 tempi)', fontsize=10)
     os.makedirs(FIG, exist_ok=True); fig.savefig(f'{FIG}/identifiability_a3.png', dpi=150); plt.close(fig)
     print(json.dumps({k: (v['w80'], v['false_positive']) for k, v in res.items() if isinstance(v, dict) and 'w80' in v}, indent=1, default=str))
-    print(json.dumps(pair, indent=1)); print(json.dumps({k: v for k, v in res['R2_P_o_on_TRF'].items() if k != 'per_participant'}, indent=1)); print(res['decision']['verdict'])
+    print(json.dumps(pair, indent=1)); print(json.dumps({k: v for k, v in res['R2_P_o_on_TRF'].items() if k != 'per_participant'}, indent=1)); print(json.dumps(res['diagnostic_criterion1_only'], indent=1)); print(res['decision']['verdict'])
 
 
 if __name__ == '__main__':
