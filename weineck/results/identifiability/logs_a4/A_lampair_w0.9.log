@@ -1,2 +1,6 @@
   world A w=0.9 r=0.04 n=40 t=12 dataset 1/20: supported=False median delta_r +0.0045 p=0.000 realised r_short 0.0313 (74s)
   world A w=0.9 r=0.04 n=40 t=12 dataset 2/20: supported=True median delta_r +0.0069 p=0.000 realised r_short 0.0294 (142s)
+  world A w=0.9 r=0.04 n=40 t=12 dataset 3/20: supported=True median delta_r +0.0048 p=0.000 realised r_short 0.0314 (202s)
+  world A w=0.9 r=0.04 n=40 t=12 dataset 4/20: supported=True median delta_r +0.0059 p=0.000 realised r_short 0.0293 (264s)
+  world A w=0.9 r=0.04 n=40 t=12 dataset 5/20: supported=True median delta_r +0.0064 p=0.000 realised r_short 0.0280 (324s)
+  world A w=0.9 r=0.04 n=40 t=12 dataset 6/20: supported=True median delta_r +0.0054 p=0.000 realised r_short 0.0306 (381s)
