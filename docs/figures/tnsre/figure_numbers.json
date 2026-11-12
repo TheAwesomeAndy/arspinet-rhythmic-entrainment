@@ -898,5 +898,246 @@
     ]
    }
   }
+ },
+ "ms": {
+  "provenance": {
+   "preregFreeze": "935c80a",
+   "preregAddendumAOne": "73626a0",
+   "stageOne": "4e0d5fc",
+   "stageTwo": "c8b1503",
+   "underfitPlan": "8f89920",
+   "theoryThreeRule": "d54f0ef",
+   "robustnessPlan": "499972d",
+   "identPlan": "8b4abe0",
+   "identAThree": "cf0a65e",
+   "identAFour": "a0013f4",
+   "identAFourExt": "ce2d574"
+  },
+  "design": {
+   "alpha_stage1": 0.01,
+   "alpha_stage2_source": "q2_residual_stage2_merged.json: H2.alpha",
+   "tost_bound": 0.1,
+   "n_shuffles": 500,
+   "trf_lag_ms": [
+    0,
+    400
+   ],
+   "fs_trf_hz": 64,
+   "fs_reservoir_hz": 256,
+   "n_fc_channels": 8,
+   "eeg_band_hz": [
+    0.5,
+    30
+   ],
+   "n_eeg_channels": 32,
+   "crit1_alpha": 0.01,
+   "crit2_alpha": 0.05,
+   "power_threshold": 0.8,
+   "ci_level": 0.95,
+   "tost_ci_level": 0.9,
+   "lam_small": 1,
+   "lam_large": 10,
+   "long_trf_ms": 1000,
+   "rho_zero": 0,
+   "tempo_rise_hz": 4,
+   "alpha_stage2": 0.04,
+   "min_trials": 40,
+   "seed": 42,
+   "rho": 0.9,
+   "beta": 0.05,
+   "n_units": 256
+  },
+  "data": {
+   "n_stage2": 34,
+   "n_stage1": 8,
+   "n_trials_stage2": 3300,
+   "n_tempi": 13,
+   "tempo_min_hz": 1.0,
+   "tempo_max_hz": 4.0
+  },
+  "stage1": {
+   "median_delta": 0.09094086918439194,
+   "frac_positive": 0.75,
+   "p": 0.0546875
+  },
+  "underfit": {
+   "drive": {
+    "median_delta": 0.31454896706828284,
+    "frac_positive": 0.9705882352941176
+   },
+   "resid_real": {
+    "median_delta": 0.2283059621647527,
+    "frac_positive": 0.9117647058823529
+   },
+   "pred": {
+    "median_delta": 0.6806345576896852,
+    "frac_positive": 1.0
+   },
+   "resid_pooled": {
+    "median_delta": 0.24502353576922956,
+    "frac_positive": 0.8823529411764706
+   },
+   "sim_drive": {
+    "median_delta": 0.12375889952789153,
+    "frac_positive": 0.7647058823529411
+   },
+   "resid_sim": {
+    "median_delta": 0.03892419233550697,
+    "frac_positive": 0.6470588235294118
+   }
+  },
+  "robustness": {
+   "n_rows": 11,
+   "n_flips": 0,
+   "H2_robust": true,
+   "equivalence_robust": true
+  },
+  "theory3_group": {
+   "delta_r_median": -0.0019066604489107585,
+   "frac_positive": 0.23529411764705882,
+   "p": 0.9999628879013471
+  },
+  "theory3": {
+   "delta_r_aug_lin_median": -0.0038309538411593,
+   "p_aug_vs_lin": 0.999999710416887,
+   "curve_min": -0.02419226041010389,
+   "curve_max": -0.006789585856891132,
+   "n_tempi_negative": 13
+  },
+  "ident": {
+   "n_grid_cells": 102,
+   "datasets_per_cell": 20,
+   "participants_per_dataset": 20,
+   "n_kernels": 34,
+   "op_r": 0.04,
+   "op_trials": 40,
+   "op_tempi": 12,
+   "calibrated_r": 0.04048302421422871,
+   "W80_A": 0.8928571428571429,
+   "W80_A_variance": 0.9858044164037856,
+   "W80_B": 0.92,
+   "W80_nested": 0.96,
+   "W80_refined_r008": 0.88,
+   "W80_refined_n160": 0.8875000000000001,
+   "C_max_rate": 0.1,
+   "fp_max": 0.0,
+   "fp_ci_hi_20": 0.1684334709830853,
+   "overlap_median": 0.5303429442116507,
+   "R2_short_median": 0.6247700057305194,
+   "R2_short_min": 0.2868128605495487,
+   "R2_short_max": 0.8498576829153364,
+   "R2_long_median": 0.8232634088799287,
+   "crit1_W80_A": 0.58,
+   "crit1_W80_B": 0.5842105263157895,
+   "crit1_W80_C": 0.4722222222222222,
+   "evoked_only_median_delta_r": -0.006723160324052744,
+   "hopf_specific_A": 0.05487471996601012,
+   "hopf_specific_C": 0.17580009603023883,
+   "crit1_nested_A": {
+    "W80": 0.5888888888888889,
+    "bracket": [
+     0.5,
+     0.6
+    ]
+   },
+   "crit1_nested_C": {
+    "W80": null,
+    "bracket": [
+     null,
+     0.6
+    ],
+    "note": "already >= 0.8 at the lowest w run (0.6)"
+   },
+   "crit1_nested_C_by_w": {
+    "0.6": {
+     "rate": 1.0,
+     "k": 10,
+     "n": 10,
+     "ci95": [
+      0.6915028921812392,
+      1.0
+     ]
+    },
+    "0.7": {
+     "rate": 1.0,
+     "k": 10,
+     "n": 10,
+     "ci95": [
+      0.6915028921812392,
+      1.0
+     ]
+    },
+    "0.8": {
+     "rate": 1.0,
+     "k": 10,
+     "n": 10,
+     "ci95": [
+      0.6915028921812392,
+      1.0
+     ]
+    },
+    "0.9": {
+     "rate": 1.0,
+     "k": 10,
+     "n": 10,
+     "ci95": [
+      0.6915028921812392,
+      1.0
+     ]
+    },
+    "1.0": {
+     "rate": 1.0,
+     "k": 10,
+     "n": 10,
+     "ci95": [
+      0.6915028921812392,
+      1.0
+     ]
+    }
+   },
+   "crit2_w1": {
+    "A": {
+     "committed pair (Hopf 10, linear 1)": {
+      "k": 20,
+      "n": 20
+     },
+     "both lambda 1": {
+      "k": 0,
+      "n": 20
+     },
+     "both lambda 10": {
+      "k": 18,
+      "n": 20
+     },
+     "both nested (own inner loop)": {
+      "k": 10,
+      "n": 10
+     }
+    },
+    "C": {
+     "committed pair (Hopf 10, linear 1)": {
+      "k": 1,
+      "n": 20
+     },
+     "both lambda 1": {
+      "k": 1,
+      "n": 20
+     },
+     "both lambda 10": {
+      "k": 20,
+      "n": 20
+     },
+     "both nested (own inner loop)": {
+      "k": 0,
+      "n": 10
+     }
+    }
+   },
+   "tier_b_bound": 0.6,
+   "snr_factor": 8.0,
+   "trials_factor": 8.0,
+   "nested_datasets": 10,
+   "lampair_datasets": 20
+  }
  }
 }

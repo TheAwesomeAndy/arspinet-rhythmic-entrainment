@@ -280,9 +280,68 @@ def fig7(rd):
 
 
 def main():
-    fig1(); fig2(); fig3(); rd = rowdata(); fig4(rd); fig5(); fig6(); fig7(rd)
+    fig1(); fig2(); fig3(); rd = rowdata(); fig4(rd); fig5(); fig6(); fig7(rd); manuscript_numbers()
     json.dump(NUM, open(f'{OUT}/figure_numbers.json', 'w'), indent=1, default=float)
     captions(); print('figures and docs/FIGURES.md written to', OUT)
+
+
+# ---------------------------------------------------------------- manuscript numbers (docs/manuscript/numbers.tex is generated from these)
+PROVENANCE = {   # commit located by an exact message prefix; asserted unique
+    'preregFreeze': 'Freeze pre-registration v1.0', 'preregAddendumAOne': 'Pre-registration addendum A1 (before the stage-1 group test)',
+    'stageOne': 'Stage 1 results read against the frozen rules', 'stageTwo': 'Stage 2 results (all 34 participants)',
+    'underfitPlan': 'Exploratory underfitting check for H2', 'theoryThreeRule': 'Theory 3 (exploratory, after the stage-2 merge): decision rule',
+    'robustnessPlan': 'Robustness plan for the stage-2 results', 'identPlan': 'Identifiability plan (exploratory methods contribution)',
+    'identAThree': 'Identifiability addendum A3 (exploratory)', 'identAFour': 'Identifiability addendum A4 (exploratory', 'identAFourExt': 'Identifiability A4.1 extension'}
+DESIGN = {   # design constants, not results; source: docs/PREREGISTRATION_DRAFT.md (frozen at the preregFreeze commit)
+    'alpha_stage1': 0.01, 'alpha_stage2_source': 'q2_residual_stage2_merged.json: H2.alpha', 'tost_bound': 0.10, 'n_shuffles': 500,
+    'trf_lag_ms': [0, 400], 'fs_trf_hz': 64, 'fs_reservoir_hz': 256, 'n_fc_channels': 8, 'eeg_band_hz': [0.5, 30], 'n_eeg_channels': 32,
+    # rule and reporting conventions: docs/OSCILLATOR_DECISION_RULE.md (criteria), docs/IDENTIFIABILITY_PLAN.md (power threshold, interval levels, lambda pairs)
+    'crit1_alpha': 0.01, 'crit2_alpha': 0.05, 'power_threshold': 0.8, 'ci_level': 0.95, 'tost_ci_level': 0.90, 'lam_small': 1, 'lam_large': 10, 'long_trf_ms': 1000,
+    'rho_zero': 0, 'tempo_rise_hz': 4}
+
+
+def manuscript_numbers():
+    import subprocess
+    def commit(prefix):
+        out = subprocess.run(['git', '-C', ROOT, 'log', '--format=%h%x09%s'], capture_output=True, text=True).stdout.splitlines()
+        hits = [l.split('\t')[0] for l in out if l.split('\t', 1)[1].startswith(prefix)]
+        assert len(hits) == 1, (prefix, hits); return hits[0]
+    ms = {'provenance': {k: commit(v) for k, v in PROVENANCE.items()}, 'design': dict(DESIGN)}
+    q2 = J('q2_residual_stage2_merged.json'); s1 = J('q2_residual_stage1.json'); u = J('underfit_merged.json'); rt = J('robustness_table.json')
+    ms['design']['alpha_stage2'] = q2['H2']['alpha']; ms['design']['min_trials'] = s1['min_trials']
+    ms['design'].update({k: v for k, v in J('robustness/baseline.json')['config'].items() if k in ('seed', 'rho', 'beta')}); ms['design']['n_units'] = 256
+    ms['data'] = {'n_stage2': q2['n'], 'n_stage1': len(s1['subjects']), 'n_trials_stage2': int(sum(q2['N_trials'].values())), 'n_tempi': 13, 'tempo_min_hz': 1.0, 'tempo_max_hz': 4.0}
+    g1 = s1['group']['resid_N0']; ms['stage1'] = {'median_delta': g1['median_delta'], 'frac_positive': g1['frac_positive'], 'p': g1['p_wilcoxon']}
+    ms['underfit'] = {k: {'median_delta': v['median_delta'], 'frac_positive': v['frac_positive']} for k, v in u['rows'].items()}
+    ms['robustness'] = {'n_rows': len(rt['rows']), 'n_flips': len(rt['flips']), 'H2_robust': rt['H2_robust'], 'equivalence_robust': rt['equivalence_robust']}
+    gl = J('oscillator_group_loto_summary.json'); ms['theory3_group'] = {'delta_r_median': gl['delta_r_aug_median'], 'frac_positive': gl['frac_positive'], 'p': gl['p']}
+    m = J('oscillator_heldout_merged.json'); ms['theory3'] = {'delta_r_aug_lin_median': float(np.median(m['delta_r_aug_lin'])), 'p_aug_vs_lin': m['p_aug_vs_lin'],
+        'curve_min': min(v['median_delta_r'] for v in m['curve'].values()), 'curve_max': max(v['median_delta_r'] for v in m['curve'].values()), 'n_tempi_negative': sum(v['median_delta_r'] < 0 for v in m['curve'].values())}
+    I = J('identifiability.json'); A3 = I['A3']; ov = J('identifiability/prediction_overlap.json'); cal = J('identifiability/calibration.json'); c2 = J('identifiability/criterion2_diagnostic.json')
+    hd = I['headline']
+    ms['ident'] = {'n_grid_cells': len([c for c in I['cells']]), 'datasets_per_cell': 20, 'participants_per_dataset': 20, 'n_kernels': len(A3['R2_P_o_on_TRF']['per_participant']),
+        'op_r': hd['operating_point']['r_target'], 'op_trials': hd['operating_point']['trials_per_tempo'], 'op_tempi': hd['operating_point']['training_tempi'],
+        'calibrated_r': cal['0.04']['realised_r'], 'W80_A': A3['A']['w80']['W80'], 'W80_A_variance': hd['W_80_percent_power_variance_share'], 'W80_B': A3['B']['w80']['W80'],
+        'W80_nested': A3['A_nested_lambda']['w80']['W80'], 'W80_refined_r008': A3['A_r0.08_n40']['w80']['W80'], 'W80_refined_n160': A3['A_r0.04_n160']['w80']['W80'],
+        'C_max_rate': max(v['rate'] for v in A3['C']['by_w'].values()), 'fp_max': max(A3[k]['false_positive']['rate'] for k in ('A', 'B', 'C', 'A_nested_lambda')),
+        'fp_ci_hi_20': A3['A']['false_positive']['ci95'][1], 'overlap_median': ov['pooled_over_pool']['median'],
+        'R2_short_median': A3['R2_P_o_on_TRF']['short_0_400ms']['median'], 'R2_short_min': A3['R2_P_o_on_TRF']['short_0_400ms']['min'], 'R2_short_max': A3['R2_P_o_on_TRF']['short_0_400ms']['max'],
+        'R2_long_median': A3['R2_P_o_on_TRF']['long_0_1000ms']['median'],
+        'crit1_W80_A': A3['diagnostic_criterion1_only']['W80_criterion1_only']['A']['W80'], 'crit1_W80_B': A3['diagnostic_criterion1_only']['W80_criterion1_only']['B']['W80'],
+        'crit1_W80_C': A3['diagnostic_criterion1_only']['W80_criterion1_only']['C']['W80'],
+        'evoked_only_median_delta_r': A3['A']['by_w']['0.0']['median_delta_r'],
+        'hopf_specific_A': c2['expressibility']['hopf_specific_fraction_A']['median'], 'hopf_specific_C': c2['expressibility']['hopf_specific_fraction_C']['median']}
+    A4 = I['A4']; n1 = A4['criterion1_nested']
+    ms['ident']['crit1_nested_A'] = n1['A']['W80_criterion1']; ms['ident']['crit1_nested_C'] = n1['C']['W80_criterion1']
+    ms['ident']['crit1_nested_C_by_w'] = {w: v['criterion1'] for w, v in n1['C']['by_w'].items()}
+    ms['ident']['crit2_w1'] = {wd: {k: {'k': v['k'], 'n': v['n']} for k, v in A4['criterion2_lambda_pair'][wd]['1.0'].items()} for wd in ('A', 'C')}
+    vals = [x for x in (ms['ident']['crit1_W80_A'], ms['ident']['crit1_W80_B'], ms['ident']['crit1_W80_C'], n1['A']['W80_criterion1']['W80'], n1['C']['W80_criterion1']['W80']) if x is not None]
+    if n1['C']['W80_criterion1']['W80'] is None and n1['C']['W80_criterion1'].get('bracket'): vals.append(n1['C']['W80_criterion1']['bracket'][1])
+    ms['ident']['tier_b_bound'] = max(vals)
+    g = I['cells']; rs_ = sorted({c['r_target'] for c in g}); ns_ = sorted({c['trials_per_tempo'] for c in g})
+    ms['ident'].update({'snr_factor': rs_[-1] / rs_[0], 'trials_factor': ns_[-1] / ns_[0], 'nested_datasets': A3['A_nested_lambda']['false_positive']['n'],
+                        'lampair_datasets': A4['criterion2_lambda_pair']['A']['1.0']['both lambda 1']['n']})
+    NUM['ms'] = ms
 
 
 # ---------------------------------------------------------------- captions
