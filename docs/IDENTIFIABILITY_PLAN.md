@@ -164,3 +164,7 @@ passes in World A depend on the committed lambda pair. The results go into `docs
 
 **Cost.** Eight nested cells at about 95 min each and six fixed-lambda reruns at about 10 min each, single-threaded,
 4 workers: about 3.5 h.
+
+**A4.1 extension (committed 2026-11-12 before the cell ran).** World C under nested lambda at w = 0.5, same seed rule
+and dataset count as A4.1 (10 datasets x 20 participants), so that World C's nested criterion-1 W80 has a lower
+bracket. Exploratory, outside the committed rule.
