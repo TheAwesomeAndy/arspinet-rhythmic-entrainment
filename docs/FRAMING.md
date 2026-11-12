@@ -108,8 +108,8 @@ addendum A1) was designed to be informative whichever way it came out; it has no
     it is confined to the TRF-inexpressible part.
     (b) *Exploratory, outside the committed rule.* The comparison against the TRF alone (criterion 1) reaches 80 %
     power at w = 0.58 (Worlds A, B, fixed lambda), 0.47 (World C, fixed lambda), 0.59 (World A, nested lambda,
-    bracket 0.5-0.6) and at or below 0.6 (World C, nested lambda). The conservative bound, the largest of these,
-    is about 0.6. On the real data criterion 1 itself failed (median delta r -0.010, 3/34 positive, p = 1.00). So,
+    bracket 0.5-0.6) and at or below 0.5 (World C, nested lambda; 9/10 at w = 0.5). The conservative bound, the
+    largest of these, is 0.59 (World A, nested lambda), about 0.6. On the real data criterion 1 itself failed (median delta r -0.010, 3/34 positive, p = 1.00). So,
     at about 80 % power and under the real pipeline's lambda procedure, the real data exclude oscillatory structure
     beyond the TRF supplying more than about 60 % of the stimulus-locked amplitude.
     The Theory 3 null therefore does not exclude an oscillator at half the amplitude, and it says nothing stable

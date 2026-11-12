@@ -3097,6 +3097,37 @@
    },
    "C": {
     "by_w": {
+     "0.5": {
+      "criterion1": {
+       "rate": 0.9,
+       "k": 9,
+       "n": 10,
+       "ci95": [
+        0.5549838829718047,
+        0.9974714214555382
+       ]
+      },
+      "criterion2": {
+       "rate": 0.0,
+       "k": 0,
+       "n": 10,
+       "ci95": [
+        0.0,
+        0.3084971078187607
+       ],
+       "n_known": 10
+      },
+      "full_rule": {
+       "rate": 0.0,
+       "k": 0,
+       "n": 10,
+       "ci95": [
+        0.0,
+        0.3084971078187607
+       ]
+      },
+      "source": "stored"
+     },
      "0.6": {
       "criterion1": {
        "rate": 1.0,
@@ -3257,9 +3288,9 @@
      "W80": null,
      "bracket": [
       null,
-      0.6
+      0.5
      ],
-     "note": "already >= 0.8 at the lowest w run (0.6)"
+     "note": "already >= 0.8 at the lowest w run (0.5)"
     },
     "W80_full_rule": {
      "W80": null,

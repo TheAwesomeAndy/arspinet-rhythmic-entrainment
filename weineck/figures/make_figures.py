@@ -247,6 +247,8 @@ def fig6():
             a.plot([float(w) for w in ws], [bw[w]['criterion1']['rate'] for w in ws], marker=mk, color=COL['aug_lin'], ms=3, ls='-.', lw=0.7, label=f'World {wd}, nested lambda, criterion 1 only')
         NUM['fig6']['W80_criterion1_nested_A4'] = {wd: A4['criterion1_nested'][wd]['W80_criterion1'] for wd in ('A', 'C')}
         NUM['fig6']['criterion2_lambda_pair_A4'] = A4['criterion2_lambda_pair']
+        bwc = A4['criterion1_nested']['C']['by_w']; wlo = min(bwc, key=float)
+        NUM['fig6']['crit1_nested_C_lowest_w'] = {'w': float(wlo), 'k': bwc[wlo]['criterion1']['k'], 'n': bwc[wlo]['criterion1']['n']}
     a.axhline(0.8, color='grey', lw=0.6); a.set_xlabel('w (oscillator amplitude share)'); a.set_ylabel('rate over simulated datasets'); a.set_ylim(-0.03, 1.03); a.legend(frameon=False, fontsize=5.0, ncol=2, loc='upper center', bbox_to_anchor=(0.5, -0.2))
     a.set_title('operating point: r 0.04, 40 trials, 12 tempi', loc='left'); lab(a, 'a')
     b.axhline(real_dr, color=COL['R'], lw=1.2); b.text(0.98, real_dr + 0.0005, f'real data: median {real_dr:+.3f} ({NUM["fig6"]["real_positive"]}/34 > 0)', color=COL['R'], fontsize=5.6, va='bottom', ha='right'); b.set_ylim(real_dr - 0.002, 0.012)
@@ -429,8 +431,8 @@ per tempo, 12 training tempi), 20 simulated datasets of 20 participants per poin
 World A {W(f6['W80_full_rule']['A'])}, World B {W(f6['W80_full_rule']['B'])}, World C {W(f6['W80_full_rule']['C'])}, nested
 lambda {W(f6['W80_full_rule']['A_nested_lambda'])}. W80, criterion 1 only: A {W(f6['W80_criterion1']['A'])}, B
 {W(f6['W80_criterion1']['B'])}, C {W(f6['W80_criterion1']['C'])}; under nested lambda (addendum A4, dash-dot) World A
-{W(f6['W80_criterion1_nested_A4']['A'])}, World C at or below {f6['W80_criterion1_nested_A4']['C']['bracket'][1]:g} (10/10 at the lowest w
-run). False-positive rate 0.00 in every world. Criterion 2 depends on the lambda pair (addendum A4): at w = 1 it passes in
+{W(f6['W80_criterion1_nested_A4']['A'])}, World C at or below {f6['W80_criterion1_nested_A4']['C']['bracket'][1]:g} ({f6['crit1_nested_C_lowest_w']['k']}/{f6['crit1_nested_C_lowest_w']['n']} at the lowest w
+run, {f6['crit1_nested_C_lowest_w']['w']:g}). False-positive rate 0.00 in every world. Criterion 2 depends on the lambda pair (addendum A4): at w = 1 it passes in
 World A in {f6['criterion2_lambda_pair_A4']['A']['1.0']['committed pair (Hopf 10, linear 1)']['k']}/20 datasets with the committed pair, {f6['criterion2_lambda_pair_A4']['A']['1.0']['both lambda 1']['k']}/20 with both
 models at lambda 1, {f6['criterion2_lambda_pair_A4']['A']['1.0']['both lambda 10']['k']}/20 at lambda 10 and {f6['criterion2_lambda_pair_A4']['A']['1.0']['both nested (own inner loop)']['k']}/10 nested; in World C {f6['criterion2_lambda_pair_A4']['C']['1.0']['committed pair (Hopf 10, linear 1)']['k']}/20, {f6['criterion2_lambda_pair_A4']['C']['1.0']['both lambda 1']['k']}/20,
 {f6['criterion2_lambda_pair_A4']['C']['1.0']['both lambda 10']['k']}/20 and {f6['criterion2_lambda_pair_A4']['C']['1.0']['both nested (own inner loop)']['k']}/10. [`identifiability.json: A4`] Pre-committed decision: "{f6['decision']}".

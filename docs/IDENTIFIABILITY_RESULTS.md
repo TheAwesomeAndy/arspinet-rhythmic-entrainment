@@ -258,22 +258,26 @@ code `weineck/identifiability_sim.py` (`--nested`, `--lampair`), `weineck/run_id
 
 Fraction of datasets in which the Hopf-augmented model beats the best TRF (median delta r > 0, one-sided Wilcoxon
 p < 0.01), 10 datasets x 20 participants per cell. World A at w = 0, 0.5, 0.9 and 1 are the A3 nested cells
-(criterion 1 parsed from their logs); all other cells are new.
+(criterion 1 parsed from their logs); all other cells are new. World C at w = 0.5 was added as extension A4.1
+(seed 3785, the same seed as every other w = 0.5 cell).
 
 | w | World A, nested lambda | World C, nested lambda |
 |---|---|---|
 | 0 | 0/10 = 0.00 [0.00, 0.31] | not run |
-| 0.5 | 0/10 = 0.00 [0.00, 0.31] | not run |
+| 0.5 | 0/10 = 0.00 [0.00, 0.31] | 9/10 = 0.90 [0.55, 1.00] |
 | 0.6 | 9/10 = 0.90 [0.55, 1.00] | 10/10 = 1.00 [0.69, 1.00] |
 | 0.7 | 10/10 = 1.00 [0.69, 1.00] | 10/10 = 1.00 [0.69, 1.00] |
 | 0.8 | 10/10 = 1.00 [0.69, 1.00] | 10/10 = 1.00 [0.69, 1.00] |
 | 0.9 | 10/10 = 1.00 [0.69, 1.00] | 10/10 = 1.00 [0.69, 1.00] |
 | 1 | 10/10 = 1.00 [0.69, 1.00] | 10/10 = 1.00 [0.69, 1.00] |
 
-W80 for criterion 1 under nested lambda: **World A 0.59 (bracket 0.5-0.6)**; **World C at or below 0.6** (already
-10/10 at the lowest w run; w < 0.6 was not run under nested lambda for World C). Under fixed lambda the values were A
-0.58, B 0.58, C 0.47. Nested lambda therefore leaves the criterion-1 crossing where it was; the largest value among the
-worlds, and the conservative bound for tier (b), is about 0.6.
+W80 for criterion 1 under nested lambda: **World A 0.59 (bracket 0.5-0.6)**; **World C at or below 0.5** (9/10 already at
+w = 0.5, the lowest w run; w < 0.5 was not run under nested lambda for World C). In the World C w = 0.5 cell delta r
+was positive in all 10 datasets (median +0.0026); criterion 1 missed in one dataset (p = 0.013); criterion 2 failed in
+all 10 (p >= 0.989), so the full rule detected 0/10. Under fixed lambda the values were A 0.58, B 0.58, C 0.47. Nested
+lambda therefore leaves the criterion-1 crossing where it was; the largest value among the worlds, and the
+conservative bound for tier (b), is World A's nested 0.59 (bracket 0.5-0.6). The World C nested bracket is open
+below 0.5, which cannot raise this maximum.
 
 ### A4.2 Sensitivity of the committed rule to its lambda pair (criterion 2)
 

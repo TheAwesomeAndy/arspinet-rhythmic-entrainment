@@ -445,9 +445,9 @@
     "W80": null,
     "bracket": [
      null,
-     0.6
+     0.5
     ],
-    "note": "already >= 0.8 at the lowest w run (0.6)"
+    "note": "already >= 0.8 at the lowest w run (0.5)"
    }
   },
   "criterion2_lambda_pair_A4": {
@@ -713,6 +713,11 @@
      }
     }
    }
+  },
+  "crit1_nested_C_lowest_w": {
+   "w": 0.5,
+   "k": 9,
+   "n": 10
   },
   "inset_w1_rates": [
    [
@@ -1044,11 +1049,20 @@
     "W80": null,
     "bracket": [
      null,
-     0.6
+     0.5
     ],
-    "note": "already >= 0.8 at the lowest w run (0.6)"
+    "note": "already >= 0.8 at the lowest w run (0.5)"
    },
    "crit1_nested_C_by_w": {
+    "0.5": {
+     "rate": 0.9,
+     "k": 9,
+     "n": 10,
+     "ci95": [
+      0.5549838829718047,
+      0.9974714214555382
+     ]
+    },
     "0.6": {
      "rate": 1.0,
      "k": 10,
@@ -1133,7 +1147,7 @@
      }
     }
    },
-   "tier_b_bound": 0.6,
+   "tier_b_bound": 0.5888888888888889,
    "snr_factor": 8.0,
    "trials_factor": 8.0,
    "nested_datasets": 10,

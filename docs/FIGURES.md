@@ -77,8 +77,8 @@ per tempo, 12 training tempi), 20 simulated datasets of 20 participants per poin
 World A 0.89 (bracket 0.8-0.9), World B 0.92 (bracket 0.9-1), World C not reached, nested
 lambda 0.96 (bracket 0.9-1). W80, criterion 1 only: A 0.58 (bracket 0.5-0.6), B
 0.58 (bracket 0.5-0.6), C 0.47 (bracket 0.25-0.5); under nested lambda (addendum A4, dash-dot) World A
-0.59 (bracket 0.5-0.6), World C at or below 0.6 (10/10 at the lowest w
-run). False-positive rate 0.00 in every world. Criterion 2 depends on the lambda pair (addendum A4): at w = 1 it passes in
+0.59 (bracket 0.5-0.6), World C at or below 0.5 (9/10 at the lowest w
+run, 0.5). False-positive rate 0.00 in every world. Criterion 2 depends on the lambda pair (addendum A4): at w = 1 it passes in
 World A in 20/20 datasets with the committed pair, 0/20 with both
 models at lambda 1, 18/20 at lambda 10 and 10/10 nested; in World C 1/20, 1/20,
 20/20 and 0/10. [`identifiability.json: A4`] Pre-committed decision: "W80 > 0.8 in World B, World C and the nested-lambda check: the 0.89 headline stands as a property of the rule".
