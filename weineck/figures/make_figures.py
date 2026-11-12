@@ -233,14 +233,21 @@ def fig6():
     real = J('oscillator_heldout_merged.json'); real_dr = float(np.median(real['delta_r_aug']))
     NUM['fig6'] = {'W80_full_rule': {k: A3[k]['w80'] for k in ['A', 'B', 'C', 'A_nested_lambda']}, 'W80_criterion1': diag['W80_criterion1_only'], 'false_positive': {k: A3[k]['false_positive'] for k in ['A', 'B', 'C', 'A_nested_lambda']},
                    'real_median_delta_r': real_dr, 'real_positive': int((np.array(real['delta_r_aug']) > 0).sum()), 'real_p': real['p_aug'], 'decision': A3['decision']['verdict']}
-    fig = plt.figure(figsize=(W2, 3.2)); a = fig.add_axes([0.07, 0.36, 0.4, 0.56]); b = fig.add_axes([0.57, 0.36, 0.4, 0.56])
+    fig = plt.figure(figsize=(W2, 3.4)); a = fig.add_axes([0.07, 0.40, 0.4, 0.53]); b = fig.add_axes([0.57, 0.40, 0.4, 0.53])
     for k, name, col, mk in worlds:
         bw = A3[k]['by_w']; ws = sorted(bw, key=float)
         a.plot([float(w) for w in ws], [bw[w]['rate'] for w in ws], marker=mk, color=col, ms=3, label=f'{name}, full rule')
         cw = diag[k]; ws2 = sorted(cw, key=float); a.plot([float(w) for w in ws2], [cw[w]['criterion1_pass'] for w in ws2], marker=mk, color=col, ms=3, ls=':', mfc='white', label=f'{name}, criterion 1 only')
         b.plot([float(w) for w in ws], [bw[w]['median_delta_r'] for w in ws], marker=mk, color=col, ms=3, label=name)
-    nb = A3['A_nested_lambda']['by_w']; a.plot([float(w) for w in nb], [nb[w]['rate'] for w in nb], 'D', color=COL['aug_lin'], ms=3.5, mfc='white', label='World A, nested lambda')
-    a.axhline(0.8, color='grey', lw=0.6); a.set_xlabel('w (oscillator amplitude share)'); a.set_ylabel('rate over simulated datasets'); a.set_ylim(-0.03, 1.03); a.legend(frameon=False, fontsize=5.2, ncol=2, loc='upper center', bbox_to_anchor=(0.5, -0.2))
+    nb = A3['A_nested_lambda']['by_w']; a.plot([float(w) for w in nb], [nb[w]['rate'] for w in nb], 'D', color=COL['aug_lin'], ms=3.5, mfc='white', label='World A, nested lambda, full rule')
+    A4 = I.get('A4')
+    if A4:
+        for wd, mk in (('A', 'D'), ('C', 'v')):
+            bw = A4['criterion1_nested'][wd]['by_w']; ws = sorted(bw, key=float)
+            a.plot([float(w) for w in ws], [bw[w]['criterion1']['rate'] for w in ws], marker=mk, color=COL['aug_lin'], ms=3, ls='-.', lw=0.7, label=f'World {wd}, nested lambda, criterion 1 only')
+        NUM['fig6']['W80_criterion1_nested_A4'] = {wd: A4['criterion1_nested'][wd]['W80_criterion1'] for wd in ('A', 'C')}
+        NUM['fig6']['criterion2_lambda_pair_A4'] = A4['criterion2_lambda_pair']
+    a.axhline(0.8, color='grey', lw=0.6); a.set_xlabel('w (oscillator amplitude share)'); a.set_ylabel('rate over simulated datasets'); a.set_ylim(-0.03, 1.03); a.legend(frameon=False, fontsize=5.0, ncol=2, loc='upper center', bbox_to_anchor=(0.5, -0.2))
     a.set_title('operating point: r 0.04, 40 trials, 12 tempi', loc='left'); lab(a, 'a')
     b.axhline(real_dr, color=COL['R'], lw=1.2); b.text(0.98, real_dr + 0.0005, f'real data: median {real_dr:+.3f} ({NUM["fig6"]["real_positive"]}/34 > 0)', color=COL['R'], fontsize=5.6, va='bottom', ha='right'); b.set_ylim(real_dr - 0.002, 0.012)
     b.axhline(0, color='grey', lw=0.6); b.set_xlabel('w'); b.set_ylabel('median delta r\n(Hopf + TRF minus best TRF)'); b.legend(frameon=False, fontsize=5.2, ncol=3, loc='upper center', bbox_to_anchor=(0.5, -0.2)); b.set_title('where the real data sit', loc='left'); lab(b, 'b')
@@ -362,8 +369,12 @@ the committed rule), against the oscillator's amplitude share w, at Weineck's op
 per tempo, 12 training tempi), 20 simulated datasets of 20 participants per point (nested lambda: 10). W80, full rule:
 World A {W(f6['W80_full_rule']['A'])}, World B {W(f6['W80_full_rule']['B'])}, World C {W(f6['W80_full_rule']['C'])}, nested
 lambda {W(f6['W80_full_rule']['A_nested_lambda'])}. W80, criterion 1 only: A {W(f6['W80_criterion1']['A'])}, B
-{W(f6['W80_criterion1']['B'])}, C {W(f6['W80_criterion1']['C'])}, nested {W(f6['W80_criterion1']['A_nested_lambda'])}.
-False-positive rate 0.00 in every world. Pre-committed decision: "{f6['decision']}".
+{W(f6['W80_criterion1']['B'])}, C {W(f6['W80_criterion1']['C'])}; under nested lambda (addendum A4, dash-dot) World A
+{W(f6['W80_criterion1_nested_A4']['A'])}, World C at or below {f6['W80_criterion1_nested_A4']['C']['bracket'][1]:g} (10/10 at the lowest w
+run). False-positive rate 0.00 in every world. Criterion 2 depends on the lambda pair (addendum A4): at w = 1 it passes in
+World A in {f6['criterion2_lambda_pair_A4']['A']['1.0']['committed pair (Hopf 10, linear 1)']['k']}/20 datasets with the committed pair, {f6['criterion2_lambda_pair_A4']['A']['1.0']['both lambda 1']['k']}/20 with both
+models at lambda 1, {f6['criterion2_lambda_pair_A4']['A']['1.0']['both lambda 10']['k']}/20 at lambda 10 and {f6['criterion2_lambda_pair_A4']['A']['1.0']['both nested (own inner loop)']['k']}/10 nested; in World C {f6['criterion2_lambda_pair_A4']['C']['1.0']['committed pair (Hopf 10, linear 1)']['k']}/20, {f6['criterion2_lambda_pair_A4']['C']['1.0']['both lambda 1']['k']}/20,
+{f6['criterion2_lambda_pair_A4']['C']['1.0']['both lambda 10']['k']}/20 and {f6['criterion2_lambda_pair_A4']['C']['1.0']['both nested (own inner loop)']['k']}/10. [`identifiability.json: A4`] Pre-committed decision: "{f6['decision']}".
 [{k('identifiability.json: A3.*.w80, A3.*.by_w, A3.diagnostic_criterion1_only, A3.decision')}] (b) Median delta r (Hopf +
 TRF minus best TRF) against w; horizontal line, the real data (median {f6['real_median_delta_r']:+.3f},
 {f6['real_positive']}/34 positive, p = {f6['real_p']:.2f}), below the simulated evoked-only world. Inset: full-rule detection

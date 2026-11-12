@@ -16,7 +16,8 @@ and the identifiability map (the committed Theory 3 rule has zero false positive
 for an oscillator supplying about 89 % of the stimulus-locked amplitude at Weineck's operating point;
 the blind spot is independent of SNR, trial count and tempo count, and addendum A3 found it survives
 power-matching, nested lambda selection and a TRF-inexpressible oscillator; the cause is the rule's
-Hopf-vs-linear-bank criterion). The TNSRE figure set (Figs 1-7) is drafted: `weineck/figures/make_figures.py`,
+Hopf-vs-linear-bank criterion, which addendum A4 shows has no lambda-stable answer; the comparison against the TRF
+alone bounds oscillatory structure beyond the TRF at about 60 % of the amplitude). The TNSRE figure set (Figs 1-7) is drafted: `weineck/figures/make_figures.py`,
 outputs in `docs/figures/tnsre/`, captions in `docs/FIGURES.md`. Remaining publication-plan item: the NMED-T
 generalization.
 

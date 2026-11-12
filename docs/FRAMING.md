@@ -90,30 +90,33 @@ addendum A1) was designed to be informative whichever way it came out; it has no
     participant slopes of the tagging statistic over tempo fall from +0.48 z/Hz (p = 0.0001) to
     +0.015 z/Hz (p = 0.37) for the drive, and the same for the reservoir unit-PC1. Beat-locked
     power is present at all 13 tempi; there is no evidence of a rate preference.
-11. **Identifiability map** (simulated, `docs/IDENTIFIABILITY_RESULTS.md`; 94 grid cells plus addendum cells,
+11. **Identifiability map** (simulated, `docs/IDENTIFIABILITY_RESULTS.md`; 94 grid cells plus addenda A3 and A4,
     20 participants per simulated dataset; false-positive rate 0.00 in every evoked-only cell). Two tiers:
-    (a) *Committed rule.* At Weineck's operating point (held-out r 0.04, 40 trials per tempo, 12 training
-    tempi) the rule needs Hopf-specific oscillator structure supplying about 89 % of the stimulus-locked
-    amplitude (99 % of its variance) for 80 % detection. This does not move with an eightfold change in SNR
-    or trials, with 4 to 12 training tempi, with power matching (0.92), with the real pipeline's nested
-    lambda selection (0.9-1.0), or with an oscillator restricted to its TRF-inexpressible part (80 % never
-    reached); addendum A3's pre-committed decision is that the 0.89 headline stands as a property of the
-    rule. What holds it there is the second criterion, the Hopf bank beating a linear oscillator bank, and
-    the criterion-2 passes in World A depend on the committed lambda pair: they occur with lambda 10 for
-    Hopf + TRF and lambda 1 for linear bank + TRF, and they vanish when both are fitted at lambda 1 (0/10
-    datasets at w = 1). The 0.89 is therefore a property of the rule with its committed lambda pair, not a
-    lambda-independent sensitivity to Hopf-specific structure.
-    (b) *Exploratory, outside the committed rule.* The comparison against the TRF alone (criterion 1)
-    reaches 80 % power at w = 0.58 in Worlds A and B and 0.47 in World C; the conservative bound is the
-    largest, 0.58. On the real data criterion 1 itself failed (median delta r -0.010, 3/34 positive,
-    p = 1.00). So, at about 80 % power and with fixed lambdas, the real data exclude oscillatory structure
-    beyond the TRF supplying more than about 58 % of the stimulus-locked amplitude. Under the real
-    pipeline's nested lambda the criterion-1 crossing is so far known only to lie between 0.5 and 0.9
-    (World A); addendum A4 pins it.
-    The Theory 3 null therefore does not exclude an oscillator at half the amplitude under the committed
-    rule, and the exploratory reading bounds oscillatory structure beyond the TRF at roughly 58 % of the
-    amplitude, pending A4. This is the methods contribution: a calibrated statement of what an
-    encoding-model comparison can and cannot decide at single-listen SNR.
+    (a) *Committed rule, with its committed lambda pair.* At Weineck's operating point (held-out r 0.04, 40 trials
+    per tempo, 12 training tempi) the rule reaches 80 % detection only when the oscillator supplies about 89 % of
+    the stimulus-locked amplitude (99 % of its variance). This does not move with an eightfold change in SNR or
+    trials, with 4 to 12 training tempi, or with power matching (0.92); addendum A3's pre-committed decision is
+    that the 0.89 headline stands as a property of the rule. That property belongs to the rule together with its
+    lambda pair (10 for Hopf + TRF, 1 for linear bank + TRF), because what limits detection is the second criterion,
+    the Hopf bank beating a linear oscillator bank, and that criterion has no lambda-stable answer (addendum A4):
+    in World A its passes vanish at matched lambda 1 (0/20 datasets at w = 0.8-1) and persist at matched lambda 10
+    (18/20 at w = 1) and under the real pipeline's nested lambda (10/10 at w = 1; full-rule W80 0.96); in World C,
+    the TRF-inexpressible oscillator, it fails under the committed pair and under nested lambda (0/10 at every w)
+    but passes in every dataset at matched lambda 10 from w = 0.8, an artefact of holding the linear bank at a
+    lambda it does not prefer. The defensible reading is the one with each model at its own inner-loop lambda, the
+    real pipeline's procedure: Hopf-specific structure is detected only near w = 1 (W80 0.96) and not at all when
+    it is confined to the TRF-inexpressible part.
+    (b) *Exploratory, outside the committed rule.* The comparison against the TRF alone (criterion 1) reaches 80 %
+    power at w = 0.58 (Worlds A, B, fixed lambda), 0.47 (World C, fixed lambda), 0.59 (World A, nested lambda,
+    bracket 0.5-0.6) and at or below 0.6 (World C, nested lambda). The conservative bound, the largest of these,
+    is about 0.6. On the real data criterion 1 itself failed (median delta r -0.010, 3/34 positive, p = 1.00). So,
+    at about 80 % power and under the real pipeline's lambda procedure, the real data exclude oscillatory structure
+    beyond the TRF supplying more than about 60 % of the stimulus-locked amplitude.
+    The Theory 3 null therefore does not exclude an oscillator at half the amplitude, and it says nothing stable
+    about Hopf-specific structure as such; it does bound oscillatory structure beyond the TRF at roughly 60 % of
+    the amplitude. This is the methods contribution: a calibrated statement of what an encoding-model comparison
+    can and cannot decide at single-listen SNR, including how much of the answer rides on the regularisation of
+    the comparison model.
 
 ## Interpretability as the lens (planned)
 

@@ -246,6 +246,79 @@ qualifications stated, not corrected:
 4. The simulation fixes the oscillator configuration and uses Gaussian noise with a smooth spectrum; see
    the limitations below.
 
+## Addendum A4 (exploratory, outside the committed rule; plan committed at `a0013f4` before any A4 cell ran)
+
+All A4 cells are at the operating point (held-out r 0.04, 40 trials per tempo, 12 training tempi) on the A3 seeds,
+so they reuse the A3 datasets (checked: the committed-pair columns below reproduce the A3 rule rates exactly).
+Numbers in `weineck/results/identifiability.json`, key `A4` (also `weineck/results/identifiability/a4_summary.json`);
+code `weineck/identifiability_sim.py` (`--nested`, `--lampair`), `weineck/run_identifiability_a4.sh`,
+`weineck/identifiability_merge_a4.py`. Clopper-Pearson 95 % intervals throughout.
+
+### A4.1 Criterion 1 under the real pipeline's nested lambda
+
+Fraction of datasets in which the Hopf-augmented model beats the best TRF (median delta r > 0, one-sided Wilcoxon
+p < 0.01), 10 datasets x 20 participants per cell. World A at w = 0, 0.5, 0.9 and 1 are the A3 nested cells
+(criterion 1 parsed from their logs); all other cells are new.
+
+| w | World A, nested lambda | World C, nested lambda |
+|---|---|---|
+| 0 | 0/10 = 0.00 [0.00, 0.31] | not run |
+| 0.5 | 0/10 = 0.00 [0.00, 0.31] | not run |
+| 0.6 | 9/10 = 0.90 [0.55, 1.00] | 10/10 = 1.00 [0.69, 1.00] |
+| 0.7 | 10/10 = 1.00 [0.69, 1.00] | 10/10 = 1.00 [0.69, 1.00] |
+| 0.8 | 10/10 = 1.00 [0.69, 1.00] | 10/10 = 1.00 [0.69, 1.00] |
+| 0.9 | 10/10 = 1.00 [0.69, 1.00] | 10/10 = 1.00 [0.69, 1.00] |
+| 1 | 10/10 = 1.00 [0.69, 1.00] | 10/10 = 1.00 [0.69, 1.00] |
+
+W80 for criterion 1 under nested lambda: **World A 0.59 (bracket 0.5-0.6)**; **World C at or below 0.6** (already
+10/10 at the lowest w run; w < 0.6 was not run under nested lambda for World C). Under fixed lambda the values were A
+0.58, B 0.58, C 0.47. Nested lambda therefore leaves the criterion-1 crossing where it was; the largest value among the
+worlds, and the conservative bound for tier (b), is about 0.6.
+
+### A4.2 Sensitivity of the committed rule to its lambda pair (criterion 2)
+
+Fraction of datasets in which the Hopf-augmented model beats the linear-bank-augmented model (one-sided Wilcoxon
+p < 0.05). Committed pair, both at lambda 1 and both at lambda 10: fixed-lambda reruns, 20 datasets. Both nested: each
+model's lambda chosen by its own inner leave-one-tempo-out, 10 datasets (World A at w = 0.9 and 1: criterion 2
+inferred from the stored rule outcome, because criterion 1 passed in every dataset there; all other nested cells store
+the p-value). This is the sensitivity of the committed rule to its lambda pair; the committed rule and its results
+are unchanged.
+
+| world, w | committed pair (Hopf 10, linear 1) | both lambda 1 | both lambda 10 | both nested (each model's own inner loop) |
+|---|---|---|---|---|
+| A, 0.8 | 3/20 = 0.15 [0.03, 0.38] | 0/20 = 0.00 [0.00, 0.17] | 2/20 = 0.10 [0.01, 0.32] | 1/10 = 0.10 [0.00, 0.45] |
+| A, 0.9 | 17/20 = 0.85 [0.62, 0.97] | 0/20 = 0.00 [0.00, 0.17] | 11/20 = 0.55 [0.32, 0.77] | 5/10 = 0.50 [0.19, 0.81] |
+| A, 1 | 20/20 = 1.00 [0.83, 1.00] | 0/20 = 0.00 [0.00, 0.17] | 18/20 = 0.90 [0.68, 0.99] | 10/10 = 1.00 [0.69, 1.00] |
+| C, 0.8 | 2/20 = 0.10 [0.01, 0.32] | 1/20 = 0.05 [0.00, 0.25] | 20/20 = 1.00 [0.83, 1.00] | 0/10 = 0.00 [0.00, 0.31] |
+| C, 0.9 | 2/20 = 0.10 [0.01, 0.32] | 3/20 = 0.15 [0.03, 0.38] | 20/20 = 1.00 [0.83, 1.00] | 0/10 = 0.00 [0.00, 0.31] |
+| C, 1 | 1/20 = 0.05 [0.00, 0.25] | 1/20 = 0.05 [0.00, 0.25] | 20/20 = 1.00 [0.83, 1.00] | 0/10 = 0.00 [0.00, 0.31] |
+
+Median over datasets of the median (Hopf + TRF minus linear bank + TRF) held-out r:
+
+| world, w | committed pair | both lambda 1 | both lambda 10 |
+|---|---|---|---|
+| A, 0.8 | +0.0002 | -0.0012 | +0.0002 |
+| A, 0.9 | +0.0005 | -0.0009 | +0.0005 |
+| A, 1 | +0.0008 | -0.0006 | +0.0007 |
+| C, 0.8 | +0.0002 | +0.0005 | +0.0023 |
+| C, 0.9 | +0.0003 | +0.0003 | +0.0021 |
+| C, 1 | -0.0000 | +0.0004 | +0.0020 |
+
+Reading (inference):
+* Criterion 2 has no lambda-stable answer. In World A it never passes at matched lambda 1 (0/20 at every w), passes
+  mostly at matched lambda 10 (18/20 at w = 1) and under nested lambda (10/10 at w = 1). In World C it fails under the
+  committed pair and under nested lambda (0/10 at every w) but passes in every dataset at matched lambda 10 from w = 0.8
+  (20/20; median advantage about +0.002, ten times the committed-pair value).
+* In World C the linear-bank model is the one that prefers a small lambda: holding it at 10 handicaps it, and the
+  Hopf model's apparent advantage at matched lambda 10 comes from that handicap. With each model at its own inner-loop
+  lambda (the real pipeline's procedure), the TRF-inexpressible Hopf-specific structure gives no detectable advantage
+  over the linear bank in World C (0/10 at every w), while in World A it does at w = 1 (10/10) and in half the
+  datasets at w = 0.9.
+* So the full rule's W80 depends on the lambda procedure as follows, at the operating point: committed pair 0.89
+  (World A), not reached (World C); nested lambda 0.96 (World A, bracket 0.9-1.0), not reached (World C); matched
+  lambda 1: not reached in World A (criterion 2 0/20); matched lambda 10 would detect World C at w >= 0.8 if
+  criterion 1 also passes there (it does, 20/20 at the committed lambda; not recomputed at matched lambda).
+
 ## Limitations (stated, not corrected)
 
 * The main grid fixes lambda per model at the modal value chosen on the real data (10 for the
