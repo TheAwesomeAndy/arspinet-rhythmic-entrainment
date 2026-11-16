@@ -315,6 +315,11 @@ def manuscript_numbers():
     ms['data'] = {'n_stage2': q2['n'], 'n_stage1': len(s1['subjects']), 'n_trials_stage2': int(sum(q2['N_trials'].values())), 'n_tempi': 13, 'tempo_min_hz': 1.0, 'tempo_max_hz': 4.0}
     g1 = s1['group']['resid_N0']; ms['stage1'] = {'median_delta': g1['median_delta'], 'frac_positive': g1['frac_positive'], 'p': g1['p_wilcoxon']}
     ms['underfit'] = {k: {'median_delta': v['median_delta'], 'frac_positive': v['frac_positive']} for k, v in u['rows'].items()}
+    gd = json.load(open(f'{ROOT}/calibration/results/synthetic_calibration_full.json'))['gain_delay']
+    ms['instrument'] = {'gain_lo': min(g['gain_pc1_over_drive'] for g in gd), 'gain_hi': max(g['gain_pc1_over_drive'] for g in gd), 'f_lo': min(g['f'] for g in gd), 'f_hi': max(g['f'] for g in gd), 'source': 'calibration/results/synthetic_calibration_full.json: gain_delay'}
+    nm = json.load(open(f'{ROOT}/pilot/results/nmedt_tensong.json')); kb = [int(np.argmax(s['group']['drive_z'])) for s in nm]
+    ms['nmedt_pilot'] = {'n_songs': len(nm), 'max_paired_diff_best_harmonic': max(abs(s['single_listen']['drive_frac_sig'][k] - s['single_listen']['unit_pc1_frac_sig'][k]) for s, k in zip(nm, kb)),
+                         'source': 'pilot/results/nmedt_tensong.json: |drive - unit-PC1| single-listen detection fraction at each song\'s best harmonic; exploratory pilot, predates the pre-registration, no TOST'}
     ms['robustness'] = {'n_rows': len(rt['rows']), 'n_flips': len(rt['flips']), 'H2_robust': rt['H2_robust'], 'equivalence_robust': rt['equivalence_robust']}
     gl = J('oscillator_group_loto_summary.json'); ms['theory3_group'] = {'delta_r_median': gl['delta_r_aug_median'], 'frac_positive': gl['frac_positive'], 'p': gl['p']}
     m = J('oscillator_heldout_merged.json'); ms['theory3'] = {'delta_r_aug_lin_median': float(np.median(m['delta_r_aug_lin'])), 'p_aug_vs_lin': m['p_aug_vs_lin'],

@@ -991,6 +991,18 @@
     "frac_positive": 0.6470588235294118
    }
   },
+  "instrument": {
+   "gain_lo": 1.4211575835552461,
+   "gain_hi": 1.4407933609570394,
+   "f_lo": 1.0,
+   "f_hi": 4.0,
+   "source": "calibration/results/synthetic_calibration_full.json: gain_delay"
+  },
+  "nmedt_pilot": {
+   "n_songs": 10,
+   "max_paired_diff_best_harmonic": 0.15000000000000002,
+   "source": "pilot/results/nmedt_tensong.json: |drive - unit-PC1| single-listen detection fraction at each song's best harmonic; exploratory pilot, predates the pre-registration, no TOST"
+  },
   "robustness": {
    "n_rows": 11,
    "n_flips": 0,
