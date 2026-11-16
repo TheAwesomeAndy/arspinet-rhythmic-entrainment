@@ -110,11 +110,18 @@ addendum A1) was designed to be informative whichever way it came out; it has no
     power at w = 0.58 (Worlds A, B, fixed lambda), 0.47 (World C, fixed lambda), 0.59 (World A, nested lambda,
     bracket 0.5-0.6) and at or below 0.5 (World C, nested lambda; 9/10 at w = 0.5). The conservative bound, the
     largest of these, is 0.59 (World A, nested lambda), about 0.6. On the real data criterion 1 itself failed (median delta r -0.010, 3/34 positive, p = 1.00). So,
-    at about 80 % power and under the real pipeline's lambda procedure, the real data exclude oscillatory structure
-    beyond the TRF supplying more than about 60 % of the stimulus-locked amplitude.
+    at about 80 % power and under the real pipeline's lambda procedure, the real data exclude structure a Hopf
+    bank can express beyond the TRF supplying more than about 59 % of the stimulus-locked amplitude, which is
+    about 67 % of its variance (v = W^2 / (W^2 + (1 - W)^2), the formula that turns 0.89 into 99 %). Criterion 1
+    compares the Hopf-augmented model with the TRF only, so it cannot tell a Hopf bank from a linear oscillator
+    bank: the bound is on what a Hopf bank can express, not on Hopf-specific (nonlinear) structure. It is a weak
+    exclusion: an oscillator carrying two thirds of the stimulus-locked variance could go undetected about one
+    time in five. It is also not guaranteed conservative: the real delta r (-0.010) is more negative than the
+    simulated evoked-only world (-0.0067), so the simulation may penalise the augmented model less than real EEG
+    does, and the W80 values may be optimistic.
     The Theory 3 null therefore does not exclude an oscillator at half the amplitude, and it says nothing stable
-    about Hopf-specific structure as such; it does bound oscillatory structure beyond the TRF at roughly 60 % of
-    the amplitude. This is the methods contribution: a calibrated statement of what an encoding-model comparison
+    about Hopf-specific structure as such; it does bound structure a Hopf bank can express beyond the TRF at
+    roughly 59 % of the amplitude (67 % of the variance), weakly. This is the methods contribution: a calibrated statement of what an encoding-model comparison
     can and cannot decide at single-listen SNR, including how much of the answer rides on the regularisation of
     the comparison model.
 

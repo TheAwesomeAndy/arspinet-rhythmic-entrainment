@@ -340,6 +340,7 @@ def manuscript_numbers():
     vals = [x for x in (ms['ident']['crit1_W80_A'], ms['ident']['crit1_W80_B'], ms['ident']['crit1_W80_C'], n1['A']['W80_criterion1']['W80'], n1['C']['W80_criterion1']['W80']) if x is not None]
     if n1['C']['W80_criterion1']['W80'] is None and n1['C']['W80_criterion1'].get('bracket'): vals.append(n1['C']['W80_criterion1']['bracket'][1])
     ms['ident']['tier_b_bound'] = max(vals)
+    tb = ms['ident']['tier_b_bound']; ms['ident']['tier_b_variance_share'] = tb ** 2 / (tb ** 2 + (1 - tb) ** 2)   # same formula as W_80_percent_power_variance_share (identifiability_merge.py)
     g = I['cells']; rs_ = sorted({c['r_target'] for c in g}); ns_ = sorted({c['trials_per_tempo'] for c in g})
     ms['ident'].update({'snr_factor': rs_[-1] / rs_[0], 'trials_factor': ns_[-1] / ns_[0], 'nested_datasets': A3['A_nested_lambda']['false_positive']['n'],
                         'lampair_datasets': A4['criterion2_lambda_pair']['A']['1.0']['both lambda 1']['n']})

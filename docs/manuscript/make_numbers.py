@@ -67,7 +67,7 @@ M = [  # (macro, json path, format)
     ('Overlap', 'ms/ident/overlap_median', '2'), ('RTwoShort', 'ms/ident/R2_short_median', 'pct'), ('RTwoShortMin', 'ms/ident/R2_short_min', 'pct'), ('RTwoShortMax', 'ms/ident/R2_short_max', 'pct'),
     ('RTwoLong', 'ms/ident/R2_long_median', 'pct'), ('CritOneA', 'ms/ident/crit1_W80_A', '2'), ('CritOneB', 'ms/ident/crit1_W80_B', '2'), ('CritOneC', 'ms/ident/crit1_W80_C', '2'),
     ('CritOneNestedA', 'ms/ident/crit1_nested_A/W80', '2'), ('CritOneNestedALo', 'ms/ident/crit1_nested_A/bracket/0', 'g'), ('CritOneNestedAHi', 'ms/ident/crit1_nested_A/bracket/1', 'g'),
-    ('TierB', 'ms/ident/tier_b_bound', '2'), ('TierBPct', 'ms/ident/tier_b_bound', 'pct'), ('EvokedOnly', 'ms/ident/evoked_only_median_delta_r', 's4'),
+    ('TierB', 'ms/ident/tier_b_bound', '2'), ('TierBPct', 'ms/ident/tier_b_bound', 'pct'), ('TierBVar', 'ms/ident/tier_b_variance_share', '2'), ('TierBVarPct', 'ms/ident/tier_b_variance_share', 'pct'), ('EvokedOnly', 'ms/ident/evoked_only_median_delta_r', 's4'),
     ('HopfSpecA', 'ms/ident/hopf_specific_A', 'pct'), ('HopfSpecC', 'ms/ident/hopf_specific_C', 'pct'), ('RealDelta', 'fig6/real_median_delta_r', 's3'), ('RealPos', 'fig6/real_positive', 'int'), ('RealP', 'fig6/real_p', '2'),
     *[(f'CritTwo{wd}{tag}', f"ms/ident/crit2_w1/{wd}/{key}/k", 'int') for wd in ('A', 'C') for tag, key in [('Committed', 'committed pair (Hopf 10, linear 1)'), ('One', 'both lambda 1'), ('Ten', 'both lambda 10'), ('Nested', 'both nested (own inner loop)')]],
     *[(f'CritTwo{wd}{tag}N', f"ms/ident/crit2_w1/{wd}/{key}/n", 'int') for wd in ('A', 'C') for tag, key in [('Committed', 'committed pair (Hopf 10, linear 1)'), ('Nested', 'both nested (own inner loop)')]],

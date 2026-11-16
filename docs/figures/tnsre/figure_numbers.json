@@ -1148,6 +1148,7 @@
     }
    },
    "tier_b_bound": 0.5888888888888889,
+   "tier_b_variance_share": 0.6723312589755864,
    "snr_factor": 8.0,
    "trials_factor": 8.0,
    "nested_datasets": 10,
