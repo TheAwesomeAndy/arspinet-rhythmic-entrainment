@@ -21,6 +21,40 @@ alone bounds oscillatory structure beyond the TRF at about 60 % of the amplitude
 outputs in `docs/figures/tnsre/`, captions in `docs/FIGURES.md`. Remaining publication-plan item: the NMED-T
 generalization.
 
+## Using the identifiability procedure
+
+`weineck/identifiability_procedure.py` asks how large an oscillator-bank contribution to the stimulus-locked
+EEG would have to be before the committed encoding-model comparison detects it, at a given single-listen SNR.
+It wraps `identifiability_sim.py`, the code behind every committed cell, without changing its numerics.
+
+```bash
+cd weineck
+# 1. fitted kernels, then the sufficient statistics of the stimulus features (needs the Weineck et al. data
+#    locally; outputs are not redistributed). Kernels first: the stimuli part reads the pooled residual noise
+#    shape from results/identifiability/noise_shape.npz and otherwise falls back to 1/f with a warning.
+python3 identifiability_precompute.py --feats <stimulus feature file> --part kernels
+python3 identifiability_precompute.py --feats <stimulus feature file> --part stimuli
+# 2. the map: per-cell detection and false-positive rates with Clopper-Pearson 95 % intervals, and W80
+python3 identifiability_procedure.py --r 0.04 --trials 40 --ntempi 12 \
+    --w-grid 0,0.5,0.6,0.7,0.8,0.9,1 --datasets 20 --participants 20 --workers 4 \
+    --out-dir results/identifiability/procedure_runs/A_r0.04_n40_t12
+```
+
+Inputs: fitted kernels (`--kernels`, JSON), the sufficient-statistics directory (`--stats-dir`), target held-out
+r (`--r`; the noise scale is calibrated if not stored), trials per tempo, training tempi, the w grid, datasets
+per cell and participants per dataset; `--world A|B|C` and `--nested` select the A3 variants. Output:
+`<out-dir>/summary.json` (per cell: full-rule and criterion-1 rates with k/n and intervals; false-positive rate
+at w = 0; W80 with its bracket and variance share) and one resumable JSON per cell. Seeds follow the committed
+rule (`cksum("<w> <r> <trials> <ntempi>") % 100000`), so committed cells are reproduced exactly.
+
+Regression test (re-runs the committed World A cell w = 0.9, r = 0.04, 40 trials, 12 tempi from its seed and
+requires every stored per-dataset value to match exactly; skipped if the sufficient statistics are absent):
+
+```bash
+python3 -m unittest discover -s weineck/tests -v                 # first 2 of 20 datasets, ~5 min
+IDENT_FULL=1 python3 -m unittest discover -s weineck/tests -v    # the whole cell, ~15 min
+```
+
 | Document | What it holds |
 |---|---|
 | [`docs/FRAMING.md`](docs/FRAMING.md) | the question, results with evidence labels, publication plan (TNSRE, then IEEE TCDS) and must-adds |
