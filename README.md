@@ -4,7 +4,7 @@ Standalone project, separate from the BIBM/SPL affective line. Nothing here touc
 `BIBM` or `dissoAdventureExperiments` repositories; the analysis imports
 `chapter5Experiments/experiment_zero.py` (the canonical LIF reservoir) read-only.
 
-## Status (2026-11-10)
+## Status (2026-11-16)
 
 The pre-registered two-stage study is complete (H2 supported at stage 2; H1 and H3 equivalent). The
 exploratory follow-ups are complete too: the underfitting check (H2 not explained by underfitting),
@@ -17,9 +17,13 @@ for an oscillator supplying about 89 % of the stimulus-locked amplitude at Weine
 the blind spot is independent of SNR, trial count and tempo count, and addendum A3 found it survives
 power-matching, nested lambda selection and a TRF-inexpressible oscillator; the cause is the rule's
 Hopf-vs-linear-bank criterion, which addendum A4 shows has no lambda-stable answer; the comparison against the TRF
-alone bounds oscillatory structure beyond the TRF at about 60 % of the amplitude). The TNSRE figure set (Figs 1-7) is drafted: `weineck/figures/make_figures.py`,
-outputs in `docs/figures/tnsre/`, captions in `docs/FIGURES.md`. Remaining publication-plan item: the NMED-T
-generalization.
+alone bounds structure a Hopf bank can express beyond the TRF at about 59 % of the amplitude, about 67 % of
+its variance, a weak exclusion and not guaranteed conservative; see `docs/FRAMING.md` item 11). The TNSRE
+figure set (Figs 1-7) is drafted: `weineck/figures/make_figures.py`, outputs in `docs/figures/tnsre/`, captions
+in `docs/FIGURES.md`. TNSRE submission pass (2026-11-16): the identifiability procedure is a documented entry
+point with a regression test (below); cover letter, citation file and the list of references to verify are in
+`docs/manuscript/`. Remaining publication-plan item: the NMED-T generalization (the NMED-T pilot in `pilot/`
+predates the pre-registration and is exploratory).
 
 ## Using the identifiability procedure
 
@@ -54,6 +58,8 @@ requires every stored per-dataset value to match exactly; skipped if the suffici
 python3 -m unittest discover -s weineck/tests -v                 # first 2 of 20 datasets, ~5 min
 IDENT_FULL=1 python3 -m unittest discover -s weineck/tests -v    # the whole cell, ~15 min
 ```
+
+Citation: `CITATION.cff`; archived release `v1.0-tnsre-submission`, Zenodo DOI to be added.
 
 | Document | What it holds |
 |---|---|

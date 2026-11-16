@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use this code or the identifiability procedure, please cite it as below."
+title: "ARSPI-Net rhythmic entrainment: a pre-registered test of residual beat-locking and an identifiability procedure for encoding-model tests of entrainment"
+type: software
+# Author list to be confirmed by the authors before release; no names are added here.
+authors:
+  - name: "[Authors to be added]"
+version: "v1.0-tnsre-submission"
+date-released: "2026-11-16"
+repository-code: "https://github.com/TheAwesomeAndy/arspinet-rhythmic-entrainment"
+license: "TBD"
+# Zenodo DOI to be added after the archive is minted, e.g.
+# identifiers:
+#   - type: doi
+#     value: "10.5281/zenodo.XXXXXXX"
+keywords:
+  - EEG
+  - neural entrainment
+  - temporal response function
+  - pre-registration
+  - identifiability
+  - spiking reservoir

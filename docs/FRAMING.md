@@ -1,6 +1,6 @@
 # Framing: the question is the contribution
 
-Updated 2026-11-09 after stage 2 (`docs/STAGE2_RESULTS.md`). Evidence labels: **measured**
+Updated 2026-11-16 (TNSRE submission pass; stage 2 in `docs/STAGE2_RESULTS.md`). Evidence labels: **measured**
 (real data), **simulated** (synthetic drives or Monte-Carlo), **literature**.
 
 Working title (v2):
