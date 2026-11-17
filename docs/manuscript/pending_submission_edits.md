@@ -13,25 +13,26 @@ Every number below is a macro from `numbers.tex`.
 ```latex
 Whether beat-locked EEG reflects entrained oscillators or summed evoked responses is often argued from
 frequency-tagging magnitudes, which cannot separate the two. We asked whether fronto-central EEG keeps beat-locked
-power after a cross-validated linear encoding model of the music, a temporal response function (TRF), is removed.
+power after a cross-validated linear encoding model, a temporal response function (TRF), is removed.
 In a pre-registered two-stage test on \NumNTwo participants listening to music at \NumNTempi tempi (Weineck et
-al.\ 2022 data), the residual kept beat-locked power (\Conf; median standardized effect \NumHTwoDelta,
+al.\ 2022), the residual kept beat-locked power (\Conf; median standardized effect \NumHTwoDelta,
 \NumHTwoPos/\NumNTwo positive). A fixed spiking reservoir (ARSPI-Net, \NumResUnits leaky integrate-and-fire units)
 read out linearly was equivalent to the linear statistic (H1, H3; \Conf). A copy with shuffled weights matched it
 (\Expl), and it tracked it song by song on a second dataset (NMED-T, \Expl). The residual was not explained by
 underfitting (linear-world residual \NumLinWorld; \Expl) and split, under IAAFT surrogates, into a spectral part
 (\NumSpectral) and a smaller phase-dependent part (\NumPhase; \Expl). Oscillator-bank encoding models did not beat
 the TRF at held-out tempi (\Expl). A simulation map of that comparison (\Simul) showed that the full committed rule,
-with its committed regularization pair, has no false positives but reaches \NumPowerPct\% power only when an
-oscillator supplies about \NumWA of the stimulus-locked amplitude (\NumWAVar\% of its variance). Separately, the
-comparison against the TRF alone, with nested regularization, bounds structure a Hopf bank can express beyond the
-TRF below about \NumTierBPct\% of the stimulus-locked amplitude (\NumTierBVarPct\% of its variance), a weak
-exclusion (\Expl). We provide a calibrated identifiability procedure for encoding-model tests of entrainment.
+at its committed regularization pair, has no false positives but reaches \NumPowerPct\% power only when an
+oscillator supplies about \NumWA of the stimulus-locked amplitude, about \NumWAVarRhoPct\% of its variance (median
+over participants, accounting for the measured correlation). Separately, the comparison against the TRF alone, with
+nested regularization, bounds structure a Hopf bank can express beyond the TRF below about \NumTierBPct\% of the
+amplitude (about \NumTierBVarRhoPct\% of the variance), a weak exclusion (\Expl). We provide a calibrated identifiability procedure for encoding-model tests of entrainment.
 ```
 
 The two simulation claims are now separate sentences: 0.89 is the full committed rule with the committed lambda
-pair, and 59 % is criterion 1 alone under nested lambda (the largest W80 across worlds). Word count is reported in
-the pass summary (limit 250).
+pair, and 59 % is criterion 1 alone under nested lambda (the largest W80 across worlds). Both variance shares
+account for the measured evoked-oscillator correlation (submission pass part 2). 250 words with each macro
+counted as one word (limit 250).
 
 ## A2. NMED-T (contributions list, Sec. IV-C, Conclusion)
 
@@ -55,14 +56,25 @@ Results (replaces the "real data exclude ... oscillatory structure beyond the TR
 \Expl Placement of the real data: criterion~1 itself failed (median $\Delta r$ \NumRealDelta, \NumRealPos/\NumNTwo
 positive, $p=\NumRealP$). Taking the largest criterion-1 W80 across worlds under nested regularization as the
 bound, the real data exclude, at about \NumPowerPct\% power, structure a Hopf bank can express beyond the TRF
-supplying more than about \NumTierBPct\% of the stimulus-locked amplitude, that is about \NumTierBVarPct\% of its
-variance. Criterion~1 compares the Hopf-augmented model with the TRF only, so it cannot separate a Hopf bank from a
+supplying more than about \NumTierBPct\% of the stimulus-locked amplitude, that is about \NumTierBVarRhoPct\% of its
+variance (median over participants, range \NumTierBVarRhoLoPct--\NumTierBVarRhoHiPct\%, accounting for the measured
+correlation $\rho$ between the evoked and Hopf-bank predictions, median \NumRhoMed, range \NumRhoMin--\NumRhoMax;
+\NumTierBVarPct\% if the two were uncorrelated). Criterion~1 compares the Hopf-augmented model with the TRF only, so it cannot separate a Hopf bank from a
 linear oscillator bank: this bounds what a Hopf bank can express, not Hopf-specific structure. It is a weak
 exclusion.
 ```
 
 Discussion and Fig. 6 caption: replace "oscillatory structure beyond the TRF" with "structure a Hopf bank can
-express beyond the TRF", and add "(about \NumTierBVarPct\% of the variance; a weak exclusion)" after the bound.
+express beyond the TRF", and add "(about \NumTierBVarRhoPct\% of the variance, median over participants, accounting
+for the measured correlation; a weak exclusion)" after the bound. Wherever the 0.89 headline is given a variance
+share, use "about \NumWAVarRhoPct\% of its variance (median over participants, accounting for the measured
+correlation)" in place of \NumWAVar\%.
+
+Variance share (submission pass part 2): share = $w^2/(w^2+(1-w)^2+2w(1-w)\rho)$ for unit-sd evoked and oscillator
+components with correlation $\rho$, measured per participant over the simulation pool
+(`identifiability_procedure.py --rho-report`, `results/identifiability/component_correlation.json`). Median
+$|\rho|$ = \NumRhoMed > 0.1, so the correlated form is used. The uncorrelated values (\NumWAVar\%,
+\NumTierBVarPct\%) overstate the oscillator's own share of the variance.
 
 ## B4. Limitations (one sentence)
 

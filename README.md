@@ -17,8 +17,8 @@ for an oscillator supplying about 89 % of the stimulus-locked amplitude at Weine
 the blind spot is independent of SNR, trial count and tempo count, and addendum A3 found it survives
 power-matching, nested lambda selection and a TRF-inexpressible oscillator; the cause is the rule's
 Hopf-vs-linear-bank criterion, which addendum A4 shows has no lambda-stable answer; the comparison against the TRF
-alone bounds structure a Hopf bank can express beyond the TRF at about 59 % of the amplitude, about 67 % of
-its variance, a weak exclusion and not guaranteed conservative; see `docs/FRAMING.md` item 11). The TNSRE
+alone bounds structure a Hopf bank can express beyond the TRF at about 59 % of the amplitude, about 45 % of
+its variance accounting for the measured evoked-oscillator correlation (67 % if uncorrelated), a weak exclusion and not guaranteed conservative; see `docs/FRAMING.md` item 11). The TNSRE
 figure set (Figs 1-7) is drafted: `weineck/figures/make_figures.py`, outputs in `docs/figures/tnsre/`, captions
 in `docs/FIGURES.md`. TNSRE submission pass (2026-11-16): the identifiability procedure is a documented entry
 point with a regression test (below); cover letter, citation file and the list of references to verify are in
@@ -48,7 +48,10 @@ Inputs: fitted kernels (`--kernels`, JSON), the sufficient-statistics directory 
 r (`--r`; the noise scale is calibrated if not stored), trials per tempo, training tempi, the w grid, datasets
 per cell and participants per dataset; `--world A|B|C` and `--nested` select the A3 variants. Output:
 `<out-dir>/summary.json` (per cell: full-rule and criterion-1 rates with k/n and intervals; false-positive rate
-at w = 0; W80 with its bracket and variance share) and one resumable JSON per cell. Seeds follow the committed
+at w = 0; W80 with its bracket and variance share) and one resumable JSON per cell. The variance share is
+reported both for uncorrelated components and, per participant, accounting for the measured correlation rho of
+the evoked and oscillator predictions; `--rho-report W1,W2` computes only that (no simulation) and writes
+`<out-dir>/component_correlation.json`. Seeds follow the committed
 rule (`cksum("<w> <r> <trials> <ntempi>") % 100000`), so committed cells are reproduced exactly.
 
 Regression test (re-runs the committed World A cell w = 0.9, r = 0.04, 40 trials, 12 tempi from its seed and

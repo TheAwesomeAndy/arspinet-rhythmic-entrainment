@@ -100,6 +100,14 @@ class Store:
         self._pieces[key] = out; return out
 
 
+def component_correlation(st, subj, world='A'):
+    """Pearson correlation of the evoked prediction P_e and the oscillator prediction P_o over the simulation
+    pool, pooled within trial (each stimulus centred on its own mean), from the same sums the simulation mixes
+    (Store.pieces: Ve, Vo, Ceo). Scale-free, so it is also the correlation of the unit-sd components
+    P_e / sd_e and P_o / sd_o that World A mixes with weights (1 - w) and w."""
+    pc = st.pieces(subj, world); return float(pc['Ceo'] / np.sqrt(pc['Ve'] * pc['Vo']))
+
+
 def mix_weights(st, subj, w, world):
     """alpha, beta for the world (see module docstring)."""
     k = st.kern[subj]

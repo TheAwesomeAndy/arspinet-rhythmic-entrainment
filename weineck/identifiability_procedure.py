@@ -27,7 +27,8 @@ Outputs (summary JSON)
   * false-positive rate: the full-rule and criterion-1 rates at w = 0 (evoked-only world), with intervals;
   * W80: the smallest w at which the rate reaches 0.8, by linear interpolation between grid points (full rule
     and criterion 1 alone), with its bracketing grid points, and its variance-share equivalent
-    v = W^2 / (W^2 + (1 - W)^2).
+    v = W^2 / (W^2 + (1 - W)^2) (uncorrelated components) and, per participant, accounting for the measured
+    correlation rho of the evoked and oscillator predictions, v = W^2 / (W^2 + (1 - W)^2 + 2 W (1 - W) rho).
 
 Seeds: by default each cell uses the committed rule seed = cksum("<w> <r> <trials> <ntempi>\\n") % 100000
 (POSIX cksum of the string the queue scripts echo), so the committed cells are reproduced exactly.
@@ -63,9 +64,25 @@ def w80(cells):
     return {'W80': None, 'bracket': None, 'note': 'not reached'}
 
 
-def variance_share(W):
-    """Amplitude share -> variance share of the oscillator component (as in identifiability_merge.py)."""
-    return None if W is None else float(W ** 2 / (W ** 2 + (1 - W) ** 2))
+def variance_share(W, rho=0.0):
+    """Amplitude share W -> variance share of the oscillator component of s = (1 - W) e + W o, e and o unit-sd
+    with correlation rho: W^2 / (W^2 + (1 - W)^2 + 2 W (1 - W) rho). rho = 0 is the formula used for the
+    committed headline (identifiability_merge.py), which assumes uncorrelated components."""
+    return None if W is None else float(W ** 2 / (W ** 2 + (1 - W) ** 2 + 2 * W * (1 - W) * rho))
+
+
+def correlation_report(st, Ws, world='A', subjects=None):
+    """Per participant rho = corr(P_e, P_o) (identifiability_sim.component_correlation) and the variance share at
+    each W in Ws; median and range across participants."""
+    subs = subjects or st.ksubs; rho = {s: sim.component_correlation(st, s, world) for s in subs}
+    stat = lambda v: {'median': float(np.median(v)), 'min': float(np.min(v)), 'max': float(np.max(v))}
+    out = {'definition': 'rho = corr(P_e, P_o) over the simulation pool, pooled within trial; share = W^2 / (W^2 + (1 - W)^2 + 2 W (1 - W) rho)',
+           'world': world, 'n_participants': len(subs), 'rho': {'per_participant': rho, **stat(list(rho.values())), 'median_abs': float(np.median(np.abs(list(rho.values()))))},
+           'share': {}}
+    for W in Ws:
+        sh = [variance_share(W, r) for r in rho.values()]
+        out['share'][f'{W:.6g}'] = {'W': float(W), 'uncorrelated': variance_share(W), **stat(sh)}
+    return out
 
 
 # ---- the committed seed rule ----
@@ -109,7 +126,8 @@ def cell_path(out_dir, w, r, trials, ntempi):
 
 
 def _run_one(job):
-    os.environ.setdefault('OMP_NUM_THREADS', '1')
+    from threadpoolctl import threadpool_limits
+    threadpool_limits(1)   # single-threaded BLAS, as for every committed cell: exact reproduction depends on summation order
     (stats_dir, kernel_files, w, r, trials, ntempi, datasets, participants, seed, gamma, world, nested, out) = job
     st = sim.Store(stats_dir, kernel_files)
     return sim.run_cell(st, float(w), r, trials, ntempi, datasets, participants, seed, gamma, world, nested, out=out,
@@ -152,6 +170,9 @@ def run_procedure(stats_dir, kernel_files, r, trials, ntempi, w_grid, datasets=2
                'cells': {str(w): c for w, c in cells.items()}, 'W80_full_rule': W_full}
     if all('criterion1' in c for c in cells.values()):
         W1 = w80({w: {'rate': c['criterion1']['rate']} for w, c in cells.items()}); W1['variance_share'] = variance_share(W1['W80']); summary['W80_criterion1'] = W1
+    Ws = [x for x in (summary['W80_full_rule']['W80'], summary.get('W80_criterion1', {}).get('W80')) if x is not None]
+    if Ws:
+        st = sim.Store(stats_dir, kernel_files); summary['variance_share_with_correlation'] = correlation_report(st, Ws, world); del st
     if 0.0 in cells:
         summary['false_positive'] = {'full_rule': cells[0.0]['full_rule'], **({'criterion1': cells[0.0]['criterion1']} if 'criterion1' in cells[0.0] else {})}
     json.dump(summary, open(os.path.join(out_dir, 'summary.json'), 'w'), indent=1)
@@ -168,7 +189,12 @@ def main(argv=None):
     ap.add_argument('--datasets', type=int, default=20); ap.add_argument('--participants', type=int, default=20)
     ap.add_argument('--world', default='A', choices=['A', 'B', 'C']); ap.add_argument('--nested', action='store_true', help='nested (inner leave-one-tempo-out) lambda per model')
     ap.add_argument('--out-dir', required=True); ap.add_argument('--workers', type=int, default=1)
+    ap.add_argument('--rho-report', default=None, metavar='W1,W2', help='only report rho = corr(P_e, P_o) per participant and the variance share at these W (no simulation); writes <out-dir>/component_correlation.json')
     a = ap.parse_args(argv)
+    if a.rho_report:
+        os.makedirs(a.out_dir, exist_ok=True); rep = correlation_report(sim.Store(a.stats_dir, a.kernels), [float(x) for x in a.rho_report.split(',')], a.world)
+        json.dump(rep, open(os.path.join(a.out_dir, 'component_correlation.json'), 'w'), indent=1)
+        print('rho', {k: v for k, v in rep['rho'].items() if k != 'per_participant'}); [print(k, v) for k, v in rep['share'].items()]; return
     t0 = time.time(); grid = [float(x) for x in a.w_grid.split(',')]
     s = run_procedure(a.stats_dir, a.kernels, a.r, a.trials, a.ntempi, grid, a.datasets, a.participants, a.world, a.nested, a.out_dir, workers=a.workers)
     for w, c in s['cells'].items():

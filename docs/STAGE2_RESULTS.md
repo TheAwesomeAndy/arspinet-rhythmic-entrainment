@@ -50,6 +50,12 @@ channels 0.015-0.079 (median ~0.036).
    parsimonious account of H2 is therefore **underfitting of a stimulus-locked response at
    single-listen SNR**, not nonlinearity; the frozen text already limits the claim to "beyond
    this linear model", and nothing here distinguishes oscillatory from evoked accounts.
+
+   > **Superseded (note added 2026-11-17).** The underfitting reading in this item is superseded by the
+   > exploratory underfitting check, `docs/UNDERFIT_CHECK.md` (run 2026-11-09, decision rule fixed before it
+   > ran): H2 is not explained by underfitting (linear-world residual delta 0.039 vs 0.228 on the real data). The
+   > text of this item is left unchanged as the historical record of the stage-2 reading.
+
 3. **The fixed spiking reservoir is not needed to see any of it.** Its linear readout equals
    the linear statistic on the drive (H1) and on the residual (H3), and a reservoir with
    shuffled recurrent weights does the same; its population rate loses the information.

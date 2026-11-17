@@ -9,10 +9,12 @@ skipped when they are absent. It re-runs the committed World A cell w = 0.9, r =
 stored seed and requires every stored committed-rule per-dataset value to be reproduced exactly (see CELL below).
 """
 import json, glob, os, sys, unittest
+for _v in ('OMP_NUM_THREADS', 'OPENBLAS_NUM_THREADS', 'MKL_NUM_THREADS'): os.environ[_v] = '1'   # before numpy loads BLAS
 import numpy as np
+from threadpoolctl import threadpool_limits
+threadpool_limits(1)   # the committed cells ran single-threaded; BLAS summation order changes the last bits with more threads
 
 HERE = os.path.dirname(os.path.abspath(__file__)); WEINECK = os.path.dirname(HERE); sys.path.insert(0, WEINECK)
-os.environ.setdefault('OMP_NUM_THREADS', '1'); os.environ.setdefault('OPENBLAS_NUM_THREADS', '1')
 import identifiability_sim as sim
 import identifiability_procedure as proc
 
@@ -60,6 +62,45 @@ class Statistics(unittest.TestCase):
         head = load(os.path.join(WEINECK, 'results', 'identifiability.json'))['headline']
         self.assertAlmostEqual(W, head['W_80_percent_power_amplitude_share'], 12)
         self.assertAlmostEqual(proc.variance_share(W), head['W_80_percent_power_variance_share'], 12)
+
+
+class VarianceShareWithCorrelation(unittest.TestCase):
+    """share = W^2 / (W^2 + (1 - W)^2 + 2 W (1 - W) rho) for s = (1 - W) e + W o, e and o unit-sd, corr rho."""
+    def test_formula_against_direct_variance(self):
+        rng = np.random.RandomState(0)
+        for W, rho in [(0.589, 0.53), (0.893, 0.53), (0.5, -0.3), (0.2, 0.0)]:
+            C = np.array([[1, rho], [rho, 1]]); x = rng.multivariate_normal([0, 0], C, 400000)
+            x = (x - x.mean(0)) / x.std(0); c = np.corrcoef(x.T)[0, 1]       # exact unit-sd components, sample rho c
+            s = (1 - W) * x[:, 0] + W * x[:, 1]
+            self.assertAlmostEqual(proc.variance_share(W, c), W ** 2 / s.var(), 12)
+
+    def test_limits(self):
+        self.assertEqual(proc.variance_share(0.5), 0.5); self.assertAlmostEqual(proc.variance_share(0.7, 1.0), 0.49, 12)
+        self.assertEqual(proc.variance_share(0.7, 0.0), proc.variance_share(0.7)); self.assertIsNone(proc.variance_share(None, 0.5))
+        self.assertLess(proc.variance_share(0.589, 0.5), proc.variance_share(0.589)); self.assertGreater(proc.variance_share(0.589, -0.5), proc.variance_share(0.589))
+
+    def test_component_correlation_from_sums(self):
+        class FakeStore:                                            # Ve, Vo, Ceo as Store.pieces returns them
+            def pieces(self, subj, world='A'): return {'Ve': 4.0, 'Vo': 9.0, 'Ceo': 3.0}
+        self.assertAlmostEqual(sim.component_correlation(FakeStore(), '1'), 0.5, 15)
+
+    def test_report_against_stored(self):
+        f = os.path.join(D, 'component_correlation.json')
+        if not os.path.exists(f): self.skipTest('component_correlation.json not computed')
+        rep = load(f); rho = list(rep['rho']['per_participant'].values())
+        self.assertEqual(rep['n_participants'], 34); self.assertAlmostEqual(rep['rho']['median'], float(np.median(rho)), 15)
+        for v in rep['share'].values():
+            sh = [proc.variance_share(v['W'], r) for r in rho]
+            self.assertAlmostEqual(v['median'], float(np.median(sh)), 15); self.assertAlmostEqual(v['min'], min(sh), 15); self.assertAlmostEqual(v['max'], max(sh), 15)
+
+
+@unittest.skipUnless(HAVE_STATS, 'sufficient statistics not present (rebuild with identifiability_precompute.py)')
+class ComponentCorrelationOnData(unittest.TestCase):
+    def test_one_participant_matches_report(self):
+        f = os.path.join(D, 'component_correlation.json')
+        if not os.path.exists(f): self.skipTest('component_correlation.json not computed')
+        rep = load(f)['rho']['per_participant']; subj = sorted(rep, key=int)[0]
+        self.assertEqual(sim.component_correlation(sim.Store(), subj), rep[subj])
 
 
 @unittest.skipUnless(HAVE_STATS, 'sufficient statistics not present (rebuild with identifiability_precompute.py)')

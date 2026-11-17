@@ -346,6 +346,12 @@ def manuscript_numbers():
     if n1['C']['W80_criterion1']['W80'] is None and n1['C']['W80_criterion1'].get('bracket'): vals.append(n1['C']['W80_criterion1']['bracket'][1])
     ms['ident']['tier_b_bound'] = max(vals)
     tb = ms['ident']['tier_b_bound']; ms['ident']['tier_b_variance_share'] = tb ** 2 / (tb ** 2 + (1 - tb) ** 2)   # same formula as W_80_percent_power_variance_share (identifiability_merge.py)
+    # variance share accounting for the measured correlation rho = corr(P_e, P_o) per participant
+    # (identifiability_procedure.py --rho-report; results/identifiability/component_correlation.json)
+    cc = json.load(open(f'{RES}/identifiability/component_correlation.json')); byW = {round(v['W'], 9): v for v in cc['share'].values()}
+    sb, sh = byW[round(tb, 9)], byW[round(A3['A']['w80']['W80'], 9)]          # KeyError if the report's W values are stale
+    ms['ident']['rho'] = {k: cc['rho'][k] for k in ('median', 'min', 'max', 'median_abs')}; ms['ident']['rho_n'] = cc['n_participants']
+    ms['ident']['tier_b_variance_share_rho'] = {k: sb[k] for k in ('median', 'min', 'max')}; ms['ident']['W80_A_variance_rho'] = {k: sh[k] for k in ('median', 'min', 'max')}
     g = I['cells']; rs_ = sorted({c['r_target'] for c in g}); ns_ = sorted({c['trials_per_tempo'] for c in g})
     ms['ident'].update({'snr_factor': rs_[-1] / rs_[0], 'trials_factor': ns_[-1] / ns_[0], 'nested_datasets': A3['A_nested_lambda']['false_positive']['n'],
                         'lampair_datasets': A4['criterion2_lambda_pair']['A']['1.0']['both lambda 1']['n']})
