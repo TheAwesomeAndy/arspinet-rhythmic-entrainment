@@ -12,7 +12,7 @@ Every number below is a macro from `numbers.tex`.
 
 ```latex
 Whether beat-locked EEG reflects entrained oscillators or summed evoked responses is often argued from
-frequency-tagging magnitudes, which cannot separate the two. We asked whether fronto-central EEG keeps beat-locked
+frequency-tagging magnitudes, which cannot separate them. We asked whether fronto-central EEG keeps beat-locked
 power after a cross-validated linear encoding model, a temporal response function (TRF), is removed.
 In a pre-registered two-stage test on \NumNTwo participants listening to music at \NumNTempi tempi (Weineck et
 al.\ 2022), the residual kept beat-locked power (\Conf; median standardized effect \NumHTwoDelta,
@@ -21,17 +21,18 @@ read out linearly was equivalent to the linear statistic (H1, H3; \Conf). A copy
 (\Expl), and it tracked it song by song on a second dataset (NMED-T, \Expl). The residual was not explained by
 underfitting (linear-world residual \NumLinWorld; \Expl) and split, under IAAFT surrogates, into a spectral part
 (\NumSpectral) and a smaller phase-dependent part (\NumPhase; \Expl). Oscillator-bank encoding models did not beat
-the TRF at held-out tempi (\Expl). A simulation map of that comparison (\Simul) showed that the full committed rule,
+the TRF at held-out tempi (\Expl). A simulation map of that comparison (\Simul) showed the full committed rule,
 at its committed regularization pair, has no false positives but reaches \NumPowerPct\% power only when an
 oscillator supplies about \NumWA of the stimulus-locked amplitude, about \NumWAVarRhoPct\% of its variance (median
 over participants, accounting for the measured correlation). Separately, the comparison against the TRF alone, with
 nested regularization, bounds structure a Hopf bank can express beyond the TRF below about \NumTierBPct\% of the
-amplitude (about \NumTierBVarRhoPct\% of the variance), a weak exclusion (\Expl). We provide a calibrated identifiability procedure for encoding-model tests of entrainment.
+stimulus-locked amplitude (about \NumTierBVarRhoPct\% of the variance), a weak exclusion (\Expl). We provide a
+calibrated identifiability procedure for encoding-model tests of entrainment.
 ```
 
 The two simulation claims are now separate sentences: 0.89 is the full committed rule with the committed lambda
 pair, and 59 % is criterion 1 alone under nested lambda (the largest W80 across worlds). Both variance shares
-account for the measured evoked-oscillator correlation (submission pass part 2). 250 words with each macro
+account for the measured evoked-oscillator correlation (submission pass part 2). 249 words with each macro
 counted as one word (limit 250).
 
 ## A2. NMED-T (contributions list, Sec. IV-C, Conclusion)
@@ -75,6 +76,18 @@ components with correlation $\rho$, measured per participant over the simulation
 (`identifiability_procedure.py --rho-report`, `results/identifiability/component_correlation.json`). Median
 $|\rho|$ = \NumRhoMed > 0.1, so the correlated form is used. The uncorrelated values (\NumWAVar\%,
 \NumTierBVarPct\%) overstate the oscillator's own share of the variance.
+
+Methods (identifiability simulation, where the amplitude share $W$ is defined), the definition followed by the
+sentence on the cross term:
+
+```latex
+For an oscillator amplitude share $W$, we report the oscillator's variance share
+$W^2/\bigl(W^2+(1-W)^2+2W(1-W)\rho\bigr)$, with $\rho$ the correlation of the unit-sd evoked and oscillator
+predictions, measured per participant over the simulation pool. Because the evoked and oscillator predictions are
+correlated (median $\rho$ \NumRhoMed, range \NumRhoMin--\NumRhoMax), the share is the oscillator's own variance,
+$W^2$ over the total variance including the cross term $2W(1-W)\rho$; the cross term is assigned to neither
+component.
+```
 
 ## B4. Limitations (one sentence)
 
