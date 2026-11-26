@@ -4,6 +4,10 @@ Standalone project, separate from the BIBM/SPL affective line. Nothing here touc
 `BIBM` or `dissoAdventureExperiments` repositories; the analysis imports
 `chapter5Experiments/experiment_zero.py` (the canonical LIF reservoir) read-only.
 
+Working rules for agents and contributors (frozen files, invariants, tests, Git discipline) are in
+[`AGENTS.md`](AGENTS.md). The independent engineering audit of 2026-11-26 is
+[`docs/FINAL_ENGINEERING_AUDIT.md`](docs/FINAL_ENGINEERING_AUDIT.md).
+
 ## Status (2026-11-16)
 
 The pre-registered two-stage study is complete (H2 supported at stage 2; H1 and H3 equivalent). The
@@ -44,6 +48,13 @@ python3 identifiability_procedure.py --r 0.04 --trials 40 --ntempi 12 \
     --out-dir results/identifiability/procedure_runs/A_r0.04_n40_t12
 ```
 
+Caution on step 1 (found by the 2026-11-26 audit, `docs/FINAL_ENGINEERING_AUDIT.md` defect D1). Both committed
+kernel logs (`weineck/results/identifiability/kernels_part{1,2}.log`) end in an error in the noise-shape step,
+after the kernels were written. The script would write `noise_shape_<first subject>.npz`, and the stimuli part
+reads `noise_shape.npz`. How `noise_shape.npz` was made for the committed cells is not recorded, so the committed
+sufficient statistics cannot be rebuilt from these two commands as they stand. The `--out-dir` in the example is
+inside `weineck/results/`. Use a directory outside the repository unless you mean to add results.
+
 Inputs: fitted kernels (`--kernels`, JSON), the sufficient-statistics directory (`--stats-dir`), target held-out
 r (`--r`; the noise scale is calibrated if not stored), trials per tempo, training tempi, the w grid, datasets
 per cell and participants per dataset; `--world A|B|C` and `--nested` select the A3 variants. Output:
@@ -62,7 +73,14 @@ python3 -m unittest discover -s weineck/tests -v                 # first 2 of 20
 IDENT_FULL=1 python3 -m unittest discover -s weineck/tests -v    # the whole cell, ~15 min
 ```
 
-Citation: `CITATION.cff`; archived release `v1.0-tnsre-submission`, Zenodo DOI to be added.
+The same command also runs `weineck/tests/test_pipeline_invariants.py` (synthetic fixtures for the loader
+matching, the TRF, the tagging statistic, the shuffle null and the committed decision rule) and
+`weineck/tests/test_committed_results.py` (the committed summary files still follow from the files they were built
+from). Neither needs data. Without the sufficient statistics the whole suite takes a few seconds.
+
+Citation: `CITATION.cff`. The release `v1.0-tnsre-submission` named there is planned and does not exist yet: the
+remote holds no tag as of 2026-11-26 (open item in `docs/manuscript/submission_checklist.md`). Zenodo DOI to be
+added.
 
 | Document | What it holds |
 |---|---|
@@ -87,6 +105,9 @@ Citation: `CITATION.cff`; archived release `v1.0-tnsre-submission`, Zenodo DOI t
 | `weineck/` | Weineck, Wen & Henry (2022) loader and trial-to-stimulus matching (`README.md` there documents the data facts), ridge mTRF, shared tagging statistic and stimulus-label shuffle null (`tagging.py`), Q2 residual pipeline, 13-tempo curve, group merge; `results/` holds aggregate JSON only, with one exception: `results/fig1_traces.npz`, a single 15 s example trial (participant 10) for Fig. 1b; `figures/make_figures.py` builds the TNSRE figure set |
 | `calibration/` | synthetic calibration of all detectors (`RESULTS.md`), Q2 power simulations (false-positive and power tables at the stage alphas) |
 | `pilot/` | NMED-T feasibility pilot and the ten-song single-listen table (`RESULTS.md`) |
+| `weineck/tests/` | unit tests: identifiability procedure, pipeline invariants on synthetic fixtures, consistency of the committed results (run command above) |
+| `docs/manuscript/` | TNSRE manuscript tooling: `make_numbers.py` writes `numbers.tex` from `docs/figures/tnsre/figure_numbers.json`. Also `main.tex` (6-page skeleton), staged edits (`pending_submission_edits.md`), references, cover letter, submission checklist |
+| `extensions/rhythm_preserving_audio/` | a separate computational extension, not part of the EEG study (merged at `a78d143`, touches nothing outside `extensions/`): rhythm-preserving generative audio editing, with its own plan (`EXPERIMENT_PLAN.md`), frozen decision rules (`DECISION_RULES.md`), tests and evidence report (`SPOTIFY_RESEARCH_EVIDENCE.md`) |
 
 ## Data
 

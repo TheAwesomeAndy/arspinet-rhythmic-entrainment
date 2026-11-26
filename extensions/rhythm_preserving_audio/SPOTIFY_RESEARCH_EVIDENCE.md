@@ -1,7 +1,7 @@
 # Research evidence: rhythm-preserving generative audio editing
 
-Prepared 2026-11-26 from the completed work on local branch `extension/rhythm-preserving-audio` of
-`TheAwesomeAndy/arspinet-rhythmic-entrainment`. Every number below is read from a committed result file named
+Prepared 2026-11-26 from the completed work on branch `extension/rhythm-preserving-audio` of
+`TheAwesomeAndy/arspinet-rhythmic-entrainment` (pushed and then merged into `main` at `a78d143`, see section 7). Every number below is read from a committed result file named
 next to it. Evidence labels: **measured** (metrics on actual model outputs), **simulated** (synthetic controls),
 **proposal** (not run), **interpretation**.
 
@@ -341,8 +341,9 @@ setting, at matched transformation".
   `v1.0-tnsre-submission` was not pushed.
 * **Commits** (oldest → newest): `6ebbd2d` plan pre-specified; `4dd6d30` metric validation; `e459b29` addendum A1;
   `c6e2a3f` tests, loader, CPU timing; `17063fb` addendum A2, **decision rules frozen**; `376ccfe` rectified-flow
-  implementation, dataset, reconstruction control; `d64209f` / `2300e63` training records; plus the in-progress
-  evaluation log commit and the final results commit that adds this report (hash reported in the conversation).
+  implementation, dataset, reconstruction control; `d64209f` / `2300e63` training records. Then `89af6d5` (in-progress
+  evaluation log), `4067d8b` (held-out evaluation, figures and this report), `9c6e71d` and `9df833d` (updates to this
+  report) and the merge `a78d143`.
 * **Model implementation**: `extensions/rhythm_preserving_audio/src/rf_model.py`; training
   `experiments/train_rf.py`; evaluation `experiments/eval_rf.py`; metrics `src/rhythmic_metrics.py`,
   `src/acoustic_metrics.py`; stimuli `src/synthetic_audio.py`; DSP `src/baselines.py`; SAME-S wrapper
@@ -370,8 +371,9 @@ setting, at matched transformation".
   ~/.venvs/rpa/bin/python -m unittest discover -s tests        # 23 tests
   ```
 * **Tests**: 23 pass (18 metric and stimulus tests, 5 rectified-flow tests).
-* **Neuroscience study unchanged**: `git diff main...extension/rhythm-preserving-audio` touches 0 files outside
-  `extensions/`; the pre-registration (`935c80a`), results, manuscript and decision rules of the EEG study are
+* **Neuroscience study unchanged**: `git diff --name-only a78d143^1 a78d143` lists 37 files, all under
+  `extensions/` (the earlier check, `git diff main...extension/rhythm-preserving-audio`, is empty now that both refs
+  point at the same commit); the pre-registration (`935c80a`), results, manuscript and decision rules of the EEG study are
   untouched. theBIBMsequel and the other attached repositories were not modified.
 
 ## 8. EDGE audit
