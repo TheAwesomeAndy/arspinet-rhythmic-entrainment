@@ -38,19 +38,28 @@ def fig_training():
 
 
 def fig_tradeoff():
-    d = json.load(open(os.path.join(R, 'rf_eval.json'))); fig, ax = plt.subplots(1, 2, figsize=(7.2, 2.8), sharey=True)
+    """D1 vs T1. Display only: y clipped to [-1, 1.05] and x to [0, 8] dB; off-scale points drawn at the edge
+    with their value written next to them (all values are in results/rf_eval.json)."""
+    d = json.load(open(os.path.join(R, 'rf_eval.json'))); fig, ax = plt.subplots(1, 2, figsize=(7.2, 2.9), sharey=True); YL, XL = (-1.0, 1.05), (0, 8)
+    clip = lambda v, lo, hi: min(max(v, lo), hi)
+    def put(a, x, y, **kw):
+        a.plot(clip(x, *XL), clip(y, *YL), **kw)
+        if not (XL[0] <= x <= XL[1] and YL[0] <= y <= YL[1]): a.annotate(f'({x:.1f}, {y:.1f})', (clip(x, *XL), clip(y, *YL)), fontsize=5, xytext=(-30, 4), textcoords='offset points')
     for a, fam in zip(ax, ('nonperiodic', 'periodic')):
-        D = d['decision'][fam]; cm = [r for r in d['per_composition'] if r['family'] == fam]
+        D = d['decision'][fam]
         for v in ('V0', 'V1'):
-            c = D['median_curves'][v]; s = sorted(c, key=float)
-            a.plot([c[k]['ltas_db'] for k in s], [c[k]['f1_norm'] for k in s], label=f'{v} (median over compositions)', **STYLE[v])
-            for k in s: a.annotate(k, (c[k]['ltas_db'], c[k]['f1_norm']), fontsize=5, xytext=(2, 2), textcoords='offset points', color=STYLE[v]['color'])
+            c = D['median_curves'][v]; ks = sorted(c, key=float)
+            a.plot([clip(c[k]['ltas_db'], *XL) for k in ks], [clip(c[k]['f1_norm'], *YL) for k in ks], label=f'{v} (median of 8 compositions)', **STYLE[v])
+            for k in ks:
+                put(a, c[k]['ltas_db'], c[k]['f1_norm'], ls='', marker='')
+                a.annotate(k, (clip(c[k]['ltas_db'], *XL), clip(c[k]['f1_norm'], *YL)), fontsize=5, xytext=(3, -7 if v == 'V0' else 3), textcoords='offset points', color=STYLE[v]['color'])
         for e, mk in (('identity', '*'), ('reconstruction', 'P'), ('oracle_target', 'D'), ('dsp_lowpass_1500', 'v')):
-            p = D['reference_points'][e]; a.plot(p['ltas_db'], p['f1_norm'], mk, color='0.3', ms=6, label=e, ls='')
+            p = D['reference_points'][e]; put(a, p['ltas_db'], p['f1_norm'], marker=mk, color='0.3', ms=6, ls='', label=e)
         a.axhline(0.5, color='0.7', lw=0.6, ls=':'); a.axhline(0, color='0.85', lw=0.6)
         for g in D['grid_ltas_db']: a.axvline(g, color='0.85', lw=0.5)
-        a.set_xscale('symlog', linthresh=1); a.set_xlabel('T1: LTAS distance from source (dB)'); a.set_title(f"{fam} ({D['role']})", fontsize=7, loc='left')
-    ax[0].set_ylabel('D1: floor-normalised onset F1'); ax[1].legend(frameon=False, fontsize=5.5, loc='lower left'); fig.tight_layout()
+        a.set_xlim(XL[0] - 0.2, XL[1] + 0.2); a.set_ylim(YL[0] - 0.05, YL[1] + 0.05); a.set_xlabel('T1: LTAS distance from source (dB)')
+        a.set_title(f"{fam} ({D['role']}); labels = editing strength", fontsize=7, loc='left')
+    ax[0].set_ylabel('D1: floor-normalised onset F1'); ax[0].legend(frameon=False, fontsize=5.5, loc='lower left'); fig.tight_layout()
     fig.savefig(os.path.join(F, 'fig_tradeoff.pdf')); fig.savefig(os.path.join(F, 'fig_tradeoff.png')); plt.close(fig)
 
 
