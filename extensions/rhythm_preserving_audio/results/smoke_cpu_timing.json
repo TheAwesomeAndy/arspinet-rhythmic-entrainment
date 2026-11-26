@@ -1,0 +1,29 @@
+{
+ "label": "ENGINEERING smoke test, zero text embeddings; outputs not scored",
+ "params": {
+  "dit": 459130880,
+  "pretransform": 108244529,
+  "conditioner": 197376,
+  "total": 567572785
+ },
+ "text_encoder": false,
+ "load_s": 5.686683177947998,
+ "clip_s": 8.6,
+ "latent_shape": [
+  1,
+  256,
+  94
+ ],
+ "encode_s": 0.6633703708648682,
+ "decode_s": 0.6222805976867676,
+ "a2a_steps": 8,
+ "a2a_total_s": 48.37755608558655,
+ "a2a_s_per_step_upper_bound": 6.0471945106983185,
+ "out_shape": [
+  1,
+  2,
+  379260
+ ],
+ "peak_rss_gb": 3.780348,
+ "torch_threads": 4
+}
