@@ -56,6 +56,33 @@ class Matching(unittest.TestCase):
         self.assertAlmostEqual(rm.prf(est, ref, 0.05)['f1'], mir_eval.onset.f_measure(ref, est, window=0.05)[0], places=12)
 
 
+class AliasingMeasures(unittest.TestCase):
+    def test_ordered_alignment_no_crossing(self):
+        pairs = rm.align_ordered([0.0, 0.11, 0.2], [0.0, 0.1, 0.2], 0.05)
+        self.assertEqual([(i, j) for i, j, _ in pairs], [(0, 0), (1, 1), (2, 2)])
+        self.assertTrue(all(b[0] > a[0] and b[1] > a[1] for a, b in zip(pairs, pairs[1:])))
+
+    def test_grid_shift_fools_deviation_on_periodic_grid(self):
+        ref = np.arange(32) * 0.1; est = ref + 0.1                 # displaced by exactly one grid step
+        self.assertLess(rm.prf(est, ref, 0.05)['mean_abs_dev_s'], 1e-9)   # deviation looks perfect: aliasing
+        tr = rm.timing_report(est, ref, 0.05)
+        self.assertAlmostEqual(tr['best_lag_ms'], 100.0, delta=2.6); self.assertLess(tr['lag_specificity'], 0)
+
+    def test_alias_floor(self):
+        self.assertGreater(rm.alias_floor(np.arange(32) * 0.1, 0.05), 0.9)        # periodic: high
+        rng = np.random.RandomState(0); ref = np.sort(rng.choice(np.arange(200) * 0.05, 20, replace=False))
+        self.assertLess(rm.alias_floor(ref, 0.02), 0.5)                              # sparse aperiodic: low
+
+    def test_nonperiodic_probe_has_low_floor(self):
+        for f in (2.0, 3.0):
+            on = np.asarray(sa.ground_truth(sa.Composition('H02', 20, f, nonperiodic=True))['onsets_s'])
+            self.assertLess(rm.alias_floor(on, 0.05), 0.6)
+
+    def test_nonperiodic_split_safe(self):
+        a = sa.nonperiodic_pattern(sa.Composition('H01', 20, 2.0)); b = sa.nonperiodic_pattern(sa.Composition('T01', 0, 2.0))
+        self.assertNotEqual(a, b)
+
+
 class OnAudio(unittest.TestCase):
     def test_identity_onsets(self):
         for tpl in ('H01', 'H03'):

@@ -138,6 +138,72 @@ def beat_scores(beats_est, beats_ref, tol=BEAT_TOL_S):
     return {'annotated': at, 'any_level': {**lv[best], 'level': best}}
 
 
+def align_ordered(est, ref, tol):
+    """Order-preserving (monotone) alignment of two event sequences by dynamic programming
+    (Needleman-Wunsch): matching est[i] to ref[j] costs |est[i] - ref[j]| if within tol (else forbidden),
+    skipping an event costs tol. Unlike greedy matching, no two matches may cross. Returns the list of
+    (i_est, i_ref, est - ref)."""
+    est = np.asarray(est, float); ref = np.asarray(ref, float); n, m = len(est), len(ref)
+    if n == 0 or m == 0: return []
+    C = np.full((n + 1, m + 1), np.inf); C[0, :] = tol * np.arange(m + 1); C[:, 0] = tol * np.arange(n + 1); B = np.zeros((n + 1, m + 1), int)
+    for i in range(1, n + 1):
+        d = np.abs(est[i - 1] - ref)
+        for j in range(1, m + 1):
+            best, arg = C[i - 1, j] + tol, 1
+            if C[i, j - 1] + tol < best: best, arg = C[i, j - 1] + tol, 2
+            if d[j - 1] <= tol and C[i - 1, j - 1] + d[j - 1] < best: best, arg = C[i - 1, j - 1] + d[j - 1], 0
+            C[i, j], B[i, j] = best, arg
+    i, j, pairs = n, m, []
+    while i > 0 and j > 0:
+        if B[i, j] == 0: pairs.append((i - 1, j - 1, float(est[i - 1] - ref[j - 1]))); i -= 1; j -= 1
+        elif B[i, j] == 1: i -= 1
+        else: j -= 1
+    while i > 0 or j > 0:
+        if i > 0: i -= 1
+        else: j -= 1
+    return pairs[::-1]
+
+
+def prf_pairs(pairs, n_est, n_ref):
+    tp = len(pairs); p = tp / n_est if n_est else 0.0; r = tp / n_ref if n_ref else 0.0; f = 2 * p * r / (p + r) if p + r else 0.0
+    d = np.array([x for *_, x in pairs]) if pairs else np.array([np.nan])
+    return {'precision': p, 'recall': r, 'f1': f, 'mean_abs_dev_s': float(np.nanmean(np.abs(d))), 'mean_signed_dev_s': float(np.nanmean(d))}
+
+
+def lag_scan(est, ref, tol, max_lag_s=0.6, step_s=0.0025):
+    """Greedy F1 of est shifted by -lag against ref, over a range of global lags (s). Returns lags, F1."""
+    lags = np.arange(-max_lag_s, max_lag_s + step_s / 2, step_s); est = np.asarray(est, float)
+    return lags, np.array([prf(est - l, ref, tol)['f1'] for l in lags])
+
+
+def _plateau_centre_ms(lags, f):
+    """Centre (ms) of the contiguous run of lags at the maximum F1 that contains the first maximum; F1 is
+    flat over +-tol around the true lag, so the first maximum would sit at the plateau's edge."""
+    i = int(np.argmax(f)); j = i
+    while j + 1 < len(f) and f[j + 1] == f[i]: j += 1
+    return float(1e3 * (lags[i] + lags[j]) / 2)
+
+
+def alias_floor(ref, tol, max_lag_s=0.6):
+    """Best F1 a copy of the reference itself reaches at a WRONG global lag (|lag| > tol): the coincidental
+    re-alignment a displaced output could score on this stimulus. A property of the reference alone."""
+    lags, f = lag_scan(ref, ref, tol, max_lag_s); off = np.abs(lags) > tol
+    return float(f[off].max()) if off.any() else 0.0
+
+
+def timing_report(est, ref, tol=ONSET_TOL_S, max_lag_s=0.6):
+    """Every candidate timing measure side by side (addendum A2): greedy F1 / deviation, order-preserving
+    alignment F1 / deviation / signed displacement, lag scan (best lag, lag-0 specificity), alias floor of
+    the reference and the floor-normalised F1 = (F1 - floor) / (1 - floor)."""
+    g = prf(est, ref, tol); o = prf_pairs(align_ordered(est, ref, tol), len(est), len(ref))
+    lags, f = lag_scan(est, ref, tol, max_lag_s); off = np.abs(lags) > tol; i0 = int(np.argmin(np.abs(lags)))
+    floor = alias_floor(ref, tol, max_lag_s)
+    return {'greedy_f1': g['f1'], 'greedy_dev_ms': 1e3 * g['mean_abs_dev_s'], 'ordered_f1': o['f1'], 'ordered_dev_ms': 1e3 * o['mean_abs_dev_s'],
+            'signed_dev_ms': 1e3 * o['mean_signed_dev_s'], 'best_lag_ms': _plateau_centre_ms(lags, f), 'f1_lag0': float(f[i0]),
+            'f1_best_wrong_lag': float(f[off].max()), 'lag_specificity': float(f[i0] - f[off].max()), 'alias_floor': floor,
+            'f1_norm': float((g['f1'] - floor) / (1 - floor)) if floor < 1 else float('nan')}
+
+
 def tempo_error(f_est, f_ref):
     """Relative tempo error, strict and octave-tolerant (factors 1/3, 1/2, 1, 2, 3)."""
     strict = abs(f_est - f_ref) / f_ref

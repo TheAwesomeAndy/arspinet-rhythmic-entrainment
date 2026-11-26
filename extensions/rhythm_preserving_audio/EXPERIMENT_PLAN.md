@@ -189,3 +189,55 @@ Changes (no other part of the plan changes):
 4. Known limit of P1, reported rather than fixed: an edit that removes a whole instrument removes its
    onsets, so P1 drops even with perfect timing of what remains (low-pass 1500 / 600 Hz:
    0.873 / 0.863, as the hi-hats disappear). P2 is unaffected by every timbre control.
+
+### A2 (2026-11-26): timing measures and grid aliasing; revised decision rules frozen before any generative output
+
+Question raised by the author after A1: is the matched-onset deviation adopted in A1 itself fooled when
+displaced events are matched to the wrong, neighbouring grid positions? Tested on synthetic controls
+(`experiments/validate_aliasing.py`, `results/aliasing_validation.json`, SIMULATED; 24 test compositions per
+stimulus family; reference = the unperturbed composition; "separation" = fraction of compositions in which a
+measure ranks identity better than the displaced copy, 1.0 = always, 0.5 = chance).
+
+**Two stimulus families.** *Periodic*: the test templates (one bar repeated, dense 16th grid). *Nonperiodic
+probe*: sparse (about 22 % of 16th steps), non-repeating event sequences with the bar's first beat kept
+(`synthetic_audio.nonperiodic_pattern`). Alias floor (best F1 a copy of the reference reaches at a wrong
+global lag, a property of the reference alone): periodic median 0.906, nonperiodic median 0.388.
+
+**Findings (group medians; periodic / nonperiodic).**
+* Matched-onset deviation **is aliased**. A shift by one 16th step gives 2.7 ms on the periodic family
+  (identity 2.5 ms); a shift by one beat gives 0.83 ms, smaller than identity. Separation
+  0.29 (1 step) and 0.04 (1 beat): worse than chance. On the probe the one-beat shift still gives 5.4 ms
+  vs 5.4 ms (separation 0.46). A deviation computed only over matched events cannot tell genuine
+  preservation from coincidental re-alignment.
+* **Order-preserving alignment** (monotone DP alignment, no crossing matches) gave exactly the greedy values in
+  every condition: a uniformly displaced periodic sequence is still perfectly ordered. No gain.
+* **Signed displacement** reads in-tolerance latency correctly (30 ms shift: 28.4 / 24.5 ms) but is
+  fooled by grid shifts (separation 0.46 / 0.50).
+* **Onset F1** always ranks identity first, but on the periodic family a one-beat shift still scores
+  0.885 (identity 1.000), inside the alias floor; on the probe it scores 0.280 and a one-step shift 0.000.
+* **Lag specificity** (F1 at lag 0 minus the best F1 at any wrong lag, |lag| > 50 ms) separates identity from
+  every grid shift in both families (separation 0.98-1.00), but its margin at identity is 0.062 on the periodic
+  family vs 0.182 on the probe. **Best lag** (centre of the maximal-F1 plateau) recovers the shift (identity
+  3.7 / -3.8 ms; separation 0.96-1.00) within its +-0.6 s scan range.
+* Conclusion: **no event-matching measure can certify timing on a dense periodic stimulus; the stimulus has to
+  be able to tell displacements apart.** The nonperiodic probe, with a low alias floor, can; a lag-0 specificity
+  check and the floor-normalised F1 then distinguish preservation from re-alignment.
+
+**Connection to the EEG study.** The pre-registration recorded that circular shift and phase randomisation are
+"invariant for magnitude statistics on a periodic grid" (`docs/PREREGISTRATION_DRAFT.md`), and FRAMING item 4
+that they "leave beat-locking magnitudes unchanged on a periodic grid", so they were rejected as nulls. The
+identifiability work found the same structural limit one level up: on periodic stimuli an evoked-response
+account and an oscillator account produce near-identical beat-locked output, so tempo-selective enhancement
+and phase-lag tests are non-diagnostic (`docs/lit_entrainment_debate.md`, Damsma 2025). Here the same limit
+appears in audio evaluation: on a periodic grid, a timing error of a whole grid step is invisible to
+event-matching measures. In both settings the remedy is a design that breaks the periodicity the measure would
+otherwise be blind to, not a cleverer statistic on the periodic data.
+
+**Time-averaged transformation measure (A1) validated further.** LTAS distance is zero for gain (-6 dB:
+0.000 dB), for every shift (max 0.001 dB) and **for time reversal (0.001 / 0.002 dB)**, and
+responds to low-pass (35.8 / 32.6 dB) and instrumentation (3.40 / 3.47 dB). It measures spectral change only and is
+blind to temporal destruction, so it is never read without the timing measures. The frame-wise log-mel distance
+stays secondary: it responds to timing (one-step shift 18.9 dB, reversal 23.6 dB) and level.
+
+**Revised decision rules: `DECISION_RULES.md`, frozen with this addendum, before any generative output.** They
+supersede section 8 where they differ.

@@ -61,10 +61,11 @@ class Composition:
     scale: str = 'minor_pent'
     root_midi: int = 57
     n_beats: int = N_BEATS
+    nonperiodic: bool = False      # A2 probe: sparse, non-repeating pattern (see nonperiodic_pattern)
 
     @property
     def cid(self) -> str:
-        return f'{self.template}_m{self.melody_seed}_f{self.tempo_hz:g}_{self.instrumentation}'
+        return f'{self.template}{"NP" if self.nonperiodic else ""}_m{self.melody_seed}_f{self.tempo_hz:g}_{self.instrumentation}'
 
     @property
     def duration_s(self) -> float:
@@ -116,10 +117,27 @@ def tonal(kind, f0, dur_s, rng, sr=SR, bright=1.0):
 
 
 # ---------------------------------------------------------------------------------------------
+NP_DENSITY = 0.22   # fraction of 16th steps carrying an event in the nonperiodic probe (all instruments together)
+
+
+def nonperiodic_pattern(comp: Composition):
+    """A2 probe stimulus: one non-repeating event sequence over the whole excerpt (no bar repeats), sparse
+    (about NP_DENSITY of the 16th steps; every bar's first beat kept so the meter stays audible; no two
+    adjacent 16ths), events assigned to kick / snare / note by a fixed draw, no hats. Fixed by (template,
+    melody_seed). Sparse and aperiodic so that a displaced copy rarely lands on other events."""
+    rng = np.random.RandomState(10_000 + 97 * list(TEMPLATES).index(comp.template) + comp.melody_seed); n = comp.n_beats * SUB
+    on = rng.rand(n) < NP_DENSITY; on[::SUB * 4] = True
+    for i in range(1, n):
+        if on[i] and on[i - 1]: on[i] = False
+    inst = rng.choice(['kick', 'snare', 'note'], size=n, p=[0.35, 0.25, 0.40]); inst[::SUB * 4] = 'kick'
+    pats = {k: ''.join('x' if (on[i] and inst[i] == k) else '.' for i in range(n)) for k in ('kick', 'snare', 'note')}
+    pats['hat'] = '.' * n; return pats
+
+
 def event_times(comp: Composition, jitter_s=0.0, drop_frac=0.0, rng=None):
     """Per instrument, onset times (s) of every hit in the excerpt; optional Gaussian timing jitter
     and random event removal (for metric controls only)."""
-    tpl = TEMPLATES[comp.template]; step = 1.0 / (comp.tempo_hz * SUB); n_steps = comp.n_beats * SUB
+    tpl = nonperiodic_pattern(comp) if comp.nonperiodic else TEMPLATES[comp.template]; step = 1.0 / (comp.tempo_hz * SUB); n_steps = comp.n_beats * SUB
     rng = rng or np.random.RandomState(0); out = {}
     for inst, pat in tpl.items():
         idx = [i for i in range(n_steps) if pat[i % len(pat)] == 'x']
@@ -181,8 +199,8 @@ def caption(comp: Composition, style=None):
     return f'{style + ", " if style else ""}steady {round(60 * comp.tempo_hz)} BPM groove in 4/4 with {inst}, tight and on the beat'
 
 
-def compositions(split: str, tempi=TEMPI_HZ, melody_seeds=(0,), instrumentations=('electronic',)):
-    return [Composition(t, s, f, i) for t in SPLITS[split] for s in melody_seeds for f in tempi for i in instrumentations]
+def compositions(split: str, tempi=TEMPI_HZ, melody_seeds=(0,), instrumentations=('electronic',), nonperiodic=False):
+    return [Composition(t, s, f, i, nonperiodic=nonperiodic) for t in SPLITS[split] for s in melody_seeds for f in tempi for i in instrumentations]
 
 
 def write_wav(path, audio, sr=SR):
