@@ -37,7 +37,7 @@ def main():
         print(f'{c.cid} done ({time.time() - t0:.0f}s)', flush=True)
     json.dump({'label': 'SIMULATED metric validation (synthetic controls)', 'melody_seed': MELODY_SEED, 'rows': rows}, open(out, 'w'), indent=1)
 
-    ctrl = list(dict.fromkeys(r['control'] for r in rows)); keys = ['onset_f1', 'onset_dev_ms', 'beat_f1', 'beat_dev_ms', 'tempo_err_octave', 'envelope_r', 'beat_band_z', 'log_mel_distance_db', 'centroid_shift_hz']
+    ctrl = list(dict.fromkeys(r['control'] for r in rows)); keys = ['onset_f1', 'onset_dev_ms', 'beat_f1', 'beat_dev_ms', 'tempo_err_octave', 'envelope_r', 'envelope_lag_ms', 'ltas_distance_db', 'log_mel_distance_db', 'centroid_shift_hz']
     med = {c: {k: float(np.nanmedian([r[k] for r in rows if r['control'] == c])) for k in keys} for c in ctrl}
     print(f"{'control':22s}" + ''.join(f'{k[:12]:>13s}' for k in keys))
     for c in ctrl: print(f'{c:22s}' + ''.join(f'{med[c][k]:13.3f}' for k in keys))
@@ -57,6 +57,11 @@ def main():
         'timbre_controls_preserve_P1': {c: medc(c, 'onset_f1') >= 0.9 for c in ctrl if c.startswith(('timbre_', 'dsp_'))},
         'timbre_controls_preserve_P2': {c: abs(medc(c, 'beat_f1', ok_beat) - medc('identity', 'beat_f1', ok_beat)) <= 0.05 for c in ctrl if c.startswith(('timbre_', 'dsp_'))},
         'timbre_controls_change_sound': {c: medc(c, 'log_mel_distance_db') > 2.0 for c in ctrl if c.startswith(('timbre_', 'dsp_'))},
+        # addendum A1 checks
+        'T1_ltas_blind_to_timing': {c: medc(c, 'ltas_distance_db') < 1.0 for c in ctrl if c.startswith(('shift_', 'jitter_', 'tempo_'))},
+        'T1_ltas_sees_timbre': {c: medc(c, 'ltas_distance_db') > 1.0 for c in ctrl if c.startswith(('timbre_', 'dsp_'))},
+        'onset_dev_monotone_jitter': all(medc(f'jitter_{a}ms', 'onset_dev_ms') <= medc(f'jitter_{b}ms', 'onset_dev_ms') for a, b in ((5, 15), (15, 30), (30, 50))),
+        'onset_dev_tracks_shift_le_tolerance': {ms: abs(medc(f'shift_{ms}ms', 'onset_dev_ms') - ms) < 3 for ms in (10, 30)},
         'n_compositions': len(comps), 'n_passing_P2_source_rule': len(ok_beat),
     }
     d = json.load(open(out)); d['group_medians'] = med; d['checks'] = checks; json.dump(d, open(out, 'w'), indent=1)

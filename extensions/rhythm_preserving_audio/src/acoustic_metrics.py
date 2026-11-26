@@ -1,8 +1,10 @@
 """Acoustic-transformation metrics: did the edit change the sound, and in the intended direction?
 
-A deliberately small set (EXPERIMENT_PLAN.md):
-  * log_mel_distance  : magnitude of change (primary). Mean absolute difference of 64-band log-mel
-                        spectra (dB), time-aligned frame by frame, over the source duration.
+A deliberately small set (EXPERIMENT_PLAN.md, addendum A1):
+  * ltas_distance     : magnitude of change (primary since A1). Long-term average log-mel spectra
+                        compared band by band (dB); blind to event timing.
+  * log_mel_distance  : frame-by-frame log-mel difference (dB); secondary, because it also responds to
+                        pure timing changes (a 30 ms shift reads as 8.6 dB on the controls).
   * centroid_shift    : direction of brightness change (Hz; negative = darker / "warmer").
   * rms_db_change, crest_db_change : direction of level / percussive-dynamics change ("softer").
   * chroma_corr       : tonal (pitch-class) similarity, to separate harmonic from rhythmic preservation.
@@ -45,6 +47,16 @@ def log_mel_distance(x_ref, x, sr, floor_db=-80.0):
     return float(np.mean(np.abs(A - B)))
 
 
+def ltas_log_mel_distance(x_ref, x, sr, floor_db=-80.0):
+    """Timing-invariant change of spectral shape (primary transformation measure, addendum A1): mean over
+    bands of |LTAS(ref) - LTAS(x)| (dB), where LTAS is the long-term average log-mel spectrum (mel power
+    averaged over all frames, then dB, referenced to its own maximum and floored). Moving events in time
+    leaves it unchanged; changing timbre, brightness or instrumentation moves it."""
+    a = mel_fb(sr) @ power_spec(x_ref, sr).mean(1); b = mel_fb(sr) @ power_spec(x, sr).mean(1)
+    A = np.maximum(10 * np.log10(a + 1e-12) - 10 * np.log10(a.max() + 1e-12), floor_db); B = np.maximum(10 * np.log10(b + 1e-12) - 10 * np.log10(b.max() + 1e-12), floor_db)
+    return float(np.mean(np.abs(A - B)))
+
+
 def spectral_centroid(x, sr):
     P = power_spec(x, sr); f = np.fft.rfftfreq(N_FFT, 1 / sr); w = P.sum(0)
     c = (f[:, None] * P).sum(0) / (w + 1e-20); return float(np.sum(c * w) / (w.sum() + 1e-20))   # power-weighted mean
@@ -70,5 +82,5 @@ def chroma_corr(x_ref, x, sr):
 
 
 def acoustic_report(x_ref, x, sr):
-    return {'log_mel_distance_db': log_mel_distance(x_ref, x, sr), 'centroid_shift_hz': spectral_centroid(x, sr) - spectral_centroid(x_ref, sr),
+    return {'ltas_distance_db': ltas_log_mel_distance(x_ref, x, sr), 'log_mel_distance_db': log_mel_distance(x_ref, x, sr), 'centroid_shift_hz': spectral_centroid(x, sr) - spectral_centroid(x_ref, sr),
             'rms_db_change': rms_db(x) - rms_db(x_ref), 'crest_db_change': crest_db(x) - crest_db(x_ref), 'chroma_corr': chroma_corr(x_ref, x, sr)}

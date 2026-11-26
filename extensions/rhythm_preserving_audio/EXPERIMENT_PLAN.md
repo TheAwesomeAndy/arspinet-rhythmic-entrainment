@@ -161,4 +161,31 @@ controls), **proposal** (not run), **interpretation**.
 
 ## 9. Addenda
 
-(none yet)
+### A1 (2026-11-26): transformation measure and timing co-primary, decided on the synthetic controls before any model output
+
+Reason (metric validation, `results/metric_validation.json`, SIMULATED, 24 test compositions):
+* The frame-by-frame log-mel distance responds to pure timing changes: a 30 ms global shift reads as
+  8.6 dB and a 1.05x tempo change as 18.6 dB, larger than the acoustic re-synthesis
+  (6.1 dB). It cannot serve as "how much the sound changed" when timing may also change.
+* Grid aliasing: on a periodic 16th-note grid a large timing error re-aligns events with other grid
+  positions. P1 is 0.000 at a 60 ms shift but 0.222 at 100 ms; P2 is 0.206 at 1.05x tempo but
+  0.657 at 1.10x. F1 against a periodic reference is therefore not monotone in the size of a
+  large timing error (the audio analogue of the EEG study's finding that periodic-grid nulls leave
+  beat-locking magnitudes unchanged).
+
+Changes (no other part of the plan changes):
+1. **T1 (primary) becomes the long-term-average log-mel distance** (`ltas_distance_db`): per-band dB
+   difference of the time-averaged log-mel spectra. Checks: below 1 dB for every shift, jitter and tempo
+   control (max group median 0.105 dB); above 1 dB for every timbre control except compression
+   (acoustic 3.4, shelf cut 5.8, low-pass 4 kHz 23.0 dB; compression 0.41 dB, a dynamics change that the
+   crest-factor change reports instead). The frame-wise log-mel distance stays as a secondary measure.
+   The matched-transformation grid of section 8 is defined on T1.
+2. **Matched-onset mean absolute deviation (ms) becomes co-primary with P1.** Within tolerance it tracks
+   the true shift (10 ms -> 8.4 ms, 30 ms -> 28.4 ms) and rises with jitter (4.2 / 11.4 /
+   18.1 / 21.4 ms at 5 / 15 / 30 / 50 ms). P1 and the deviation are read together: a high P1 with a
+   large deviation, or an F1 recovering at a large error, is read as aliasing, not preservation.
+3. A global-latency diagnostic (`envelope_lag_ms`, novelty cross-correlation peak within +-150 ms) is
+   added to every report; it can alias too and is never a decision quantity.
+4. Known limit of P1, reported rather than fixed: an edit that removes a whole instrument removes its
+   onsets, so P1 drops even with perfect timing of what remains (low-pass 1500 / 600 Hz:
+   0.873 / 0.863, as the hi-hats disappear). P2 is unaffected by every timbre control.

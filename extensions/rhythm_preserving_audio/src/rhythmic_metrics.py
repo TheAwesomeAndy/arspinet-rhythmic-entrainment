@@ -168,6 +168,15 @@ def envelope_corr(x_ref, x, sr, max_lag_s=0.0):
     L = int(max_lag_s * fr); return float(max(np.corrcoef(a[max(0, -l):n - max(0, l)], b[max(0, l):n - max(0, -l)])[0, 1] for l in range(-L, L + 1)))
 
 
+def envelope_lag_ms(x_ref, x, sr, max_lag_s=0.15):
+    """Global latency diagnostic: lag (ms, positive = x late) maximising the novelty-envelope
+    cross-correlation within +-max_lag_s. On a periodic grid this can alias to a grid step; diagnostic only."""
+    a, fr = novelty(x_ref, sr); b, _ = novelty(x, sr); n = min(len(a), len(b)); a, b = a[:n] - a[:n].mean(), b[:n] - b[:n].mean()
+    L = int(max_lag_s * fr); lags = np.arange(-L, L + 1)
+    cc = [np.dot(a[max(0, -l):n - max(0, l)], b[max(0, l):n - max(0, -l)]) for l in lags]
+    return float(1e3 * lags[int(np.argmax(cc))] / fr)
+
+
 def rhythm_report(x, sr, gt, x_ref=None):
     """All rhythmic metrics for one output x against the composition's ground truth (and, for envelope
     similarity, against the source audio x_ref). Pre-specified roles (EXPERIMENT_PLAN.md):
@@ -181,7 +190,7 @@ def rhythm_report(x, sr, gt, x_ref=None):
     rep = {'onset': prf(on, onsets_ref, ONSET_TOL_S), 'beat_informed': beat_scores(b_inf, beats_ref),
            'beat_uninformed': beat_scores(b_un, beats_ref), 'tempo': tempo_error(f_est, f_ref),
            'ibi_rel_dev': ioi_deviation(b_inf, beats_ref), 'beat_band_z': beat_band_z(x, sr, f_ref)}
-    if x_ref is not None: rep['envelope_r'] = envelope_corr(x_ref, x, sr)
+    if x_ref is not None: rep['envelope_r'] = envelope_corr(x_ref, x, sr); rep['envelope_lag_ms'] = envelope_lag_ms(x_ref, x, sr)
     return rep
 
 
@@ -191,4 +200,4 @@ def flat(rep):
             'beat_f1': rep['beat_informed']['annotated']['f1'], 'beat_dev_ms': 1e3 * rep['beat_informed']['annotated']['mean_abs_dev_s'],
             'beat_f1_uninformed_any': rep['beat_uninformed']['any_level']['f1'], 'tempo_err_octave': rep['tempo']['rel_err_octave'],
             'tempo_err_strict': rep['tempo']['rel_err_strict'], 'ibi_rel_dev': rep['ibi_rel_dev'], 'beat_band_z': rep['beat_band_z'],
-            'envelope_r': rep.get('envelope_r', float('nan'))}
+            'envelope_r': rep.get('envelope_r', float('nan')), 'envelope_lag_ms': rep.get('envelope_lag_ms', float('nan'))}
