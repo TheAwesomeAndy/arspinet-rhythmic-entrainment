@@ -1,0 +1,6 @@
+No module named 'flash_attn'
+flash_attn not installed, disabling Flash Attention
+No module named 'flash_attn'
+flash_attn varlen/bert_padding not available, disabling varlen attention
+/home/user/.venvs/rpa/lib/python3.13/site-packages/torch/nn/utils/weight_norm.py:143: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)

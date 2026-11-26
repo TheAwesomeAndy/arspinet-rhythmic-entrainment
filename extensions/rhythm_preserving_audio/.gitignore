@@ -1,0 +1,14 @@
+# generated audio, model caches and checkpoints are never committed
+results/audio/
+results/latents/
+checkpoints/
+lora_checkpoints/
+*.wav
+*.flac
+*.mp3
+*.ckpt
+*.pt
+*.safetensors
+hf_cache/
+__pycache__/
+lightning_logs/
