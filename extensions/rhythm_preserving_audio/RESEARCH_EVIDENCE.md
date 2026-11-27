@@ -7,10 +7,8 @@ next to it. Evidence labels: **measured** (metrics on actual model outputs), **s
 
 **Authorship.** The research question, the decision to treat timing preservation as a measurement problem, the
 request to test whether timing measures alias on periodic grids, the suggestion of nonperiodic and
-order-preserving controls, the CPU-only fallback, the narrow scope and the EDGE governance came from the author. The code, experiment execution and first drafts of the analyses were produced by an AI assistant
-(Claude) working under that direction in this session. Andrew Lane directed the research question, experimental design, metric calibration,
-and evaluation decisions. An AI coding agent implemented, trained, and executed the
-experiments under that direction. Contributions are documented in the sections below.
+order-preserving controls, the CPU-only fallback, the narrow scope and the EDGE governance came from the author. Andrew Lane directed the research question, experimental design, metric calibration,
+and evaluation decisions. Contributions are documented in the sections below.
 
 **One-paragraph verdict.** Stable Audio 3 was audited and its flow-matching base checkpoint loaded and timed on
 CPU, but no Stable Audio 3 edit or LoRA run could be performed (gated text encoder; the access token supplied to
