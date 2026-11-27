@@ -28,7 +28,7 @@ Every result belongs to exactly one layer. Say which one whenever you write abou
 | Pilot (predates the pre-registration, exploratory) | none | `pilot/RESULTS.md`, `WEEK1_ASSESSMENT.md` | `pilot/nmedt_pilot.py` (loader that every other pilot script imports. Its own statistic is superseded), `nmedt_pilot_v2.py` (a recorded negative result, superseded statistic), `nmedt_pilot_v3.py` (tagging statistic, imported by v4 and the ten-song script), `nmedt_pilot_v4_units.py`, `nmedt_tensong.py` | `pilot/results/` |
 | Calibration (synthetic) | none | `calibration/RESULTS.md` | `calibration/synthetic_calibration.py`, `calibration/power_q2.py` | `calibration/results/` |
 | Manuscript tooling | `docs/manuscript/make_numbers.py` docstring | `docs/FIGURES.md` (generated) | `weineck/figures/make_figures.py`, `docs/manuscript/make_numbers.py` | `docs/figures/tnsre/`, `docs/figures/tnsre/figure_numbers.json`, `docs/manuscript/numbers.tex` |
-| Audio extension (separate from the EEG study) | `extensions/rhythm_preserving_audio/EXPERIMENT_PLAN.md`, `DECISION_RULES.md` | `extensions/rhythm_preserving_audio/SPOTIFY_RESEARCH_EVIDENCE.md` | `extensions/rhythm_preserving_audio/src/`, `experiments/` | `extensions/rhythm_preserving_audio/results/`, `figures/` |
+| Audio extension (separate from the EEG study) | `extensions/rhythm_preserving_audio/EXPERIMENT_PLAN.md`, `DECISION_RULES.md` | `extensions/rhythm_preserving_audio/RESEARCH_EVIDENCE.md` | `extensions/rhythm_preserving_audio/src/`, `experiments/` | `extensions/rhythm_preserving_audio/results/`, `figures/` |
 
 One-off checks that back the data notes in `weineck/README.md`: `align_scan.py`, `trf_align_check.py`,
 `resolve_trials.py`, `tempo_tiebreak_selftest.py`. `verify_mapping.py` is superseded.

@@ -107,7 +107,7 @@ added.
 | `pilot/` | NMED-T feasibility pilot and the ten-song single-listen table (`RESULTS.md`) |
 | `weineck/tests/` | unit tests: identifiability procedure, pipeline invariants on synthetic fixtures, consistency of the committed results (run command above) |
 | `docs/manuscript/` | TNSRE manuscript tooling: `make_numbers.py` writes `numbers.tex` from `docs/figures/tnsre/figure_numbers.json`. Also `main.tex` (6-page skeleton), staged edits (`pending_submission_edits.md`), references, cover letter, submission checklist |
-| `extensions/rhythm_preserving_audio/` | a separate computational extension, not part of the EEG study (merged at `a78d143`, touches nothing outside `extensions/`): rhythm-preserving generative audio editing, with its own plan (`EXPERIMENT_PLAN.md`), frozen decision rules (`DECISION_RULES.md`), tests and evidence report (`SPOTIFY_RESEARCH_EVIDENCE.md`) |
+| `extensions/rhythm_preserving_audio/` | a separate computational extension, not part of the EEG study (merged at `a78d143`, touches nothing outside `extensions/`): rhythm-preserving generative audio editing, with its own plan (`EXPERIMENT_PLAN.md`), frozen decision rules (`DECISION_RULES.md`), tests and evidence report (`RESEARCH_EVIDENCE.md`) |
 
 ## Data
 

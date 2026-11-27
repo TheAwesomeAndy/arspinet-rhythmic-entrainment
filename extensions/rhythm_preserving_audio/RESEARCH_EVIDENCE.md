@@ -278,8 +278,8 @@ My doctoral research asks what a measurement system preserves of musical rhythm.
 into generative audio: I designed a benchmark for rhythm preservation in audio-to-audio editing, showed that
 standard onset metrics are fooled by periodic grids and corrected for it, and trained conditional rectified-flow
 editors in a pretrained audio latent space. Under pre-registered rules, source conditioning preserved timing at
-matched transformation strength. I want to bring this measurement-first approach to controllable generation at
-Spotify.
+matched transformation strength. I want to bring this measurement-first approach to controllable audio
+generation.
 
 ### 6.3 Résumé bullets
 

@@ -709,7 +709,7 @@ statement altered. *Verification:* paths resolve. Claims are the ones evidenced 
 
 **F6. Branch state in the extension's evidence report.** *Problem:* E6. *Root cause:* the report was
 written before the push and the merge, and only its section 7 was updated afterwards. *File:*
-`extensions/rhythm_preserving_audio/SPOTIFY_RESEARCH_EVIDENCE.md`. *Change:* line 3 now says the branch was
+`extensions/rhythm_preserving_audio/RESEARCH_EVIDENCE.md`. *Change:* line 3 now says the branch was
 pushed and merged at `a78d143`. The commit list names `89af6d5`, `4067d8b`, `9c6e71d`, `9df833d` and the
 merge. The scope check is now `git diff --name-only a78d143^1 a78d143`, with a note on why the old command
 is empty. 8 lines added, 6 removed. No number, result or reading changed. *Verification:* the new command
@@ -722,13 +722,15 @@ instruction. Not merged into `main`. No tag, no history rewrite. Status before t
 
 ```
  M README.md
- M extensions/rhythm_preserving_audio/SPOTIFY_RESEARCH_EVIDENCE.md
+ M extensions/rhythm_preserving_audio/RESEARCH_EVIDENCE.md
 ?? AGENTS.md
 ?? CLAUDE.md
 ?? docs/FINAL_ENGINEERING_AUDIT.md
 ?? weineck/tests/test_committed_results.py
 ?? weineck/tests/test_pipeline_invariants.py
 ```
+
+*Note (2026-11-27): the extension's evidence report was later renamed to `extensions/rhythm_preserving_audio/RESEARCH_EVIDENCE.md`; paths in this report use the current name.*
 
 ## 9. Changes awaiting approval
 
