@@ -708,7 +708,7 @@ by "planned and does not exist yet". Three rows added to the code table (`weinec
 statement altered. *Verification:* paths resolve. Claims are the ones evidenced in this report.
 
 **F6. Branch state in the extension's evidence report.** *Problem:* E6. *Root cause:* the report was
-written before the push and the merge, and only its section 7 was updated afterwards. *File:*
+written before the push and the merge, and only its section 7 (now section 6) was updated afterwards. *File:*
 `extensions/rhythm_preserving_audio/RESEARCH_EVIDENCE.md`. *Change:* line 3 now says the branch was
 pushed and merged at `a78d143`. The commit list names `89af6d5`, `4067d8b`, `9c6e71d`, `9df833d` and the
 merge. The scope check is now `git diff --name-only a78d143^1 a78d143`, with a note on why the old command

@@ -1,7 +1,7 @@
 # Research evidence: rhythm-preserving generative audio editing
 
 Prepared 2026-11-26 from the completed work on branch `extension/rhythm-preserving-audio` of
-`TheAwesomeAndy/arspinet-rhythmic-entrainment` (pushed and then merged into `main` at `a78d143`, see section 7). Every number below is read from a committed result file named
+`TheAwesomeAndy/arspinet-rhythmic-entrainment` (pushed and then merged into `main` at `a78d143`, see section 6). Every number below is read from a committed result file named
 next to it. Evidence labels: **measured** (metrics on actual model outputs), **simulated** (synthetic controls),
 **proposal** (not run), **interpretation**.
 
@@ -194,7 +194,7 @@ interpreted as magnitudes, which is why the periodic family was frozen as second
   evaluation script did not compute them for model outputs. They exist in the metric suite and were validated on
   synthetic controls only. Outputs are deterministic (fixed seeds) and can be re-scored; this was not done, to
   avoid a further analysis cycle.
-* **Stable Audio 3** (pretrained edit or LoRA): not run (section 9).
+* **Stable Audio 3** (pretrained edit or LoRA): not run (section 8).
 * **No perceptual, emotional, neurological or therapeutic outcome** was measured or is implied.
 
 ### 3.5 Interpretation (labelled)
@@ -257,83 +257,7 @@ Not supported by completed work and therefore not listed as qualifications: diff
 LoRA / parameter-efficient fine-tuning, fine-tuning of any pretrained generative model, post-training,
 reward modelling, text-to-audio generation.
 
-## 6. Application-ready material
-
-### 6.1 Technical research summary (150 words)
-
-I studied whether generative audio editors preserve rhythmic timing, extending my pre-registered EEG research on
-what measurement systems retain of rhythm. I designed a synthetic benchmark with exact onset ground truth,
-paired renders that differ only in instrumentation, and train/test splits by rhythmic template. Calibration showed
-that onset matching aliases on periodic grids: a copy shifted by a whole beat scored better timing deviation than
-the original. I therefore evaluated timing on nonperiodic probe stimuli with an
-alias-floor correction, and compared editors at matched spectral change under decision rules frozen before any
-model output. Two conditional rectified-flow editors were trained from scratch on CPU in the latent space of Stability AI's
-pretrained SAME-S autoencoder. The source-conditioned editor preserved onset timing better than
-label-conditioned SDEdit editing at equal transformation (+0.21 normalised F1, 95 % CI 0.13–0.28, 8/8 held-out
-compositions). Stable Audio 3 fine-tuning was planned but blocked by model access.
-
-### 6.2 Cover-letter paragraph (80 words)
-
-My doctoral research asks what a measurement system preserves of musical rhythm. I recently carried that question
-into generative audio: I designed a benchmark for rhythm preservation in audio-to-audio editing, showed that
-standard onset metrics are fooled by periodic grids and corrected for it, and trained conditional rectified-flow
-editors in a pretrained audio latent space. Under pre-registered rules, source conditioning preserved timing at
-matched transformation strength. I want to bring this measurement-first approach to controllable audio
-generation.
-
-### 6.3 Résumé bullets
-
-* Built and trained conditional rectified-flow (flow-matching) audio editors in PyTorch on a pretrained
-  autoencoder's latent space; under pre-registered rules, source conditioning improved onset-timing preservation
-  at matched spectral change (+0.21 normalised F1, 95 % CI 0.13–0.28, 8/8 held-out compositions).
-* Designed a rhythm-preservation benchmark for generative audio editing (exact onset ground truth, template-level
-  splits, fixed-cycle-count stimuli) and showed that onset-matching metrics alias on periodic grids; introduced
-  nonperiodic probes and an alias-floor correction.
-* Audited Stable Audio 3 from primary sources (objective, architecture, editing and LoRA APIs, licence) and
-  built a CPU loading and timing pipeline for its flow-matching base model.
-
-### 6.4 Portfolio sentence
-
-A pre-registered study of rhythm preservation in generative audio editing, with conditional rectified-flow
-editors trained from scratch on a pretrained audio latent space and alias-aware timing metrics carried over from
-my EEG research.
-
-### 6.5 Interview questions and answers
-
-**Q1. Write the rectified-flow loss you used and explain why the target is ε − x₀.**
-x_t = (1 − t)x₀ + tε; d x_t/dt = ε − x₀ is constant along each straight path, so the network regresses that
-velocity: E‖v_θ(x_t, t, c) − (ε − x₀)‖². At inference the learned field is integrated from noise (t = 1) to data
-(t = 0). The marginal velocity field is what the regression recovers; individual paths of the learned ODE need not
-be straight because many (x₀, ε) pairs cross. t was sampled logit-normal, putting more weight on mid-range t.
-
-**Q2. How does your editing strength work, and why did V0 lose timing at high strength?**
-SDEdit-style: noise the source latent to x_s = (1 − s)x_src + sε and integrate the ODE from s to 0. The source's
-information survives only through the (1 − s)x_src term; at s → 1 it vanishes. V0 is conditioned only on a label,
-so at full strength it generates a plausible acoustic clip with unrelated timing (D1 −0.38, 6.0 dB from the
-source). V1 also sees the source latent at every step, so its timing survives even from pure noise (D1 0.78).
-
-**Q3. Why not just report onset F1, and what is the alias floor?**
-On a dense periodic pattern a displaced copy lines up with other events: a one-beat shift scored F1 0.885 and a
-matched deviation of 0.8 ms, better than the original. The alias floor is the best F1 a copy of the reference
-reaches at a wrong global lag; normalising F1 by it and requiring that lag 0 beats every wrong lag separates real
-preservation from re-alignment. Periodic stimuli have a floor near 0.91, so the primary evaluation used sparse
-nonperiodic probes (floor 0.39).
-
-**Q4. How do you know V1 did not win by simply editing less?**
-Rhythm was compared at matched spectral change: per composition, D1 was interpolated as a function of the
-timing-blind LTAS distance, and the editors were compared at fixed LTAS points taken from V0's range, with each
-editor required to cover those points itself. V1 also landed closer to the true acoustic target (1.58 vs ≥ 1.89 dB),
-so it edited at least as accurately.
-
-**Q5. What are the main threats to validity?**
-Synthetic stimuli and one kind of timbre edit; 8 compositions per family from 4 templates (not independent);
-single training seed per model; V1's task is supervised paired translation whose targets share the source's exact
-timing, which favours source conditioning by design; latent frames are 92 ms long, so fine timing lives inside
-channels and depends on the pretrained decoder; beat and tempo metrics were not computed on outputs; Stable Audio 3
-was not tested. The claim is limited to "source conditioning preserves timing better than label-only SDEdit in this
-setting, at matched transformation".
-
-## 7. Repository verification
+## 6. Repository verification
 
 * **Branch**: `extension/rhythm-preserving-audio`, **pushed to GitHub on 2026-11-26 with the author's
   authorization** (https://github.com/TheAwesomeAndy/arspinet-rhythmic-entrainment/tree/extension/rhythm-preserving-audio).
@@ -376,7 +300,7 @@ setting, at matched transformation".
   point at the same commit); the pre-registration (`935c80a`), results, manuscript and decision rules of the EEG study are
   untouched. theBIBMsequel and the other attached repositories were not modified.
 
-## 8. EDGE audit
+## 7. EDGE audit
 
 | dimension | score (1–5) | basis |
 |---|---|---|
@@ -388,7 +312,7 @@ setting, at matched transformation".
 Unresolved limitations: synthetic data only; one edit type; no Stable Audio 3 result; no LoRA; beat and tempo
 metrics not computed on outputs; small n; literature novelty unchecked.
 
-## 9. Conclusions
+## 8. Conclusions
 
 ### Qualifications now supported by evidence
 
